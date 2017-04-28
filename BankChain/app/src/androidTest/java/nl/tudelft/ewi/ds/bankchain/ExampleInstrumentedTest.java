@@ -1,4 +1,4 @@
-package ds.ewi.tudelft.nl.bankchain;
+package nl.tudelft.ewi.ds.bankchain;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("ds.ewi.tudelft.nl.bankchain", appContext.getPackageName());
+        assertEquals("nl.tudelft.ewi.ds.bankchain", appContext.getPackageName());
     }
 }
