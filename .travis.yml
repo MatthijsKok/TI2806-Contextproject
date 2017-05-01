@@ -31,7 +31,8 @@ android:
 
 # Move into the project folder
 # before_script: cd BankChain
-before_install: cd BankChain
+before_install:
+  - cd BankChain
 
 before_script:
   # Create and start emulator
