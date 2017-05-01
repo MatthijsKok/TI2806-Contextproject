@@ -43,11 +43,9 @@ before_script:
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
-# # Run tests
+# Run tests
 script:
   - "./gradlew clean build connectedCheck connectedAndroidTest -PdisablePreDex --stacktrace"
-  # connectedAndroidTest
-  # - ./gradlew build connectedCheck
 
 # script:
 #   - bash gradlew test jacocoTestReport
