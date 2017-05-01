@@ -30,15 +30,18 @@ android:
     - android-25
 
     # Additional components
-    # - extra-google-google_play_services
-    # - extra-google-m2repository
-    - extra-android-m2repository
+    # - extra-google-m2repository # Google play service
+    - extra-android-m2repository # Design support library
     # - addon-google_apis-google-19
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
     # - sys-img-armeabi-v7a-addon-google_apis-google-25
     # - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
+
+  licenses:
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
 
 # Move into the project folder
 # before_script: cd BankChain
@@ -69,6 +72,9 @@ before_install:
 #   - emulator -avd test -no-skin -no-audio -no-window &
 #   - android-wait-for-emulator
 #   - adb shell input keyevent 82 &
+
+before_script:
+  - echo y | android update sdk --no-ui --all --filter platform-tools,android-25,extra-android-m2repository
 
 # # Run tests
 script:
