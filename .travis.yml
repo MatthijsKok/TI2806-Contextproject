@@ -45,7 +45,7 @@ before_script:
 
 # # Run tests
 script:
-  - "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
+  - "./gradlew clean build connectedCheck connectedAndroidTest -PdisablePreDex --stacktrace"
   # connectedAndroidTest
   # - ./gradlew build connectedCheck
 
