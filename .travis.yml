@@ -2,6 +2,15 @@ language: android
 jdk: oraclejdk8
 sudo: false
 
+env:
+  global:
+    - GRADLE_USER_HOME=${TRAVIS_BUILD_DIR}/gradle
+    - ANDROID_HOME=${TRAVIS_BUILD_DIR}/android-sdk
+    - SDK=${TRAVIS_BUILD_DIR}/android-sdk
+    - PATH=${GRADLE_USER_HOME}/bin/:${SDK}/:${SDK}/tools/:${SDK}/platform-tools/:${PATH}
+    - ANDROID_TARGET=android-25
+    - ANDROID_ABI=armeabi-v7a
+
 android:
   components:
     # Uncomment the lines below if you want to
@@ -9,9 +18,9 @@ android:
     # The double 'tools' is intended. It causes the latest list of
     # androids to be downloaded and then the latest to be installed.
     - tools
-    - build-tools-25.0.2
     - tools
-    - platform-tools
+    - build-tools-25.0.2
+    # - platform-tools
 
 
     # The BuildTools version used by your project
@@ -29,7 +38,7 @@ android:
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
     # - sys-img-armeabi-v7a-addon-google_apis-google-25
-    - sys-img-armeabi-v7a-android-25
+    # - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 
 # Move into the project folder
 # before_script: cd BankChain
@@ -77,10 +86,3 @@ cache:
     - ${TRAVIS_BUILD_DIR}/gradle/caches/
     - ${TRAVIS_BUILD_DIR}/gradle/wrapper/dists/
     - ${TRAVIS_BUILD_DIR}/android-sdk/extras/
-
-env:
-  global:
-    - GRADLE_USER_HOME=${TRAVIS_BUILD_DIR}/gradle
-    - ANDROID_HOME=${TRAVIS_BUILD_DIR}/android-sdk
-    - SDK=${TRAVIS_BUILD_DIR}/android-sdk
-    - PATH=${GRADLE_USER_HOME}/bin/:${SDK}/:${SDK}/tools/:${SDK}/platform-tools/:${PATH}
