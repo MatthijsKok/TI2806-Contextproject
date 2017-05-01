@@ -13,16 +13,16 @@ android:
     - tools
 
     # The BuildTools version used by your project
-    - build-tools-25.0.3
+    - build-tools-25.0.2
 
     # The SDK version used to compile your project
     - android-25
 
     # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
+    # - extra-google-google_play_services
+    # - extra-google-m2repository
     - extra-android-m2repository
-    - addon-google_apis-google-19
+    # - addon-google_apis-google-19
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
@@ -32,6 +32,16 @@ android:
 # before_script: cd BankChain
 before_install:
   - cd BankChain
+
+# install:
+#   - echo y | android update sdk -u -a -t tools
+#   - echo y | android update sdk -u -a -t platform-tools
+#   - echo y | android update sdk -u -a -t build-tools-25.0.2
+#   - echo y | android update sdk -u -a -t android-25
+#   - echo y | android update sdk -u -a -t extra-google-google_play_services
+#   - echo y | android update sdk -u -a -t extra-google-m2repository
+#   - echo y | android update sdk -u -a -t extra-android-m2repository
+#   - echo y | android update sdk -u -a -t addon-google_apis-google-19
 
 # install:
 #   - echo y | android update sdk -u -a -t tools
