@@ -23,9 +23,4 @@ public class ExampleInstrumentedTest {
 
         assertEquals("nl.tudelft.ewi.ds.bankchain", appContext.getPackageName());
     }
-
-    @Test
-    public void failTest() throws Exception {
-        throw new Exception("CI test");
-    }
 }
