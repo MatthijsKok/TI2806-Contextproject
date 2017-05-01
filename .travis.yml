@@ -19,8 +19,8 @@ android:
     # androids to be downloaded and then the latest to be installed.
     - tools
     - tools
+    - platform-tools
     - build-tools-25.0.2
-    # - platform-tools
 
 
     # The BuildTools version used by your project
@@ -65,18 +65,21 @@ before_install:
 
 # before_script:
 #   # Create and start emulator
-#   - echo no | android create avd --force -n test -t android-25 --abi armeabi-v7a
+#   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
 #   - emulator -avd test -no-skin -no-audio -no-window &
 #   - android-wait-for-emulator
 #   - adb shell input keyevent 82 &
 
 # # Run tests
-# script: ./gradlew connectedAndroidTest
+script:
+#   - ./gradlew connectedAndroidTest
+  - ./gradlew build connectedCheck
 
 # Caching for speeding up builds
 before_cache:
   - rm -f  $HOME/BankChain/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/BankChain/.gradle/caches/*/plugin-resolution/
+
 cache:
   apt: true
   directories:
