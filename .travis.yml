@@ -45,9 +45,15 @@ before_script:
 
 # # Run tests
 script:
-  - "./gradlew clean build connectedCheck -PdisablePreDex -- stacktrace"
+  - "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
   # connectedAndroidTest
   # - ./gradlew build connectedCheck
+
+# script:
+#   - bash gradlew test jacocoTestReport
+
+# after_success:
+  # - bash <(curl -s https://codecov.io/bash)
 
 # Caching for speeding up builds
 before_cache:
