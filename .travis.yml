@@ -1,86 +1,54 @@
 language: android
 jdk: oraclejdk8
-sudo: false
+sudo: required
 
 env:
   global:
-    - GRADLE_USER_HOME=${TRAVIS_BUILD_DIR}/gradle
-    - ANDROID_HOME=${TRAVIS_BUILD_DIR}/android-sdk
-    - SDK=${TRAVIS_BUILD_DIR}/android-sdk
-    - PATH=${GRADLE_USER_HOME}/bin/:${SDK}/:${SDK}/tools/:${SDK}/platform-tools/:${PATH}
-    - ANDROID_TARGET=android-25
-    - ANDROID_ABI=armeabi-v7a
-    - ADB_INSTALL_TIMEOUT=8
+    - ANDROID_API=24
+    - EMULATOR_API=21
+    - ANDROID_BUILD_TOOLS=24.0.2
+    - ADB_INSTALL_TIMEOUT=5 # minutes
 
 android:
   components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    # The double 'tools' is intended. It causes the latest list of
-    # androids to be downloaded and then the latest to be installed.
     - tools
     - platform-tools
-    - tools
-    - build-tools-25.0.2
-    - build-tools-22.0.1
-
-
-    # The BuildTools version used by your project
-    # - build-tools-25.0.2
-
-    # The SDK version used to compile your project
-    - android-25
-    - android-22
-
-    # Additional components
-    # - extra-google-m2repository # Google play service
-    - extra-android-m2repository # Design support library
-    # - addon-google_apis-google-19
-
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
-    # - sys-img-armeabi-v7a-addon-google_apis-google-25
-    # - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
-    - sys-img-armeabi-v7a-android-22
-
+    - build-tools-$ANDROID_BUILD_TOOLS
+    - android-$ANDROID_API
+    - android-$EMULATOR_API_LEVEL
+    - extra-google-m2repository
+    - extra-android-m2repository # for design library
+    - addon-google_apis-google-19 # google play services
+    - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
+    - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API_LEVEL
   licenses:
-    - 'android-sdk-license-.+'
-    - 'google-gdk-license-.+'
+    - android-sdk-preview-license-.+
+    - android-sdk-license-.+
+    - google-gdk-license-.+
 
 # Move into the project folder
 # before_script: cd BankChain
 before_install:
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" >
+  "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+  - chmod +x gradlew
   - cd BankChain
-
-# install:
-#   - echo y | android update sdk -u -a -t tools
-#   - echo y | android update sdk -u -a -t platform-tools
-#   - echo y | android update sdk -u -a -t build-tools-25.0.2
-#   - echo y | android update sdk -u -a -t android-25
-#   - echo y | android update sdk -u -a -t extra-google-google_play_services
-#   - echo y | android update sdk -u -a -t extra-google-m2repository
-#   - echo y | android update sdk -u -a -t extra-android-m2repository
-#   - echo y | android update sdk -u -a -t addon-google_apis-google-19
-
-# install:
-#   - echo y | android update sdk -u -a -t tools
-#   - echo y | android update sdk -u -a -t platform-tools
-#   - echo y | android update sdk -u -a -t build-tools-25.0.2
-#   - echo y | android update sdk -u -a -t android-25
-#   - echo y | android update sdk -u -a -t extra-google-m2repository
-#   - echo y | android update sdk -u -a -t extra-android-m2repository
+  - ./gradlew dependencies || true
 
 before_script:
-  # Create and start emulator
-  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+  Create and start emulator
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
 # # Run tests
 script:
-#   - ./gradlew connectedAndroidTest
-  - ./gradlew build connectedCheck
+  - "./gradlew clean build connectedCheck -PdisablePreDex -- stacktrace"
+  # connectedAndroidTest
+  # - ./gradlew build connectedCheck
 
 # Caching for speeding up builds
 before_cache:
