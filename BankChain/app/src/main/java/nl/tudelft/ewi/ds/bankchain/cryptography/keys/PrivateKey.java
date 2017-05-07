@@ -2,9 +2,11 @@ package nl.tudelft.ewi.ds.bankchain.cryptography.keys;
 
 public abstract class PrivateKey extends Key {
 
-    abstract PublicKey getPublicKey();
+    private PublicKey publicKey;
 
-    abstract String decodeMessage(String message);
+    public abstract PublicKey getPublicKey();
 
-    abstract String signMessage(String message);
+    public abstract String decodeMessage(String message);
+
+    public abstract String signMessage(String message);
 }

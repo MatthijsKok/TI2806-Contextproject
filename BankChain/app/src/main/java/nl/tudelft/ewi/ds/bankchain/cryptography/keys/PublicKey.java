@@ -2,7 +2,7 @@ package nl.tudelft.ewi.ds.bankchain.cryptography.keys;
 
 public abstract class PublicKey extends Key {
 
-    abstract String encryptMessage(String message);
+    public abstract String encryptMessage(String message);
 
-    abstract boolean verifySignedMessage(String message);
+    public abstract boolean verifySignedMessage(String message);
 }
