@@ -1,5 +1,7 @@
 package nl.tudelft.ewi.ds.bankchain.cryptography;
 
+import java.security.SignatureException;
+
 import nl.tudelft.ewi.ds.bankchain.cryptography.keys.PrivateKey;
 import nl.tudelft.ewi.ds.bankchain.cryptography.keys.PublicKey;
 
@@ -12,19 +14,32 @@ public class Response {
 
     private Challenge challenge;
     private String secret;
+    private String signature;
     private String encryptedResponse;
     private PrivateKey responderPrivateKey;
 
-    public Response(Challenge challenge, PrivateKey responderSK) {
+    public Response(Challenge challenge, PrivateKey responderSK) throws SignatureException {
         this.challenge = challenge;
         this.responderPrivateKey = responderSK;
 
         this.secret = decryptChallenge();
+        verifyChallengeSignature();
         this.encryptedResponse = encryptResponse();
+        this.signature = responderPrivateKey.signMessage(secret);
+    }
+
+    private void verifyChallengeSignature() throws SignatureException {
+        if (!challenge.getPublicKey().verifySignedMessage(secret, challenge.getSignature())) {
+            throw new SignatureException("The signature of the Challenge is invalid");
+        }
     }
 
     public String getEncryptedResponse() {
         return this.encryptedResponse;
+    }
+
+    public String getSignature() {
+        return this.signature;
     }
 
     public PublicKey getPublicKey() {
