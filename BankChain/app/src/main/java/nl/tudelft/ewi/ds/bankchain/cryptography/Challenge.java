@@ -3,6 +3,7 @@ package nl.tudelft.ewi.ds.bankchain.cryptography;
 import android.util.Base64;
 
 import java.security.SecureRandom;
+import java.security.SignatureException;
 
 import nl.tudelft.ewi.ds.bankchain.cryptography.keys.PrivateKey;
 import nl.tudelft.ewi.ds.bankchain.cryptography.keys.PublicKey;
@@ -24,9 +25,21 @@ public class Challenge {
     public Challenge(PrivateKey challengerPrivateKey, PublicKey responderPublicKey) {
         this.challengerPrivateKey = challengerPrivateKey;
 
+        generateChallenge();
+        signChallenge();
+        encryptChallenge(responderPublicKey);
+    }
+
+    private void generateChallenge() {
         this.seed = new SecureRandom().generateSeed(SEED_LENGTH);
         this.secret = Base64.encodeToString(seed, Base64.NO_WRAP);
+    }
+
+    private void signChallenge() {
         this.signature = challengerPrivateKey.signMessage(secret);
+    }
+
+    private void encryptChallenge(PublicKey responderPublicKey) {
         this.encryptedSecret = responderPublicKey.encryptMessage(secret);
     }
 
@@ -43,8 +56,18 @@ public class Challenge {
     }
 
     public boolean verifyResponse(Response response) {
-        String decodedResponse = challengerPrivateKey.decodeMessage(response.getEncryptedResponse());
-        return response.getPublicKey().verifySignedMessage(decodedResponse, response.getSignature())
-            && decodedResponse.equals(secret);
+        try {
+            verifyResponseSignature(response);
+        } catch (SignatureException e) {
+            return false;
+        }
+        return secret.equals(challengerPrivateKey.decodeMessage(response.getEncryptedResponse()));
+    }
+
+    private boolean verifyResponseSignature(Response response) throws SignatureException {
+        if (!response.getPublicKey().verifySignedMessage(secret, response.getSignature())) {
+            throw new SignatureException("The signature of the Response is invalid!");
+        }
+        return true;
     }
 }

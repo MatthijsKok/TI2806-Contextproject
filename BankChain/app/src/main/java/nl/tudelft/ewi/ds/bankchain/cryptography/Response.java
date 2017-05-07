@@ -22,16 +22,29 @@ public class Response {
         this.challenge = challenge;
         this.responderPrivateKey = responderSK;
 
-        this.secret = decryptChallenge();
+        decryptChallenge();
         verifyChallengeSignature();
-        this.encryptedResponse = encryptResponse();
+        signResponse();
+        encryptResponse();
+    }
+
+    private void decryptChallenge() {
+        this.secret = this.responderPrivateKey.decodeMessage(challenge.getEncryptedChallenge());
+    }
+
+    private boolean verifyChallengeSignature() throws SignatureException {
+        if (!challenge.getPublicKey().verifySignedMessage(secret, challenge.getSignature())) {
+            throw new SignatureException("The signature of the Challenge is invalid!");
+        }
+        return true;
+    }
+
+    private void signResponse() {
         this.signature = responderPrivateKey.signMessage(secret);
     }
 
-    private void verifyChallengeSignature() throws SignatureException {
-        if (!challenge.getPublicKey().verifySignedMessage(secret, challenge.getSignature())) {
-            throw new SignatureException("The signature of the Challenge is invalid");
-        }
+    private void encryptResponse() {
+        this.encryptedResponse = this.challenge.getPublicKey().encryptMessage(secret);
     }
 
     public String getEncryptedResponse() {
@@ -44,13 +57,5 @@ public class Response {
 
     public PublicKey getPublicKey() {
         return this.responderPrivateKey.getPublicKey();
-    }
-
-    private String decryptChallenge() {
-        return this.responderPrivateKey.decodeMessage(challenge.getEncryptedChallenge());
-    }
-
-    private String encryptResponse() {
-        return challenge.getPublicKey().encryptMessage(secret);
     }
 }
