@@ -21,4 +21,6 @@
         </activity>
     </application>
 
+    <!-- Permission to talk to banks -->
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
