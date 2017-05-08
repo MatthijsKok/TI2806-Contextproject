@@ -5,9 +5,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import nl.tudelft.ewi.ds.bankchain.bank.Bank;
+import nl.tudelft.ewi.ds.bankchain.bank.Session;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +31,14 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+
+
+        Bank b = new BunqBank();
+        Session s = b.createSession();
+        Log.d("BankChain_D", s.toString());
+        Log.d("BankChain_D", "Hello world");
     }
 
     @Override
