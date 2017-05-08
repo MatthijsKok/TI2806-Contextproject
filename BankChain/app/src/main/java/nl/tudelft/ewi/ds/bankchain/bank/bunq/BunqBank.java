@@ -9,6 +9,8 @@ public final class BunqBank extends Bank {
     public Session createSession() {
         BunqSession session = new BunqSession();
 
+        session.openSession();
+
         return session;
     }
 }

@@ -32,3 +32,16 @@
 -keepattributes Signature
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+
+# Streamsupport
+-keep class java8.** { *; }
+-dontwarn java8.**
+
+
+-optimizationpasses 5
+-overloadaggressively
+-repackageclasses ''
+-allowaccessmodification
+
+-keep class com.google.**
+-dontwarn com.google.**
