@@ -3,6 +3,11 @@ package nl.tudelft.ewi.ds.bankchain.cryptography.keys;
 
 import android.util.Base64;
 
+/**
+ * The abstract Key class.
+ * This class holds the raw byte[] that is the key.
+ * Implements some methods to encode the Key to Strings and back.
+ */
 abstract class Key {
 
     private byte[] data;
