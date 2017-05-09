@@ -1,5 +1,8 @@
 package nl.tudelft.ewi.ds.bankchain.bank;
 
+import java.math.BigInteger;
+import java.util.LongSummaryStatistics;
+
 public class IBANVerifier {
 
     /**
@@ -14,7 +17,6 @@ public class IBANVerifier {
         /*
         An IBAN is validated by converting it into an integer and performing a basic mod-97 operation (as described in ISO 7064) on it. If the IBAN is valid, the remainder equals 1.[Note 1] The algorithm of IBAN validation is as follows:[8]
 
-        Check that the total IBAN length is correct as per the country. If not, the IBAN is invalid
         Move the four initial characters to the end of the string
         Replace each letter in the string with two digits, thereby expanding the string, where A = 10, B = 11, ..., Z = 35
         Interpret the string as a decimal integer and compute the remainder of that number on division by 97
@@ -26,7 +28,32 @@ public class IBANVerifier {
         • Rearrange:		W E S T12345698765432 G B82
         • Convert to integer:		3214282912345698765432161182
         • Compute remainder:		3214282912345698765432161182	mod 97 = 1
-        */
-        return false;
+        */                      //321428291234569876543216118
+
+        // check if iban is within the allowed length paramaters
+        if(iban.length()<15 || iban.length()>34){
+            return false;
+        }
+        // complete all operations that allow for 11 proof
+        BigInteger converted = converter(iban);
+        // perform 11 proof
+        return  converted.mod(BigInteger.valueOf(97)).equals(BigInteger.ONE);
+    }
+
+    private static BigInteger converter(String Iban){
+        // take first foout characters and put them at the back
+        String arranged = Iban.substring(4) + Iban.substring(0,4) ;
+        StringBuilder result = new StringBuilder();
+        //interchange any letter with the corresponding digit
+        for (char c:arranged.toCharArray()) {
+            int val = c;
+            if (c < 65) {
+                result.append(c);
+            } else {
+                result.append(val - 55);
+            }
+        }
+        //return value as a number
+        return new BigInteger(result.toString());
     }
 }

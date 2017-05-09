@@ -26,7 +26,7 @@ public final class BunqSession extends Session {
     counter
 
     server public key
-    client-auth
+    client-auth token
     device server id
     device IP
     session id

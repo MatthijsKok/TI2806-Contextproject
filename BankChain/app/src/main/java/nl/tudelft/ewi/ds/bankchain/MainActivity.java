@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
+import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
+import nl.tudelft.ewi.ds.bankchain.bank.Environment;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,10 +33,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Environment v = new Environment();
+        v.Bank = "Bunq";
+        v.Url = "https://jsonplaceholder.typicode.com/";
 
-
-
-        Bank b = new BunqBank();
+        Bank b = new BankFactory(v).create();
         b.createSession();
     }
 
