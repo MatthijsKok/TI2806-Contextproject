@@ -11,9 +11,9 @@ public class BankFactory {
     }
 
     public Bank create(){
-        switch (env.Bank) {
+        switch (env.bank) {
             case "Bunq":
-                return new BunqBank(env.Url);
+                return new BunqBank(env.url);
             case "Mock":
                 return new MockBank();
             default:
