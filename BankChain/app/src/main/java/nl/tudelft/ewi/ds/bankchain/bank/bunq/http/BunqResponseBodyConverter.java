@@ -17,7 +17,6 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq.http;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
@@ -25,17 +24,14 @@ import com.google.gson.stream.JsonReader;
 
 import java.io.IOException;
 
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqSession;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 
 final class BunqResponseBodyConverter<T> implements Converter<ResponseBody, T> {
-    private final BunqSession session;
     private final Gson gson;
     private final TypeAdapter<T> adapter;
 
-    BunqResponseBodyConverter(BunqSession session, @NonNull Gson gson, TypeAdapter<T> adapter) {
-        this.session = session;
+    BunqResponseBodyConverter(@NonNull Gson gson, TypeAdapter<T> adapter) {
         this.gson = gson;
         this.adapter = adapter;
     }
@@ -43,15 +39,6 @@ final class BunqResponseBodyConverter<T> implements Converter<ResponseBody, T> {
     @Override
     public T convert(ResponseBody value) throws IOException {
         JsonReader jsonReader = gson.newJsonReader(value.charStream());
-
-        // If a session exists and it has a public key
-        // Get the server sign
-        // if server sign is not available, exception (otherwise removing the header circumvents checks)
-        // Calculate body
-        // Verify body with signature
-
-        // TODO: Add check for server signature
-        Log.d("SESSION", "Handle converting of response body with session");
 
         try {
             return adapter.read(jsonReader);
