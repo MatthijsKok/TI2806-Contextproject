@@ -36,9 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Bank b = new BunqBank();
-        Session s = b.createSession();
-        Log.d("BankChain_D", s.toString());
-        Log.d("BankChain_D", "Hello world");
+        b.createSession();
     }
 
     @Override

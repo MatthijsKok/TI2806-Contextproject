@@ -13,9 +13,9 @@ import java.util.concurrent.ExecutionException;
 import java8.util.concurrent.CompletableFuture;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.http.BunqConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.adapter.java8.Java8CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
 public final class BunqSession extends Session {
@@ -38,58 +38,34 @@ public final class BunqSession extends Session {
     private SignHelper signHelper;
     private PublicKey serverPublicKey;
 
-    public class Post {
-        int userId;
-        int id;
-        String title;
-        String body;
+    /**
+     * Package-private constructor. Use BunqBank to start a session.
+     */
+    BunqSession() {
     }
 
-    interface Service {
-        @GET("/posts") CompletableFuture<List<Post>> body();
-//        @GET("/posts/{post}") CompletableFuture<List<Image>> body();
-    }
-
-    public BunqSession() {
-    }
-
-    public void openSession() {
+    /**
+     * Do installation of a client public key to the Bunq servers.
+     */
+    public void doInstallation() {
 
         // Create a keypair for the client
-        this.clientKeyPair = this.createClientKeyPair();
+        clientKeyPair = this.createClientKeyPair();
 
 
         // Send public key to server
         // DO POST to /installation
         // Receive public server key
 
-        this.serverPublicKey = null;
 
-        this.signHelper = new SignHelper(this.clientKeyPair, this.serverPublicKey);
+        // TODO once result is in:
+        serverPublicKey = null;
+        signHelper = new SignHelper(clientKeyPair, serverPublicKey);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(Java8CallAdapterFactory.create())
-                .build();
-        Service service = retrofit.create(Service.class);
-
-        CompletableFuture<List<Post>> future = service.body();
-
-        try {
-            List<Post> posts = future.get();
-            Log.d("APP", String.format("%d", posts.size()));
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void testMsg() {
-        Log.d("APP", "Hello World!");
     }
 
     public SignHelper getSignHelper() {
-        return this.signHelper;
+        return signHelper;
     }
 
     /**
@@ -120,7 +96,7 @@ public final class BunqSession extends Session {
 
     @Override
     public boolean isValid() {
-        return false;
+        return true;
     }
 }
 

@@ -51,7 +51,6 @@ dependencies {
 
     // HTTP library
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
 
     // Java 8 streams and async
     compile 'net.sourceforge.streamsupport:streamsupport:1.5.4'
@@ -61,6 +60,6 @@ dependencies {
     compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.4'
 
     // JSON parsing and serializing
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
+    compile 'com.google.code.gson:gson:2.8.0'
     testCompile 'junit:junit:4.12'
 }
