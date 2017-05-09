@@ -1,5 +1,7 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import android.support.annotation.Nullable;
+
 /**
  * A session store.
  *
@@ -9,6 +11,7 @@ package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 public class SessionStore {
     private BunqSession session = null;
 
+    @Nullable
     public BunqSession get() {
         return session;
     }

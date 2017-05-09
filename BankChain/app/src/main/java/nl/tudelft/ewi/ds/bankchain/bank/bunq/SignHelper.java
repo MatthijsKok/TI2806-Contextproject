@@ -71,24 +71,3 @@ class SignHelper {
         return false;
     }
 }
-
-/*
-    Use Signature
-
-    initVerify(public) of server
-
-    initSign(privatekey) of client
-    initSign(private, secure)
-
-method: SHA256withRSA
-
-        Signature s = Signature.getInstance("SHA256withRSA")
-        s.initSign(privateKey) // of client
-        s.update(dataToSign bytes)
-        bytes = s.sign()
-
-
-        s.initVerify(publicKey) // of server
-        s.verify(byte[] signature)
-
-        */

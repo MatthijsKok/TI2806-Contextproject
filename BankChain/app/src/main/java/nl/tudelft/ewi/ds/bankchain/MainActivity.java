@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
-import nl.tudelft.ewi.ds.bankchain.bank.Session;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 
 public class MainActivity extends AppCompatActivity {

@@ -1,5 +1,6 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.List;
@@ -22,20 +23,44 @@ public final class BunqBank extends Bank {
     private Retrofit retrofit;
 
     public BunqBank() {
-        this.sessionStore = new SessionStore();
+        this("https://jsonplaceholder.typicode.com/");
+    }
+
+    public BunqBank(@NonNull String url) {
+        sessionStore = new SessionStore();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(BunqConverterFactory.create(sessionStore))
+                .addCallAdapterFactory(Java8CallAdapterFactory.create())
+                .build();
     }
 
     @Override
     public void createSession() {
-        BunqSession session = new BunqSession();
+        BunqSession session = new BunqSession(this);
         sessionStore.set(session);
 
-        this.createRetrofit();
+
 
         // Install new client pubkey at Bunq
         session.doInstallation();
 
 
+
+
+
+        // TODO: remove this, is a test
+        Service service = retrofit.create(Service.class);
+
+        CompletableFuture<List<Post>> future = service.body();
+        try {
+            List<Post> posts = future.get();
+            Log.d("APP", String.format("%d", posts.size()));
+        } catch (InterruptedException | ExecutionException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -56,27 +81,4 @@ public final class BunqBank extends Bank {
         @GET("/posts") CompletableFuture<List<Post>> body();
     }
 
-    /**
-     * Create Retrofit, our HTTP system.
-     */
-    private void createRetrofit() {
-        // Create Retrofit setup
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/") // TODO: use configured URL
-                .addConverterFactory(BunqConverterFactory.create(sessionStore))
-                .addCallAdapterFactory(Java8CallAdapterFactory.create())
-                .build();
-
-        // TODO: remove this, is a test
-        Service service = retrofit.create(Service.class);
-
-        CompletableFuture<List<Post>> future = service.body();
-        try {
-            List<Post> posts = future.get();
-            Log.d("APP", String.format("%d", posts.size()));
-        } catch (InterruptedException | ExecutionException e)
-        {
-            e.printStackTrace();
-        }
-    }
 }

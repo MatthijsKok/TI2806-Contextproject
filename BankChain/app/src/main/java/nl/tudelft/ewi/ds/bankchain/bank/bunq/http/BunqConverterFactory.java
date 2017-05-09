@@ -56,13 +56,13 @@ public final class BunqConverterFactory extends Converter.Factory {
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
 
-        return new BunqResponseBodyConverter(sessionStore.get(), gson, adapter);
+        return new BunqResponseBodyConverter<>(sessionStore.get(), gson, adapter);
     }
 
     @Override
     public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
         TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(type));
 
-        return new BunqRequestBodyConverter(sessionStore.get(), gson, adapter);
+        return new BunqRequestBodyConverter<>(sessionStore.get(), gson, adapter);
     }
 }

@@ -34,6 +34,11 @@ public final class BunqSession extends Session {
     token date = Response[1].Token.created
     */
 
+    /**
+     * Store the bank to access Retrofit
+     */
+    private BunqBank bank;
+
     private KeyPair clientKeyPair;
     private SignHelper signHelper;
     private PublicKey serverPublicKey;
@@ -41,7 +46,10 @@ public final class BunqSession extends Session {
     /**
      * Package-private constructor. Use BunqBank to start a session.
      */
-    BunqSession() {
+    BunqSession(BunqBank bank) {
+        this.bank = bank;
+
+        // TODO: get current ip and store
     }
 
     /**
