@@ -51,6 +51,7 @@ dependencies {
 
     // HTTP library
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
 
     // Java 8 streams and async
     compile 'net.sourceforge.streamsupport:streamsupport:1.5.4'

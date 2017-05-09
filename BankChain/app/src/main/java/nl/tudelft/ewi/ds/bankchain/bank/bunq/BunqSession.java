@@ -1,32 +1,18 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
-import android.util.Log;
-
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import java8.util.concurrent.CompletableFuture;
-
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.http.BunqConverterFactory;
-import retrofit2.Retrofit;
-import retrofit2.adapter.java8.Java8CallAdapterFactory;
-import retrofit2.http.GET;
 
 public final class BunqSession extends Session {
     /*
-    private key
-    public key
 
     counter
 
-    server public key
-    client-auth
+    client-auth token
     device server id
     device IP
     session id
@@ -39,15 +25,25 @@ public final class BunqSession extends Session {
      */
     private BunqBank bank;
 
-    private KeyPair clientKeyPair;
+    public KeyPair clientKeyPair;
     private SignHelper signHelper;
     private PublicKey serverPublicKey;
+
+    /**
+     * Simple counter for sending unique requests.
+     *
+     * Used for Request-Id by Bunq.
+     */
+    private long requestId;
 
     /**
      * Package-private constructor. Use BunqBank to start a session.
      */
     BunqSession(BunqBank bank) {
         this.bank = bank;
+
+        SecureRandom r = new SecureRandom();
+        this.requestId = r.nextLong();
 
         // TODO: get current ip and store
     }
@@ -56,7 +52,6 @@ public final class BunqSession extends Session {
      * Do installation of a client public key to the Bunq servers.
      */
     public void doInstallation() {
-
         // Create a keypair for the client
         clientKeyPair = this.createClientKeyPair();
 
@@ -69,7 +64,6 @@ public final class BunqSession extends Session {
         // TODO once result is in:
         serverPublicKey = null;
         signHelper = new SignHelper(clientKeyPair, serverPublicKey);
-
     }
 
     public SignHelper getSignHelper() {
@@ -105,6 +99,22 @@ public final class BunqSession extends Session {
     @Override
     public boolean isValid() {
         return true;
+    }
+
+    public String getNextRequestId() {
+        return String.valueOf(++requestId);
+    }
+
+    /**
+     * Get wether the session contains the public key for the server.
+     *
+     * Only after the installation step this is available, and only
+     * after that step all calls have to have a valid signature.
+     *
+     * @return true when there is a server public key.
+     */
+    public boolean hasServerPublicKey() {
+        return serverPublicKey != null;
     }
 }
 

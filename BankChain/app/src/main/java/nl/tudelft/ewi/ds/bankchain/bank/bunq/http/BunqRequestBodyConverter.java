@@ -17,7 +17,6 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq.http;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
@@ -28,7 +27,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqSession;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okio.Buffer;
@@ -37,12 +35,10 @@ import retrofit2.Converter;
 final class BunqRequestBodyConverter<T> implements Converter<T, RequestBody> {
     private static final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=UTF-8");
 
-    private final BunqSession session;
     private final Gson gson;
     private final TypeAdapter<T> adapter;
 
-    BunqRequestBodyConverter(BunqSession session, @NonNull Gson gson, TypeAdapter<T> adapter) {
-        this.session = session;
+    BunqRequestBodyConverter(@NonNull Gson gson, TypeAdapter<T> adapter) {
         this.gson = gson;
         this.adapter = adapter;
     }
@@ -60,23 +56,11 @@ final class BunqRequestBodyConverter<T> implements Converter<T, RequestBody> {
         RequestBody requestBody = RequestBody.create(MEDIA_TYPE, buffer.readByteString());
         buffer.close();
 
-
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        // TODO: create a proper textual request body
-        // TODO: sign body with key
-        // TODO: set key in header
-
-        Log.d("SESSION", "Handle converting of request body with session");
-
-        // if there is a valid session
-        //  calculate content as string
-        //  sign it
-        //  set header
 
         return requestBody;
     }
