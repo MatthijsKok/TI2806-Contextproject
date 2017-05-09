@@ -1,11 +1,19 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import android.util.Log;
+
+import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.util.concurrent.ExecutionException;
+
+import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.InstallationService;
+import retrofit2.HttpException;
 
 public final class BunqSession extends Session {
     /*
@@ -33,6 +41,8 @@ public final class BunqSession extends Session {
     private SignHelper signHelper;
     private PublicKey serverPublicKey;
 
+    private String clientAuthenticationToken;
+
     /**
      * Simple counter for sending unique requests.
      *
@@ -52,21 +62,45 @@ public final class BunqSession extends Session {
         // TODO: get current ip and store
     }
 
+    public void createKeys() {
+        // Create a keypair for the client
+        clientKeyPair = this.createClientKeyPair();
+    }
+
     /**
      * Do installation of a client public key to the Bunq servers.
      */
+    // TODO: return a Future instead, so objects can be chained properly?
     public void doInstallation() {
-        // Create a keypair for the client
-        clientKeyPair = this.createClientKeyPair();
+        InstallationService service = bank.getRetrofit().create(InstallationService.class);
 
+        String key = BunqTools.publicKeyToString(this.clientKeyPair.getPublic());
 
-        // Send public key to server
-        // DO POST to /installation
-        // Receive public server key
+        InstallationService.CreateRequest bod = new InstallationService.CreateRequest(key);
+        CompletableFuture<InstallationService.CreateResponse> future = service.createInstallation(bod);
 
+        try {
+            InstallationService.CreateResponse resp = future.get();
 
-        // TODO once result is in:
-        serverPublicKey = null;
+            this.clientAuthenticationToken = resp.items.get(1).token.token;
+
+            PublicKey pub = BunqTools.stringToPublicKey(resp.items.get(2).publicKey.key);
+            this.serverPublicKey = pub;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            HttpException ex = (HttpException)e.getCause();
+
+            try {
+                Log.e("APP", ex.response().errorBody().string());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+            e.printStackTrace();
+        }
+
+        // Create the sign helper, now available with the server public key
         signHelper = new SignHelper(clientKeyPair, serverPublicKey);
     }
 
@@ -160,33 +194,5 @@ requests:
   - headers, sorted alphabetically by key, key and value separated by ": ", only Cache-Control, User-Agent and X-Bunq-. Separate using \n
   - two \n
   - request or response body
-
-
-sign using private key (of public key sent to server in first step)
-
-verify server signature using public key of server
-
-RSA keypair must be 2048 bits and adhere to PKCS #8.
-
-
-Create keypair
-
-Use Signature
-
-initVerify(public) of server
-
-initSign(privatekey) of client
-initSign(private, secure)
-
-method: SHA256withRSA
-
-Signature s = Signature.getInstance("SHA256withRSA")
-s.initSign(privateKey) // of client
-s.update(dataToSign bytes)
-bytes = s.sign()
-
-
-s.initVerify(publicKey) // of server
-s.verify(byte[] signature)
 
  */

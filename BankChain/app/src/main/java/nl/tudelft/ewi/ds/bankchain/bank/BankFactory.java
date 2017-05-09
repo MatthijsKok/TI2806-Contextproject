@@ -1,13 +1,7 @@
 package nl.tudelft.ewi.ds.bankchain.bank;
 
-import android.service.carrier.CarrierService;
-
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 import nl.tudelft.ewi.ds.bankchain.bank.mock.MockBank;
-
-/**
- * Created by Richard-HP on 09/05/2017.
- */
 
 public class BankFactory {
     private Environment env;

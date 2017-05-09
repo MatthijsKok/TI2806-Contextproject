@@ -1,5 +1,8 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq.api;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.security.PublicKey;
 import java.util.List;
 
 import java8.util.concurrent.CompletableFuture;
@@ -14,16 +17,22 @@ public interface InstallationService {
      * Response POJO for POST /installation.
      */
     class CreateResponse {
-        public List<Item> Response;
+        @SerializedName("Response")
+        public List<Item> items;
 
         /**
          * The response can contain multiple items, list them all.
          * If not used in the element of the array, it will be null.
          */
         public class Item {
-            public IdItem Id;
-            public GenericToken Token;
-            public PublicKeyItem ServerPublicKey;
+            @SerializedName("Id")
+            public IdItem id;
+
+            @SerializedName("Token")
+            public GenericToken token;
+
+            @SerializedName("ServerPublicKey")
+            public PublicKeyItem publicKey;
         }
 
         /**
@@ -37,15 +46,22 @@ public interface InstallationService {
          * Item with server public key.
          */
         public class PublicKeyItem {
-            public String server_public_key;
+            @SerializedName("server_public_key")
+            public String key;
         }
     }
 
     class CreateRequest {
-        public String client_public_key;
+        @SerializedName("client_public_key")
+        public String clientPublicKey;
+
+        // TODO add Tools static class.
+        /*public CreateRequest(PublicKey key) {
+            this(Tools.publicKeyToString(key));
+        }*/
 
         public CreateRequest(String key) {
-            this.client_public_key = key;
+            this.clientPublicKey = key;
         }
     }
 }

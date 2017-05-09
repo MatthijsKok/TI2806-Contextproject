@@ -5,14 +5,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankchain.bank.Environment;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         Environment v = new Environment();
         v.Bank = "Bunq";
-        v.Url = "https://jsonplaceholder.typicode.com/";
+        v.Url = "https://sandbox.public.api.bunq.com/";
 
         Bank b = new BankFactory(v).create();
         b.createSession();

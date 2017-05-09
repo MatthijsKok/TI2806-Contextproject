@@ -6,11 +6,9 @@ import java.io.IOException;
 
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqSession;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.SessionStore;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.internal.http.HttpHeaders;
 
 public class BunqInterceptor implements Interceptor {
     private final static String USER_AGENT = "BankChain";
@@ -21,7 +19,6 @@ public class BunqInterceptor implements Interceptor {
     private final static String REGION = "X-Bunq-Region";
     private final static String LANGUAGE = "X-Bunq-Language";
     private final static String GEOLOCATION = "X-Bunq-Geolocation";
-
 
     private BunqBank bank;
 
@@ -91,12 +88,8 @@ public class BunqInterceptor implements Interceptor {
                 // TODO: make proper exceptions that subclass IOException
                 throw new IOException("Bunq was spoofed: no server signature found");
             }
-
-
         }
 
         return builder.build();
     }
-
-
 }
