@@ -41,7 +41,12 @@ public final class BunqSession extends Session {
     private SignHelper signHelper;
     private PublicKey serverPublicKey;
 
-    private String clientAuthenticationToken;
+    public String clientAuthenticationToken;
+
+    /**
+     * Id fromt he Device Server, indicating our own device.
+     */
+    private int deviceServerId;
 
     /**
      * Simple counter for sending unique requests.
@@ -123,17 +128,19 @@ public final class BunqSession extends Session {
         try {
             DeviceServerService.CreateResponse response = future.get();
 
-            Log.d("APP", "Success!");
+            deviceServerId = response.items.get(0).id.id;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
-            HttpException ex = (HttpException)e.getCause();
+//            HttpException ex = (HttpException)e.getCause();
+//
+//            try {
+//                Log.e("APP", ex.response().errorBody().string());
+//            } catch (IOException e1) {
+//                e1.printStackTrace();
+//            }
 
-            try {
-                Log.e("APP", ex.response().errorBody().string());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            e.getCause().printStackTrace();
 
             e.printStackTrace();
         }

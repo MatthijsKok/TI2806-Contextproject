@@ -17,7 +17,7 @@ import retrofit2.http.POST;
  * @author Jos Kuijpers
  */
 public interface InstallationService {
-    @POST("v1//installation")
+    @POST("v1/installation")
     CompletableFuture<CreateResponse> createInstallation(@Body CreateRequest pubkey);
 
     /**

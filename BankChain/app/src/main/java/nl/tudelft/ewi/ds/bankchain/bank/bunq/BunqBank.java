@@ -63,6 +63,8 @@ public final class BunqBank extends Bank {
 
         // Install new client pubkey at Bunq
         session.doInstallation();
+
+        session.doDeviceRegistration();
     }
 
     @Override
