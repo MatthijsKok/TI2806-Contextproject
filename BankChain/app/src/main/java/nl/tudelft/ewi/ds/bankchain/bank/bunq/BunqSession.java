@@ -10,9 +10,15 @@ import java.util.concurrent.ExecutionException;
 
 import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.DeviceServerService;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.InstallationService;
 import retrofit2.HttpException;
 
+/**
+ * A session at the Bunq bank.
+ *
+ * @author Jos Kuijpers
+ */
 public final class BunqSession extends Session {
     /*
 
@@ -66,17 +72,15 @@ public final class BunqSession extends Session {
      * Do installation of a client public key to the Bunq servers.
      */
     // TODO: return a Future instead, so objects can be chained properly?
-    public void doInstallation() {
+    void doInstallation() {
         CompletableFuture<InstallationService.CreateResponse> future;
         InstallationService service;
         InstallationService.CreateRequest request;
-        String key;
 
         service = bank.getRetrofit().create(InstallationService.class);
 
         // Create the object to send to Bunq
-        key = BunqTools.publicKeyToString(clientKeyPair.getPublic());
-        request = new InstallationService.CreateRequest(key);
+        request = new InstallationService.CreateRequest(clientKeyPair.getPublic());
 
         future = service.createInstallation(request);
 
@@ -88,6 +92,38 @@ public final class BunqSession extends Session {
 
             // Create the sign helper, now available with the server public key
             signHelper = new SignHelper(clientKeyPair, serverPublicKey);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            HttpException ex = (HttpException)e.getCause();
+
+            try {
+                Log.e("APP", ex.response().errorBody().string());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+            e.printStackTrace();
+        }
+    }
+
+    void doDeviceRegistration() {
+        CompletableFuture<DeviceServerService.CreateResponse> future;
+        DeviceServerService service;
+        DeviceServerService.CreateRequest request;
+
+        service = bank.getRetrofit().create(DeviceServerService.class);
+
+        request = new DeviceServerService.CreateRequest();
+        request.description = "Test description";
+        request.secret = bank.getApiKey();
+
+        future = service.createDevice(request);
+
+        try {
+            DeviceServerService.CreateResponse response = future.get();
+
+            Log.d("APP", "Success!");
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

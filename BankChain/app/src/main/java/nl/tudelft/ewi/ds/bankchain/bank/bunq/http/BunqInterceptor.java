@@ -10,6 +10,14 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * HTTP interceptor for adding Bunq specific requirements.
+ *
+ * Adds headers and signature to responses.
+ * Verifies signature in requests.
+ *
+ * @author Jos Kuijpers
+ */
 public class BunqInterceptor implements Interceptor {
     private final static String USER_AGENT = "BankChain";
 

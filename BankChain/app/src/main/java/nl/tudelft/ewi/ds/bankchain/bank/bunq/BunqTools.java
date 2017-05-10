@@ -11,6 +11,11 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
+/**
+ * Tools for the Bunq system, used all over.
+ *
+ * @author Jos Kuijpers
+ */
 public final class BunqTools {
     /**
      * Write a string version of given public key, including PEM headers.
