@@ -4,8 +4,6 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.util.concurrent.ExecutionException;
@@ -20,10 +18,6 @@ public final class BunqSession extends Session {
 
     counter
 
-<<<<<<< HEAD
-    server public key
-=======
->>>>>>> 97d77802779a730157e609db5778fe161174c004
     client-auth token
     device server id
     device IP
@@ -56,6 +50,7 @@ public final class BunqSession extends Session {
     BunqSession(BunqBank bank) {
         this.bank = bank;
 
+        // TODO: this is not deterministic random in the app lifetime. Is that needed though?
         SecureRandom r = new SecureRandom();
         this.requestId = r.nextLong();
 
@@ -64,7 +59,7 @@ public final class BunqSession extends Session {
 
     public void createKeys() {
         // Create a keypair for the client
-        clientKeyPair = this.createClientKeyPair();
+        clientKeyPair = BunqTools.createClientKeyPair();
     }
 
     /**
@@ -72,20 +67,27 @@ public final class BunqSession extends Session {
      */
     // TODO: return a Future instead, so objects can be chained properly?
     public void doInstallation() {
-        InstallationService service = bank.getRetrofit().create(InstallationService.class);
+        CompletableFuture<InstallationService.CreateResponse> future;
+        InstallationService service;
+        InstallationService.CreateRequest request;
+        String key;
 
-        String key = BunqTools.publicKeyToString(this.clientKeyPair.getPublic());
+        service = bank.getRetrofit().create(InstallationService.class);
 
-        InstallationService.CreateRequest bod = new InstallationService.CreateRequest(key);
-        CompletableFuture<InstallationService.CreateResponse> future = service.createInstallation(bod);
+        // Create the object to send to Bunq
+        key = BunqTools.publicKeyToString(clientKeyPair.getPublic());
+        request = new InstallationService.CreateRequest(key);
+
+        future = service.createInstallation(request);
 
         try {
-            InstallationService.CreateResponse resp = future.get();
+            InstallationService.CreateResponse response = future.get();
 
-            this.clientAuthenticationToken = resp.items.get(1).token.token;
+            clientAuthenticationToken = response.items.get(1).token.token;
+            serverPublicKey = BunqTools.stringToPublicKey(response.items.get(2).publicKey.key);
 
-            PublicKey pub = BunqTools.stringToPublicKey(resp.items.get(2).publicKey.key);
-            this.serverPublicKey = pub;
+            // Create the sign helper, now available with the server public key
+            signHelper = new SignHelper(clientKeyPair, serverPublicKey);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -99,39 +101,10 @@ public final class BunqSession extends Session {
 
             e.printStackTrace();
         }
-
-        // Create the sign helper, now available with the server public key
-        signHelper = new SignHelper(clientKeyPair, serverPublicKey);
     }
 
     public SignHelper getSignHelper() {
         return signHelper;
-    }
-
-    /**
-     * Create a new keypair
-     *
-     * @return keypair or null
-     */
-    private KeyPair createClientKeyPair() {
-        SecureRandom random = null;
-        KeyPair pair;
-
-        try {
-            KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA");
-            random = SecureRandom.getInstance("SHA1PRNG");
-
-            // Bunq requires key size of 2048 bits
-            keygen.initialize(2048, random);
-
-            pair = keygen.generateKeyPair();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-
-            return null;
-        }
-
-        return pair;
     }
 
     @Override
@@ -139,12 +112,17 @@ public final class BunqSession extends Session {
         return true;
     }
 
+    /**
+     * Get a unique request id for Bunq calls.
+     *
+     * @return unique id (for this app session)
+     */
     public String getNextRequestId() {
         return String.valueOf(++requestId);
     }
 
     /**
-     * Get wether the session contains the public key for the server.
+     * Get whether the session contains the public key for the server.
      *
      * Only after the installation step this is available, and only
      * after that step all calls have to have a valid signature.
@@ -154,6 +132,8 @@ public final class BunqSession extends Session {
     public boolean hasServerPublicKey() {
         return serverPublicKey != null;
     }
+
+    // TODO: add saving to and loading from disk
 }
 
 /*
