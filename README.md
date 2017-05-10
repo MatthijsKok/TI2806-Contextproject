@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/MatthijsKok/TI2806-Contextproject/branch/develop/graph/badge.svg)](https://codecov.io/gh/MatthijsKok/TI2806-Contextproject)
+
 BankChain: increasing trust on the blockchain using IBAN verification
 =====================================================================
 
