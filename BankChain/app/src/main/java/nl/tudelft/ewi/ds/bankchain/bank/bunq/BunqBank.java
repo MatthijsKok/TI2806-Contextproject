@@ -59,6 +59,15 @@ public final class BunqBank extends Bank {
     }
 
     @Override
+    public ArrayList<Transaction> listTransactions(Session session) {
+        if(sessionStore.hasValidSession()){
+
+        }
+        return new ArrayList<Transaction>();
+
+    }
+
+    @Override
     public BunqSession getCurrentSession() {
         return sessionStore.get();
     }

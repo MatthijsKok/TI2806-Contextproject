@@ -2,6 +2,8 @@ package nl.tudelft.ewi.ds.bankchain.bank;
 
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 public abstract class Bank {
 
     // public abstract boolean isSandbox();
@@ -15,7 +17,7 @@ public abstract class Bank {
 //
 //    public abstract Optional<Session> createSession();
 //
-//    public abstract Optional<List<Transaction>> listTransactions(Session);
+     public abstract List<Transaction> listTransactions(Session session);
 //
 //    public abstract boolean sendTransaction(Session, Transaction);
 
