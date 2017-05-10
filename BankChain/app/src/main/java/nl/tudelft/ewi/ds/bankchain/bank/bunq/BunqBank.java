@@ -9,6 +9,11 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.java8.Java8CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Bank implementation for the Bunq bank.
+ *
+ * @author Jos Kuijpers
+ */
 public final class BunqBank extends Bank {
     private SessionStore sessionStore;
 
@@ -17,9 +22,10 @@ public final class BunqBank extends Bank {
      */
     private Retrofit retrofit;
 
-    public BunqBank() {
-        this("https://sandbox.public.api.bunq.com/");
-    }
+    /**
+     * API key from Bunq
+     */
+    private String apiKey;
 
     /**
      * Create a new bank inferface with given API url.
@@ -28,8 +34,9 @@ public final class BunqBank extends Bank {
      *
      * @param url URL of the Bunq API
      */
-    public BunqBank(@NonNull String url) {
+    public BunqBank(@NonNull String url, @NonNull String apiKey) {
         sessionStore = new SessionStore();
+        this.apiKey = apiKey;
 
         // Create a retrofit system with a JSON parser and Java8 async system
         Retrofit.Builder builder = new Retrofit.Builder()
@@ -56,6 +63,10 @@ public final class BunqBank extends Bank {
 
         // Install new client pubkey at Bunq
         session.doInstallation();
+
+        session.doDeviceRegistration();
+
+        session.doSessionStart();
     }
 
     @Override
@@ -77,7 +88,20 @@ public final class BunqBank extends Bank {
      *
      * @return http client.
      */
+    @NonNull
     public Retrofit getRetrofit() {
         return retrofit;
+    }
+
+    /**
+     * Get the API key.
+     *
+     * Only accessable by the Bunq package.
+     *
+     * @return Api key
+     */
+    @NonNull
+    String getApiKey() {
+        return apiKey;
     }
 }

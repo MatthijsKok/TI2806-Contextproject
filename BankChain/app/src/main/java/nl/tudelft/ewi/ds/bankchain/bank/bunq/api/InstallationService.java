@@ -6,11 +6,18 @@ import java.security.PublicKey;
 import java.util.List;
 
 import java8.util.concurrent.CompletableFuture;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTools;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
+/**
+ * Service for the installation endpoint.
+ * Creates a new installation (install of public client key)
+ *
+ * @author Jos Kuijpers
+ */
 public interface InstallationService {
-    @POST("v1//installation")
+    @POST("v1/installation")
     CompletableFuture<CreateResponse> createInstallation(@Body CreateRequest pubkey);
 
     /**
@@ -26,20 +33,13 @@ public interface InstallationService {
          */
         public class Item {
             @SerializedName("Id")
-            public IdItem id;
+            public GenericId id;
 
             @SerializedName("Token")
             public GenericToken token;
 
             @SerializedName("ServerPublicKey")
             public PublicKeyItem publicKey;
-        }
-
-        /**
-         * Item with an Id.
-         */
-        public class IdItem {
-            public int id;
         }
 
         /**
@@ -56,9 +56,9 @@ public interface InstallationService {
         public String clientPublicKey;
 
         // TODO add Tools static class.
-        /*public CreateRequest(PublicKey key) {
-            this(Tools.publicKeyToString(key));
-        }*/
+        public CreateRequest(PublicKey key) {
+            this(BunqTools.publicKeyToString(key));
+        }
 
         public CreateRequest(String key) {
             this.clientPublicKey = key;

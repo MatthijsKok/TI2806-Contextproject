@@ -1,5 +1,8 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import android.util.Base64;
+import android.util.Log;
+
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -9,7 +12,7 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
-class SignHelper {
+public class SignHelper {
 
     private PrivateKey clientPrivateKey;
     private PublicKey clientPublicKey;
@@ -36,16 +39,18 @@ class SignHelper {
     /**
      * Sign a message to be sent to the server
      */
-    String sign(String message) {
+    public String sign(String message) {
         try {
             Signature s = Signature.getInstance("SHA256withRSA");
-            s.initSign(this.clientPrivateKey);
+            s.initSign(clientPrivateKey);
 
+            // Load bytes into the signing system
             s.update(message.getBytes(StandardCharsets.UTF_8));
 
             byte[] signature = s.sign();
+            byte[] encoded = Base64.encode(signature, Base64.DEFAULT | Base64.NO_WRAP);
 
-            return new String(signature, StandardCharsets.UTF_8);
+            return new String(encoded, StandardCharsets.UTF_8);
         } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
             e.printStackTrace();
         }
@@ -56,14 +61,18 @@ class SignHelper {
     /**
      * Verify a signature from the server
      */
-    boolean verify(String message, String signature) {
+    public boolean verify(String message, String signature) {
         try {
             Signature s = Signature.getInstance("SHA256withRSA");
-            s.initVerify(this.serverPublicKey);
+            s.initVerify(serverPublicKey);
+
+            // Convert base64 signature into binary bytes
+            byte[] encodedSign = signature.getBytes(StandardCharsets.UTF_8);
+            byte[] decodedSign = Base64.decode(encodedSign, Base64.DEFAULT);
 
             s.update(message.getBytes(StandardCharsets.UTF_8));
 
-            return s.verify(signature.getBytes(StandardCharsets.UTF_8));
+            return s.verify(decodedSign);
         } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
             e.printStackTrace();
         }

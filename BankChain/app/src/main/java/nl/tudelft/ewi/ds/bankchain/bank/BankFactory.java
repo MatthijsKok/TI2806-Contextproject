@@ -13,7 +13,7 @@ public class BankFactory {
     public Bank create(){
         switch (env.bank) {
             case "Bunq":
-                return new BunqBank(env.url);
+                return new BunqBank(env.url, env.apiKey);
             case "Mock":
                 return new MockBank();
             default:
