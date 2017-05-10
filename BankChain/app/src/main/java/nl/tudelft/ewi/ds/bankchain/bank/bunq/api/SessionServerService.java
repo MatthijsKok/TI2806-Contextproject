@@ -2,27 +2,30 @@ package nl.tudelft.ewi.ds.bankchain.bank.bunq.api;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.security.PublicKey;
 import java.util.List;
 
 import java8.util.concurrent.CompletableFuture;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTools;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 /**
- * Service for the Device Server endpoint
+ * Service for session-server endpoint.
+ * Create a new session
  *
  * @author Jos Kuijpers
  */
-public interface DeviceServerService {
-    @POST("v1/device-server")
-    CompletableFuture<DeviceServerService.CreateResponse> createDevice(@Body DeviceServerService.CreateRequest request);
+public interface SessionServerService {
+    @POST("v1/session-server")
+    CompletableFuture<CreateResponse> createSession(@Body CreateRequest secret);
 
     /**
-     * Response POJO for POST /device-server.
+     * Response POJO for POST /session-server
      */
     class CreateResponse {
         @SerializedName("Response")
-        public List<Item> items;
+        public List<InstallationService.CreateResponse.Item> items;
 
         /**
          * The response can contain multiple items, list them all.
@@ -31,15 +34,16 @@ public interface DeviceServerService {
         public class Item {
             @SerializedName("Id")
             public GenericId id;
+
+            @SerializedName("Token")
+            public GenericToken token;
+
+//            @SerializedName("UserCompany")
+            // TODO: look into data that might be useful here
         }
     }
 
-    /**
-     * Reques POJO
-     */
     class CreateRequest {
-        public String description;
-
         /**
          * API key
          */

@@ -65,6 +65,8 @@ public final class BunqBank extends Bank {
         session.doInstallation();
 
         session.doDeviceRegistration();
+
+        session.doSessionStart();
     }
 
     @Override

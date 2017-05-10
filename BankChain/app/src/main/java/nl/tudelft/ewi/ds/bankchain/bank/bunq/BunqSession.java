@@ -12,6 +12,8 @@ import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.DeviceServerService;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.InstallationService;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.SessionServerService;
+import nl.tudelft.ewi.ds.bankchain.bank.network.NetUtils;
 import retrofit2.HttpException;
 
 /**
@@ -20,18 +22,6 @@ import retrofit2.HttpException;
  * @author Jos Kuijpers
  */
 public final class BunqSession extends Session {
-    /*
-
-    counter
-
-    client-auth token
-    device server id
-    device IP
-    session id
-    session token = client auth
-    token date = Response[1].Token.created
-    */
-
     /**
      * Store the bank to access Retrofit
      */
@@ -49,6 +39,16 @@ public final class BunqSession extends Session {
     private int deviceServerId;
 
     /**
+     * IP address connected to the session.
+     */
+    private String ipAddress;
+
+    /**
+     * Session id, can be used to end the session.
+     */
+    private int sessionId;
+
+    /**
      * Simple counter for sending unique requests.
      *
      * Used for Request-Id by Bunq.
@@ -64,8 +64,6 @@ public final class BunqSession extends Session {
         // TODO: this is not deterministic random in the app lifetime. Is that needed though?
         SecureRandom r = new SecureRandom();
         this.requestId = r.nextLong();
-
-        // TODO: get current ip and store
     }
 
     public void createKeys() {
@@ -103,7 +101,7 @@ public final class BunqSession extends Session {
             HttpException ex = (HttpException)e.getCause();
 
             try {
-                Log.e("APP", ex.response().errorBody().string());
+                Log.e("BUNQ", ex.response().errorBody().string());
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -120,7 +118,7 @@ public final class BunqSession extends Session {
         service = bank.getRetrofit().create(DeviceServerService.class);
 
         request = new DeviceServerService.CreateRequest();
-        request.description = "Test description";
+        request.description = "BankChain on Android";
         request.secret = bank.getApiKey();
 
         future = service.createDevice(request);
@@ -128,7 +126,42 @@ public final class BunqSession extends Session {
         try {
             DeviceServerService.CreateResponse response = future.get();
 
+            ipAddress = NetUtils.getIPAddress();
             deviceServerId = response.items.get(0).id.id;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+//            HttpException ex = (HttpException)e.getCause();
+//
+//            try {
+//                Log.e("APP", ex.response().errorBody().string());
+//            } catch (IOException e1) {
+//                e1.printStackTrace();
+//            }
+
+            e.getCause().printStackTrace();
+
+            e.printStackTrace();
+        }
+    }
+
+    void doSessionStart() {
+        CompletableFuture<SessionServerService.CreateResponse> future;
+        SessionServerService service;
+        SessionServerService.CreateRequest request;
+
+        service = bank.getRetrofit().create(SessionServerService.class);
+
+        request = new SessionServerService.CreateRequest();
+        request.secret = bank.getApiKey();
+
+        future = service.createSession(request);
+
+        try {
+            SessionServerService.CreateResponse response = future.get();
+
+            clientAuthenticationToken = response.items.get(1).token.token;
+            sessionId = response.items.get(0).id.id;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -152,6 +185,12 @@ public final class BunqSession extends Session {
 
     @Override
     public boolean isValid() {
+        // A session is useless when the IP address changed as it is bound
+        // to the tokens.
+        if (ipAddress != null && !ipAddress.equals(NetUtils.getIPAddress())) {
+            return false;
+        }
+
         return true;
     }
 
@@ -178,44 +217,3 @@ public final class BunqSession extends Session {
 
     // TODO: add saving to and loading from disk
 }
-
-/*
-
-Create:
-- create client public and private keypair (store)
-- create number: 1
-- send request to /installation with client pub key
-  - store installationId (Response[0].id.id)
-  - store token (Response.[1].Token.token) = Client-Authentication header dor [device and session]
-  - store server pub key (Response[2].ServerPublicKey)
-
-- send request to /device-server (signed)
--- with, in json, secret (API key)
--- store own IP for reference check
--- description (Random thing)
--- Client-Authentication header
-  - store id of DeviceServer (is  header), (Response[0].id.id)
-
-- send request to /session-server (signed)
-- provide Client-Authentication header
-- provide Client-Signature header
-- JSON: secret (API key)
- - store session id (Response[0].id.id) (to end session)
- - store session token (Response[1].Token.token) = Client-Authentication
-
-DONE
-
-
-Signing
-
-SHA256 hash, as base64 in X-Bunq-Client-Signature req, and X-Bunq-Server-Signature resp
-
-requests:
-  - for requests only: method in capitals, request endpoint url incl query string. "POST /v1/user"
-  - for response only: response code
-  - \n
-  - headers, sorted alphabetically by key, key and value separated by ": ", only Cache-Control, User-Agent and X-Bunq-. Separate using \n
-  - two \n
-  - request or response body
-
- */
