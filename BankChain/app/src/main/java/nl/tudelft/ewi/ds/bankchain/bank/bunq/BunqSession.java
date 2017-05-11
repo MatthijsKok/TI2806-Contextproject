@@ -31,7 +31,6 @@ public final class BunqSession extends Session {
     /**
      * Id fromt he Device Server, indicating our own device.
      */
-    @SuppressWarnings("unused")
     private int deviceServerId;
 
     /**
@@ -93,7 +92,7 @@ public final class BunqSession extends Session {
         });
     }
 
-    CompletableFuture<Void> doDeviceRegistration() {
+    CompletableFuture<Void> doDeviceRegistration(Void c) {
         CompletableFuture<DeviceServerService.CreateResponse> future;
         DeviceServerService service;
         DeviceServerService.CreateRequest request;
@@ -112,7 +111,7 @@ public final class BunqSession extends Session {
         });
     }
 
-    CompletableFuture<Void> doSessionStart() {
+    CompletableFuture<Void> doSessionStart(Void c) {
         CompletableFuture<SessionServerService.CreateResponse> future;
         SessionServerService service;
         SessionServerService.CreateRequest request;

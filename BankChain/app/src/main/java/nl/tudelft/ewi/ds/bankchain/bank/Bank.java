@@ -13,7 +13,7 @@ public abstract class Bank {
      *
      * TODO: currently not returned. Need to see how it turns out with futures etc.
      */
-    public abstract CompletableFuture createSession();
+    public abstract CompletableFuture<Session> createSession();
 //
 //    public abstract Optional<Session> createSession();
 //
