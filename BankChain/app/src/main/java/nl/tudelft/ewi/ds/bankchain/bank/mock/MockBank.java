@@ -2,6 +2,7 @@ package nl.tudelft.ewi.ds.bankchain.bank.mock;
 
 import android.support.annotation.Nullable;
 
+import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
 
@@ -17,8 +18,8 @@ public class MockBank extends Bank {
 
 
     @Override
-    public void createSession() {
-
+    public CompletableFuture createSession() {
+        return CompletableFuture.completedFuture(null);
     }
 
     @Nullable

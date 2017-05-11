@@ -1,8 +1,12 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java8.util.concurrent.CompletableFuture;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.ErrorResponse;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.http.BunqInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -54,7 +58,8 @@ public final class BunqBank extends Bank {
     }
 
     @Override
-    public void createSession() {
+    public CompletableFuture<Void> createSession() {
+        CompletableFuture<Void> future;
         BunqSession session = new BunqSession(this);
         sessionStore.set(session);
 
@@ -62,11 +67,19 @@ public final class BunqBank extends Bank {
         session.createKeys();
 
         // Install new client pubkey at Bunq
-        session.doInstallation();
+        future = session.doInstallation()
+                        .<Void>thenComposeAsync(session::doDeviceRegistration);
+//                        .thenCompose(() -> session.doSessionStart());
 
-        session.doDeviceRegistration();
+        future.exceptionally(e -> {
+            ErrorResponse er = ErrorResponse.parseError(this, e);
 
-        session.doSessionStart();
+            Log.e("BUNQ1", er.toString());
+
+            return null;
+        });
+
+        return future;
     }
 
     @Override

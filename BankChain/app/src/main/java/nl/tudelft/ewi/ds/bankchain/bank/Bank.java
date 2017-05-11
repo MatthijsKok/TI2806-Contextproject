@@ -2,6 +2,8 @@ package nl.tudelft.ewi.ds.bankchain.bank;
 
 import android.support.annotation.Nullable;
 
+import java8.util.concurrent.CompletableFuture;
+
 public abstract class Bank {
 
     // public abstract boolean isSandbox();
@@ -11,7 +13,7 @@ public abstract class Bank {
      *
      * TODO: currently not returned. Need to see how it turns out with futures etc.
      */
-    public abstract void createSession();
+    public abstract CompletableFuture createSession();
 //
 //    public abstract Optional<Session> createSession();
 //

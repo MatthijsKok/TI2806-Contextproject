@@ -61,7 +61,7 @@ public class BunqInterceptor implements Interceptor {
         builder.addHeader(REGION, "en_US");
         builder.addHeader(LANGUAGE, "en_US");
         builder.addHeader(GEOLOCATION, "0 0 0 0 000");
-        builder.addHeader("Cache-Control", "nocache");
+//        builder.addHeader("Cache-Control", "nocache");
 
         builder.removeHeader("User-Agent");
         builder.addHeader("User-Agent", USER_AGENT);
