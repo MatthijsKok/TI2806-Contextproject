@@ -25,7 +25,15 @@ public interface SessionServerService {
      */
     class CreateResponse {
         @SerializedName("Response")
-        public List<InstallationService.CreateResponse.Item> items;
+        List<Item> items;
+
+        public GenericId getId() {
+            return items.get(0).id;
+        }
+
+        public GenericToken getToken() {
+            return items.get(1).token;
+        }
 
         /**
          * The response can contain multiple items, list them all.

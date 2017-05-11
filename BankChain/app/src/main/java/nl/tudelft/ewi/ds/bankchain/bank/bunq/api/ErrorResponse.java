@@ -1,7 +1,6 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq.api;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 

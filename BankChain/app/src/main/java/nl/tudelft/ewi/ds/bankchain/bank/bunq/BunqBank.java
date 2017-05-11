@@ -19,7 +19,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @author Jos Kuijpers
  */
 public final class BunqBank extends Bank {
-    private SessionStore sessionStore;
+    /**
+     * Current session
+     */
+    private BunqSession session;
 
     /**
      * HTTP endpoint.
@@ -39,7 +42,6 @@ public final class BunqBank extends Bank {
      * @param url URL of the Bunq API
      */
     public BunqBank(@NonNull String url, @NonNull String apiKey) {
-        sessionStore = new SessionStore();
         this.apiKey = apiKey;
 
         // Create a retrofit system with a JSON parser and Java8 async system
@@ -60,16 +62,15 @@ public final class BunqBank extends Bank {
     @Override
     public CompletableFuture<Void> createSession() {
         CompletableFuture<Void> future;
-        BunqSession session = new BunqSession(this);
-        sessionStore.set(session);
+        session = new BunqSession(this);
 
         // TODO: the keys could be stored instead
         session.createKeys();
 
         // Install new client pubkey at Bunq
-        future = session.doInstallation()
-                        .<Void>thenComposeAsync(session::doDeviceRegistration);
-//                        .thenCompose(() -> session.doSessionStart());
+        future = session.doInstallation();
+        session.doDeviceRegistration();
+        session.doSessionStart();
 
         future.exceptionally(e -> {
             ErrorResponse er = ErrorResponse.parseError(this, e);
@@ -84,7 +85,7 @@ public final class BunqBank extends Bank {
 
     @Override
     public BunqSession getCurrentSession() {
-        return sessionStore.get();
+        return session;
     }
 
     /**

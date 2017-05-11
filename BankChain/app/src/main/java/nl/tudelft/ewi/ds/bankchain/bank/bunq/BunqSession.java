@@ -3,7 +3,6 @@ package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 import java.security.KeyPair;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.util.concurrent.ExecutionException;
 
 import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
@@ -32,6 +31,7 @@ public final class BunqSession extends Session {
     /**
      * Id fromt he Device Server, indicating our own device.
      */
+    @SuppressWarnings("unused")
     private int deviceServerId;
 
     /**
@@ -42,6 +42,7 @@ public final class BunqSession extends Session {
     /**
      * Session id, can be used to end the session.
      */
+    @SuppressWarnings("unused")
     private int sessionId;
 
     /**
@@ -84,8 +85,8 @@ public final class BunqSession extends Session {
         future = service.createInstallation(request);
 
         return future.thenAccept((InstallationService.CreateResponse response) -> {
-            clientAuthenticationToken = response.items.get(1).token.token;
-            serverPublicKey = BunqTools.stringToPublicKey(response.items.get(2).publicKey.key);
+            clientAuthenticationToken = response.getToken().token;
+            serverPublicKey = BunqTools.stringToPublicKey(response.getPublicKey().key);
 
             // Create the sign helper, now available with the server public key
             signHelper = new SignHelper(clientKeyPair, serverPublicKey);
@@ -107,7 +108,7 @@ public final class BunqSession extends Session {
 
         return future.thenAccept((DeviceServerService.CreateResponse response) -> {
             ipAddress = NetUtils.getIPAddress();
-            deviceServerId = response.items.get(0).id.id;
+            deviceServerId = response.getId().id;
         });
     }
 
@@ -124,8 +125,8 @@ public final class BunqSession extends Session {
         future = service.createSession(request);
 
         return future.thenAccept((SessionServerService.CreateResponse response) -> {
-            clientAuthenticationToken = response.items.get(1).token.token;
-            sessionId = response.items.get(0).id.id;
+            clientAuthenticationToken = response.getToken().token;
+            sessionId = response.getId().id;
         });
     }
 
