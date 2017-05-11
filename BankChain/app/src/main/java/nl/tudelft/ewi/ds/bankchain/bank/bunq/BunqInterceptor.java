@@ -1,12 +1,10 @@
-package nl.tudelft.ewi.ds.bankchain.bank.bunq.http;
+package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqSession;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -23,7 +21,7 @@ import okio.Buffer;
  *
  * @author Jos Kuijpers
  */
-public class BunqInterceptor implements Interceptor {
+class BunqInterceptor implements Interceptor {
     private final static String USER_AGENT = "BankChain";
 
     private final static String SERVER_SIGNATURE = "X-Bunq-Server-Signature";
@@ -40,7 +38,7 @@ public class BunqInterceptor implements Interceptor {
 
     private BunqBank bank;
 
-    public BunqInterceptor(BunqBank bank) {
+    BunqInterceptor(BunqBank bank) {
         this.bank = bank;
     }
 

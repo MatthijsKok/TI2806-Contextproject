@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener((view) ->
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-
                         .setAction("Action", null).show()
         );
 
@@ -38,8 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         Bank b = new BankFactory(v).create();
 
-        CompletableFuture<Void> L = b.createSession().thenAccept(t -> Tools.runOnMainThread(() -> {
-            Log.d("GUI", "Created sesion");
+
+
+        b.createSession().thenAccept(t -> Tools.runOnMainThread(() -> {
+            Log.d("GUI", "Created session");
             Toast.makeText(getApplicationContext(), "Created session!", Toast.LENGTH_LONG).show();
             b.listTransactions(null);
         })).exceptionally(e -> {

@@ -11,27 +11,30 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
-public class SignHelper {
+class SignHelper {
 
     private PrivateKey clientPrivateKey;
-    private PublicKey clientPublicKey;
     private PublicKey serverPublicKey;
 
     /**
-     * Create a new signing object with client and server keys
+     * Create a new signing object with client and server keys.
+     *
      * @param clientPrivateKey Private key of the client
-     * @param clientPublicKey Public key of the client
      * @param serverPublicKey Public key of the server
      */
-    SignHelper(PrivateKey clientPrivateKey, PublicKey clientPublicKey, PublicKey serverPublicKey) {
+    SignHelper(PrivateKey clientPrivateKey, PublicKey serverPublicKey) {
         this.clientPrivateKey = clientPrivateKey;
-        this.clientPublicKey = clientPublicKey;
         this.serverPublicKey = serverPublicKey;
     }
 
+    /**
+     * Create a new signing object with client keypair and server key.
+     *
+     * @param clientKeyPair Keypair of the client
+     * @param serverPublicKey Public key of the server
+     */
     SignHelper(KeyPair clientKeyPair, PublicKey serverPublicKey) {
         this.clientPrivateKey = clientKeyPair.getPrivate();
-        this.clientPublicKey = clientKeyPair.getPublic();
         this.serverPublicKey = serverPublicKey;
     }
 
@@ -47,7 +50,7 @@ public class SignHelper {
             s.update(message.getBytes(StandardCharsets.UTF_8));
 
             byte[] signature = s.sign();
-            byte[] encoded = Base64.encode(signature, Base64.DEFAULT | Base64.NO_WRAP);
+            byte[] encoded = Base64.encode(signature, Base64.NO_WRAP);
 
             return new String(encoded, StandardCharsets.UTF_8);
         } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {

@@ -32,7 +32,7 @@ public final class BunqTools {
      * @param string string of the key, possibly with PEM headers
      * @return public key or null on failure to convert
      */
-    // TODO: write tests that encode into each other, and make it more robus
+    // TODO: write tests that encode into each other, and make it more robust
     public static PublicKey stringToPublicKey(String string) {
         // Remove headers
         String publicKey = string.replace("-----BEGIN PUBLIC KEY-----\n", "");

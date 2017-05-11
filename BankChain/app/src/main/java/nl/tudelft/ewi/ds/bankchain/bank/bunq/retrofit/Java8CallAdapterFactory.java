@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package retrofit2.adapter.java8;
+package nl.tudelft.ewi.ds.bankchain.bank.bunq.retrofit;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
