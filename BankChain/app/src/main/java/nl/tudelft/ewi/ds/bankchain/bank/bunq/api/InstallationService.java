@@ -25,7 +25,15 @@ public interface InstallationService {
      */
     class CreateResponse {
         @SerializedName("Response")
-        public List<Item> items;
+        List<Item> items;
+
+        public GenericToken getToken() {
+            return items.get(1).token;
+        }
+
+        public PublicKeyItem getPublicKey() {
+            return items.get(2).publicKey;
+        }
 
         /**
          * The response can contain multiple items, list them all.

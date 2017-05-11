@@ -5,12 +5,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.util.concurrent.ExecutionException;
+
+import java8.util.concurrent.CompletableFuture;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankchain.bank.Environment;
+import nl.tudelft.ewi.ds.bankchain.bank.Session;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,10 +38,17 @@ public class MainActivity extends AppCompatActivity {
         Environment v = new Environment();
         v.bank = "Bunq";
         v.url = "https://sandbox.public.api.bunq.com/";
-        v.apiKey = "78311ab6-1692-480b-be8d-737c4ff27447";
+        v.apiKey = "a7214ea680c514b4fa278b3cc5f97a65ff37053483976c8203fbc916a38c2db1";
 
         Bank b = new BankFactory(v).create();
-        b.createSession();
+
+        CompletableFuture<Session> f = b.createSession();
+
+        f.thenAccept((t) -> {
+           Log.d("GUI", "Created session");
+
+            Toast.makeText(getApplicationContext(), "Created session!", Toast.LENGTH_LONG).show();
+        });
     }
 
     @Override

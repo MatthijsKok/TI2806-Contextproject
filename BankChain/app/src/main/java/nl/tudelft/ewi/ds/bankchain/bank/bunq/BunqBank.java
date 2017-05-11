@@ -1,12 +1,16 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java8.util.concurrent.CompletableFuture;
 
 import java.util.ArrayList;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.ErrorResponse;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.http.BunqInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -19,7 +23,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @author Jos Kuijpers
  */
 public final class BunqBank extends Bank {
-    private SessionStore sessionStore;
+    /**
+     * Current session
+     */
+    private BunqSession session;
 
     /**
      * HTTP endpoint.
@@ -39,7 +46,6 @@ public final class BunqBank extends Bank {
      * @param url URL of the Bunq API
      */
     public BunqBank(@NonNull String url, @NonNull String apiKey) {
-        sessionStore = new SessionStore();
         this.apiKey = apiKey;
 
         // Create a retrofit system with a JSON parser and Java8 async system
@@ -58,33 +64,40 @@ public final class BunqBank extends Bank {
     }
 
     @Override
-    public void createSession() {
-        BunqSession session = new BunqSession(this);
-        sessionStore.set(session);
+    public CompletableFuture<Session> createSession() {
+        CompletableFuture<Void> future;
+
+        session = new BunqSession(this);
 
         // TODO: the keys could be stored instead
         session.createKeys();
 
         // Install new client pubkey at Bunq
-        session.doInstallation();
+        future = session.doInstallation()
+                .thenComposeAsync(session::doDeviceRegistration)
+                .thenComposeAsync(session::doSessionStart)
+                .exceptionally(e -> {
+            ErrorResponse er = ErrorResponse.parseError(this, e);
 
-        session.doDeviceRegistration();
+            Log.e("BUNQ1", er.toString());
 
-        session.doSessionStart();
+            return null;
+        });
+
+        // Return a future with the session as value
+        return future.thenApply((v) -> session);
     }
 
     @Override
     public ArrayList<Transaction> listTransactions(Session session) {
-        if(sessionStore.hasValidSession()){
 
-        }
         return new ArrayList<Transaction>();
 
     }
 
     @Override
     public BunqSession getCurrentSession() {
-        return sessionStore.get();
+        return session;
     }
 
     /**

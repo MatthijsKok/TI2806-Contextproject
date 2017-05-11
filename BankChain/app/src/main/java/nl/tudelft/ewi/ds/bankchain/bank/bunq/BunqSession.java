@@ -1,12 +1,8 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
-import android.util.Log;
-
-import java.io.IOException;
 import java.security.KeyPair;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.util.concurrent.ExecutionException;
 
 import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
@@ -14,7 +10,6 @@ import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.DeviceServerService;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.InstallationService;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.SessionServerService;
 import nl.tudelft.ewi.ds.bankchain.bank.network.NetUtils;
-import retrofit2.HttpException;
 
 /**
  * A session at the Bunq bank.
@@ -46,6 +41,7 @@ public final class BunqSession extends Session {
     /**
      * Session id, can be used to end the session.
      */
+    @SuppressWarnings("unused")
     private int sessionId;
 
     /**
@@ -75,7 +71,7 @@ public final class BunqSession extends Session {
      * Do installation of a client public key to the Bunq servers.
      */
     // TODO: return a Future instead, so objects can be chained properly?
-    void doInstallation() {
+    CompletableFuture<Void> doInstallation() {
         CompletableFuture<InstallationService.CreateResponse> future;
         InstallationService service;
         InstallationService.CreateRequest request;
@@ -87,30 +83,16 @@ public final class BunqSession extends Session {
 
         future = service.createInstallation(request);
 
-        try {
-            InstallationService.CreateResponse response = future.get();
-
-            clientAuthenticationToken = response.items.get(1).token.token;
-            serverPublicKey = BunqTools.stringToPublicKey(response.items.get(2).publicKey.key);
+        return future.thenAccept((InstallationService.CreateResponse response) -> {
+            clientAuthenticationToken = response.getToken().token;
+            serverPublicKey = BunqTools.stringToPublicKey(response.getPublicKey().key);
 
             // Create the sign helper, now available with the server public key
             signHelper = new SignHelper(clientKeyPair, serverPublicKey);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            HttpException ex = (HttpException)e.getCause();
-
-            try {
-                Log.e("BUNQ", ex.response().errorBody().string());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
-            e.printStackTrace();
-        }
+        });
     }
 
-    void doDeviceRegistration() {
+    CompletableFuture<Void> doDeviceRegistration(Void c) {
         CompletableFuture<DeviceServerService.CreateResponse> future;
         DeviceServerService service;
         DeviceServerService.CreateRequest request;
@@ -123,29 +105,13 @@ public final class BunqSession extends Session {
 
         future = service.createDevice(request);
 
-        try {
-            DeviceServerService.CreateResponse response = future.get();
-
+        return future.thenAccept((DeviceServerService.CreateResponse response) -> {
             ipAddress = NetUtils.getIPAddress();
-            deviceServerId = response.items.get(0).id.id;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-//            HttpException ex = (HttpException)e.getCause();
-//
-//            try {
-//                Log.e("APP", ex.response().errorBody().string());
-//            } catch (IOException e1) {
-//                e1.printStackTrace();
-//            }
-
-            e.getCause().printStackTrace();
-
-            e.printStackTrace();
-        }
+            deviceServerId = response.getId().id;
+        });
     }
 
-    void doSessionStart() {
+    CompletableFuture<Void> doSessionStart(Void c) {
         CompletableFuture<SessionServerService.CreateResponse> future;
         SessionServerService service;
         SessionServerService.CreateRequest request;
@@ -157,26 +123,10 @@ public final class BunqSession extends Session {
 
         future = service.createSession(request);
 
-        try {
-            SessionServerService.CreateResponse response = future.get();
-
-            clientAuthenticationToken = response.items.get(1).token.token;
-            sessionId = response.items.get(0).id.id;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-//            HttpException ex = (HttpException)e.getCause();
-//
-//            try {
-//                Log.e("APP", ex.response().errorBody().string());
-//            } catch (IOException e1) {
-//                e1.printStackTrace();
-//            }
-
-            e.getCause().printStackTrace();
-
-            e.printStackTrace();
-        }
+        return future.thenAccept((SessionServerService.CreateResponse response) -> {
+            clientAuthenticationToken = response.getToken().token;
+            sessionId = response.getId().id;
+        });
     }
 
     public SignHelper getSignHelper() {

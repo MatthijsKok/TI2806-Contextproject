@@ -22,7 +22,11 @@ public interface DeviceServerService {
      */
     class CreateResponse {
         @SerializedName("Response")
-        public List<Item> items;
+        List<Item> items;
+
+        public GenericId getId() {
+            return items.get(0).id;
+        }
 
         /**
          * The response can contain multiple items, list them all.
@@ -35,9 +39,12 @@ public interface DeviceServerService {
     }
 
     /**
-     * Reques POJO
+     * Request POJO
      */
     class CreateRequest {
+        /**
+         * Description of this device, for device listing
+         */
         public String description;
 
         /**
