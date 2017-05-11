@@ -1,7 +1,6 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import android.util.Base64;
-import android.util.Log;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;

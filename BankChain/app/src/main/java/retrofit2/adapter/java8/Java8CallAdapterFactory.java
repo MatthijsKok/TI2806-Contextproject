@@ -15,11 +15,11 @@
  */
 package retrofit2.adapter.java8;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java8.util.concurrent.CompletableFuture;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBankException;
 import retrofit2.Call;
 import retrofit2.CallAdapter;
 import retrofit2.Callback;
@@ -88,11 +88,13 @@ public final class Java8CallAdapterFactory extends CallAdapter.Factory {
             this.responseType = responseType;
         }
 
-        @Override public Type responseType() {
+        @Override
+        public Type responseType() {
             return responseType;
         }
 
-        @Override public CompletableFuture<R> adapt(final Call<R> call) {
+        @Override
+        public CompletableFuture<R> adapt(final Call<R> call) {
             final CompletableFuture<R> future = new CompletableFuture<R>() {
                 @Override public boolean cancel(boolean mayInterruptIfRunning) {
                     if (mayInterruptIfRunning) {
@@ -103,15 +105,19 @@ public final class Java8CallAdapterFactory extends CallAdapter.Factory {
             };
 
             call.enqueue(new Callback<R>() {
-                @Override public void onResponse(Call<R> call, Response<R> response) {
+                @Override
+                public void onResponse(Call<R> call, Response<R> response) {
                     if (response.isSuccessful()) {
                         future.complete(response.body());
                     } else {
-                        future.completeExceptionally(new HttpException(response));
+                        HttpException ex = new HttpException(response);
+                        future.completeExceptionally(new BunqBankException(ex));
                     }
                 }
 
-                @Override public void onFailure(Call<R> call, Throwable t) {
+                @Override
+                public void onFailure(Call<R> call, Throwable t) {
+                    // TODO: posisbly convert as well, but have to know how this is triggered
                     future.completeExceptionally(t);
                 }
             });
@@ -128,11 +134,13 @@ public final class Java8CallAdapterFactory extends CallAdapter.Factory {
             this.responseType = responseType;
         }
 
-        @Override public Type responseType() {
+        @Override
+        public Type responseType() {
             return responseType;
         }
 
-        @Override public CompletableFuture<Response<R>> adapt(final Call<R> call) {
+        @Override
+        public CompletableFuture<Response<R>> adapt(final Call<R> call) {
             final CompletableFuture<Response<R>> future = new CompletableFuture<Response<R>>() {
                 @Override public boolean cancel(boolean mayInterruptIfRunning) {
                     if (mayInterruptIfRunning) {
@@ -143,11 +151,13 @@ public final class Java8CallAdapterFactory extends CallAdapter.Factory {
             };
 
             call.enqueue(new Callback<R>() {
-                @Override public void onResponse(Call<R> call, Response<R> response) {
+                @Override
+                public void onResponse(Call<R> call, Response<R> response) {
                     future.complete(response);
                 }
 
-                @Override public void onFailure(Call<R> call, Throwable t) {
+                @Override
+                public void onFailure(Call<R> call, Throwable t) {
                     future.completeExceptionally(t);
                 }
             });

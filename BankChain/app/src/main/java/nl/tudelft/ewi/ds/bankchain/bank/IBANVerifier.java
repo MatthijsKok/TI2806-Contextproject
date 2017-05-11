@@ -1,7 +1,6 @@
 package nl.tudelft.ewi.ds.bankchain.bank;
 
 import java.math.BigInteger;
-import java.util.LongSummaryStatistics;
 
 public class IBANVerifier {
 

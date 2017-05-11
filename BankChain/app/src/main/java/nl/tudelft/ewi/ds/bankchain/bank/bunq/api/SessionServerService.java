@@ -2,11 +2,9 @@ package nl.tudelft.ewi.ds.bankchain.bank.bunq.api;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.security.PublicKey;
 import java.util.List;
 
 import java8.util.concurrent.CompletableFuture;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTools;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 

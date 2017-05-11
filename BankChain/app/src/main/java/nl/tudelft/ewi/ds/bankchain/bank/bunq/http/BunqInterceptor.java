@@ -46,10 +46,10 @@ public class BunqInterceptor implements Interceptor {
 
     @Override
     public Response intercept(Chain chain) throws IOException {
-        Request request = this.createRequest(chain.request());
+        Request request = createRequest(chain.request());
         Response response = chain.proceed(request);
 
-        return this.createResponse(response);
+        return createResponse(response);
     }
 
     private Request createRequest(Request incoming) throws IOException {
@@ -76,7 +76,7 @@ public class BunqInterceptor implements Interceptor {
             builder = incomingWithHeaders.newBuilder();
 
             // Create a string that is in the proper format, as defined by Bunq
-            String signable = this.createSignable(incomingWithHeaders);
+            String signable = createSignable(incomingWithHeaders);
             String signature = bank.getCurrentSession().getSignHelper().sign(signable);
 
             builder.addHeader(CLIENT_SIGNATURE, signature);
@@ -97,7 +97,7 @@ public class BunqInterceptor implements Interceptor {
                 throw new IOException("Bunq was spoofed: no server signature found");
             }
 
-            String signable = this.createSignable(incoming, builder);
+            String signable = createSignable(incoming, builder);
             if (!bank.getCurrentSession().getSignHelper().verify(signable, serverSignature)) {
                 throw new IOException("Bunq was spoofed: server signature is wrong");
             }
@@ -108,13 +108,16 @@ public class BunqInterceptor implements Interceptor {
 
     @NonNull
     private String createSignable(Request request) throws IOException {
-        okio.Buffer buffer = new Buffer();
+        String body = "";
+        if(request.body() != null) {
+            okio.Buffer buffer = new Buffer();
+            request.body().writeTo(buffer);
+            body = buffer.readByteString().string(StandardCharsets.UTF_8);
+        }
 
-        request.body().writeTo(buffer);
-        String body = buffer.readByteString().string(StandardCharsets.UTF_8);
         String prefix = request.method() + " " + request.url().encodedPath();
 
-        return this.createSignable(prefix, request.headers(), body, false);
+        return createSignable(prefix, request.headers(), body, false);
     }
 
     @NonNull
@@ -129,7 +132,7 @@ public class BunqInterceptor implements Interceptor {
 
         builder.body(ResponseBody.create(contentType, bodyString));
 
-        return this.createSignable(String.valueOf(response.code()), response.headers(), bodyString, true);
+        return createSignable(String.valueOf(response.code()), response.headers(), bodyString, true);
     }
 
     /**
@@ -164,15 +167,15 @@ public class BunqInterceptor implements Interceptor {
 
         // Add all required headers, alphabetically
         if (!bunqHeadersOnly) {
-            this.buildHeader(headers, "Cache-Control", sb);
-            this.buildHeader(headers, "User-Agent", sb);
+            buildHeader(headers, "Cache-Control", sb);
+            buildHeader(headers, "User-Agent", sb);
         }
-        this.buildHeader(headers, CLIENT_AUTHENTICATION, sb);
-        this.buildHeader(headers, CLIENT_REQUEST_ID, sb);
-        this.buildHeader(headers, CLIENT_RESPONSE_ID, sb);
-        this.buildHeader(headers, GEOLOCATION, sb);
-        this.buildHeader(headers, LANGUAGE, sb);
-        this.buildHeader(headers, REGION, sb);
+        buildHeader(headers, CLIENT_AUTHENTICATION, sb);
+        buildHeader(headers, CLIENT_REQUEST_ID, sb);
+        buildHeader(headers, CLIENT_RESPONSE_ID, sb);
+        buildHeader(headers, GEOLOCATION, sb);
+        buildHeader(headers, LANGUAGE, sb);
+        buildHeader(headers, REGION, sb);
 
         // Bunq: Two '\n' (linefeed) newlines (even when there is no body).
         // The first one is already done at the end of the last header

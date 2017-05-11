@@ -23,7 +23,7 @@ public abstract class Bank {
 //
      public abstract List<Transaction> listTransactions(Session session);
 //
-//    public abstract boolean sendTransaction(Session, Transaction);
+//    public abstract boolean sendTransaction(Session, TransactionAbstract);
 
     /**
      * Get the current session of the bank.
@@ -34,4 +34,6 @@ public abstract class Bank {
      */
     @Nullable
     public abstract Session getCurrentSession();
+
+    public abstract Throwable confirmException(Throwable e);
 }

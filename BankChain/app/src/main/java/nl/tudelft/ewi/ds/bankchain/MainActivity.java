@@ -10,14 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.concurrent.ExecutionException;
-
 import java8.util.concurrent.CompletableFuture;
-
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankchain.bank.Environment;
-import nl.tudelft.ewi.ds.bankchain.bank.Session;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,17 +34,27 @@ public class MainActivity extends AppCompatActivity {
         Environment v = new Environment();
         v.bank = "Bunq";
         v.url = "https://sandbox.public.api.bunq.com/";
-        v.apiKey = "a7214ea680c514b4fa278b3cc5f97a65ff37053483976c8203fbc916a38c2db1";
+        v.apiKey = "8f4a0a53df16da7cdb1974834d09042a88a395ad550ad61256dc49f65b04dabe";
 
         Bank b = new BankFactory(v).create();
 
-        CompletableFuture<Session> f = b.createSession();
-
-        f.thenAccept((t) -> {
-           Log.d("GUI", "Created session");
-
+        CompletableFuture<Void> L = b.createSession().thenAccept(t -> Tools.runOnMainThread(() -> {
+            Log.d("GUI", "Created sesion");
             Toast.makeText(getApplicationContext(), "Created session!", Toast.LENGTH_LONG).show();
+            b.listTransactions(null);
+        })).exceptionally(e -> {
+            final Throwable t = b.confirmException(e);
+
+            Tools.runOnMainThread(() -> {
+                Log.d("GUI", "Failed session " + t.getMessage());
+                Toast.makeText(getApplicationContext(), "Failed to create session: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            });
+
+            return null;
         });
+
+
+
     }
 
     @Override
