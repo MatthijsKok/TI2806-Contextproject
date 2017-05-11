@@ -2,7 +2,11 @@ package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
+import nl.tudelft.ewi.ds.bankchain.bank.Session;
+import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.http.BunqInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
