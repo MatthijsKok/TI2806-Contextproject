@@ -31,6 +31,7 @@ public final class BunqSession extends Session {
     /**
      * Id fromt he Device Server, indicating our own device.
      */
+    @SuppressWarnings("unused")
     private int deviceServerId;
 
     /**
@@ -69,9 +70,13 @@ public final class BunqSession extends Session {
 
     /**
      * Do installation of a client public key to the Bunq servers.
+     *
+     * The arg is required because of the limitations of futures.
+     *
+     * @param arg null
+     * @return future
      */
-    // TODO: return a Future instead, so objects can be chained properly?
-    CompletableFuture<Void> doInstallation() {
+    CompletableFuture<Void> doInstallation(@SuppressWarnings("unused") Void arg) {
         CompletableFuture<InstallationService.CreateResponse> future;
         InstallationService service;
         InstallationService.CreateRequest request;
@@ -92,7 +97,15 @@ public final class BunqSession extends Session {
         });
     }
 
-    CompletableFuture<Void> doDeviceRegistration(Void c) {
+    /**
+     * Perform the device registration step.
+     *
+     * The arg is required because of the limitations of futures.
+     *
+     * @param arg null
+     * @return future
+     */
+    CompletableFuture<Void> doDeviceRegistration(@SuppressWarnings("unused") Void arg) {
         CompletableFuture<DeviceServerService.CreateResponse> future;
         DeviceServerService service;
         DeviceServerService.CreateRequest request;
@@ -111,7 +124,15 @@ public final class BunqSession extends Session {
         });
     }
 
-    CompletableFuture<Void> doSessionStart(Void c) {
+    /**
+     * Perform the session creationstep.
+     *
+     * The arg is required because of the limitations of futures.
+     *
+     * @param arg null
+     * @return future
+     */
+    CompletableFuture<Void> doSessionStart(@SuppressWarnings("unused") Void arg) {
         CompletableFuture<SessionServerService.CreateResponse> future;
         SessionServerService service;
         SessionServerService.CreateRequest request;

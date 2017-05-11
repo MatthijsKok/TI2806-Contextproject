@@ -69,7 +69,7 @@ public interface InstallationService {
         }
 
         public CreateRequest(String key) {
-            this.clientPublicKey = key;
+            clientPublicKey = key;
         }
     }
 }

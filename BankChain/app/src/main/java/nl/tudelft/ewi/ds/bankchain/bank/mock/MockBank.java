@@ -18,7 +18,7 @@ public class MockBank extends Bank {
 
 
     @Override
-    public CompletableFuture createSession() {
+    public CompletableFuture<Session> createSession() {
         return CompletableFuture.completedFuture(null);
     }
 
@@ -26,5 +26,10 @@ public class MockBank extends Bank {
     @Override
     public Session getCurrentSession() {
         return null;
+    }
+
+    @Override
+    public Throwable confirmException(Throwable e) {
+        return e;
     }
 }

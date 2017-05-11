@@ -30,4 +30,6 @@ public abstract class Bank {
      */
     @Nullable
     public abstract Session getCurrentSession();
+
+    public abstract Throwable confirmException(Throwable e);
 }

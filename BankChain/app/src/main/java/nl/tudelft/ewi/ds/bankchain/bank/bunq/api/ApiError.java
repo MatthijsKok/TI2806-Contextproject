@@ -20,14 +20,14 @@ import retrofit2.Response;
  *
  * @author Jos Kuijpers
  */
-public class ErrorResponse {
+public class ApiError {
     @SerializedName("Error")
-    public List<Error> errors;
+    List<Error> errors;
 
-    public String status;
-    public int statusCode;
+    String status;
+    int statusCode;
 
-    ErrorResponse(String description, String localizedDescription) {
+    private ApiError(String description, String localizedDescription) {
         errors = new ArrayList<>();
 
         Error err = new Error();
@@ -40,6 +40,15 @@ public class ErrorResponse {
 
     @Override
     public String toString() {
+        return getError();
+    }
+
+    /**
+     * Get the error message
+     *
+     * @return string with error or null
+     */
+    public String getError() {
         if (errors.size() > 0) {
             return errors.get(0).toString();
         }
@@ -52,7 +61,7 @@ public class ErrorResponse {
      *
      * @return localized error string
      */
-    public String localizedError() {
+    public String getLocalizedError() {
         if (errors.size() > 0) {
             Error err = errors.get(0);
 
@@ -73,18 +82,18 @@ public class ErrorResponse {
      * @return Error response
      */
     @NonNull
-    public static ErrorResponse parseError(BunqBank bank, Throwable obj) {
+    public static ApiError parseError(BunqBank bank, Throwable obj) {
         if (obj instanceof HttpException) {
-            return ErrorResponse.parseError(bank, ((HttpException) obj).response());
+            return ApiError.parseError(bank, ((HttpException) obj).response());
         }
 
         // Often, the http exception is contained by an interrupt, completion or other functional
         // exception.
         if (obj.getCause() instanceof HttpException) {
-            return ErrorResponse.parseError(bank, ((HttpException)obj.getCause()).response());
+            return ApiError.parseError(bank, ((HttpException)obj.getCause()).response());
         }
 
-        return new ErrorResponse(obj.getMessage(), obj.getLocalizedMessage());
+        return new ApiError(obj.getMessage(), obj.getLocalizedMessage());
     }
 
     /**
@@ -95,19 +104,19 @@ public class ErrorResponse {
      * @return error response
      */
     @NonNull
-    public static ErrorResponse parseError(BunqBank bank, Response<?> response) {
-        Converter<ResponseBody, ErrorResponse> converter;
+    public static ApiError parseError(BunqBank bank, Response<?> response) {
+        Converter<ResponseBody, ApiError> converter;
 
-        converter = bank.getRetrofit().responseBodyConverter(ErrorResponse.class, new Annotation[0]);
+        converter = bank.getRetrofit().responseBodyConverter(ApiError.class, new Annotation[0]);
 
         try {
-            ErrorResponse er = converter.convert(response.errorBody());
+            ApiError er = converter.convert(response.errorBody());
             er.status = response.message();
             er.statusCode = response.code();
 
             return er;
         } catch (IOException e) {
-            return new ErrorResponse(e.getMessage(), e.getLocalizedMessage());
+            return new ApiError(e.getMessage(), e.getLocalizedMessage());
         }
     }
 

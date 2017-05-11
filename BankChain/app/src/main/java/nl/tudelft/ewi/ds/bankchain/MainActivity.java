@@ -10,14 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.concurrent.ExecutionException;
-
-import java8.util.concurrent.CompletableFuture;
-
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankchain.bank.Environment;
-import nl.tudelft.ewi.ds.bankchain.bank.Session;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,12 +37,18 @@ public class MainActivity extends AppCompatActivity {
 
         Bank b = new BankFactory(v).create();
 
-        CompletableFuture<Session> f = b.createSession();
-
-        f.thenAccept((t) -> {
-           Log.d("GUI", "Created session");
-
+        b.createSession().thenAccept(t -> Tools.runOnMainThread(() -> {
+            Log.d("GUI", "Created sesion");
             Toast.makeText(getApplicationContext(), "Created session!", Toast.LENGTH_LONG).show();
+        })).exceptionally(e -> {
+            final Throwable t = b.confirmException(e);
+
+            Tools.runOnMainThread(() -> {
+                Log.d("GUI", "Failed session " + t.getMessage());
+                Toast.makeText(getApplicationContext(), "Failed to create session: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            });
+
+            return null;
         });
     }
 
