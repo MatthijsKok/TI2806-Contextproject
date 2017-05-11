@@ -8,10 +8,9 @@ import java8.util.concurrent.CompletionException;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankException;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.http.BunqInterceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.adapter.java8.Java8CallAdapterFactory;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.retrofit.Java8CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**

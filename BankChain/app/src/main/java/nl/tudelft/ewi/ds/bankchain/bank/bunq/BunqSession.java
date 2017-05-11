@@ -22,11 +22,11 @@ public final class BunqSession extends Session {
      */
     private BunqBank bank;
 
-    public KeyPair clientKeyPair;
+    private KeyPair clientKeyPair;
     private SignHelper signHelper;
     private PublicKey serverPublicKey;
 
-    public String clientAuthenticationToken;
+    String clientAuthenticationToken;
 
     /**
      * Id fromt he Device Server, indicating our own device.
