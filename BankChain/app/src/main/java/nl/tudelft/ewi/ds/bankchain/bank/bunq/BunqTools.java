@@ -2,6 +2,7 @@ package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import android.util.Base64;
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -25,7 +26,7 @@ public final class BunqTools {
      */
     public static String publicKeyToString(PublicKey pubkey) {
         return "-----BEGIN PUBLIC KEY-----\n"
-                + new String(Base64.encode(pubkey.getEncoded(), 0))
+                + new String(Base64.encode(pubkey.getEncoded(), 0), StandardCharsets.UTF_8)
                 + "-----END PUBLIC KEY-----\n";
     }
 

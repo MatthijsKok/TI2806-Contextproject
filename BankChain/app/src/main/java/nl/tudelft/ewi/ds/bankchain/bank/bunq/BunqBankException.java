@@ -52,6 +52,10 @@ public class BunqBankException extends BankException {
         this.error = ApiError.parseError((BunqBank) bank, httpException);
     }
 
+    public HttpException getHttpException() {
+        return httpException;
+    }
+
     @Override
     public String getMessage() {
         if (error == null) {
