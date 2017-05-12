@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankchain.bank.Environment;
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Environment v = new Environment();
         v.bank = "Bunq";
         v.url = "https://sandbox.public.api.bunq.com/";
-        v.apiKey = "8f4a0a53df16da7cdb1974834d09042a88a395ad550ad61256dc49f65b04dabe";
+        v.apiKey = "";
 
         Bank b = new BankFactory(v).create();
 
@@ -42,7 +41,13 @@ public class MainActivity extends AppCompatActivity {
         b.createSession().thenAccept(t -> Tools.runOnMainThread(() -> {
             Log.d("GUI", "Created session");
             Toast.makeText(getApplicationContext(), "Created session!", Toast.LENGTH_LONG).show();
-            b.listTransactions(null);
+
+            b.listTransactions().thenAccept(ts -> Tools.runOnMainThread(() -> {
+                Toast.makeText(getApplicationContext(), "Got list of transactions!", Toast.LENGTH_LONG).show();
+
+                Log.i("GUI", ts.toString());
+            }));
+
         })).exceptionally(e -> {
             final Throwable t = b.confirmException(e);
 

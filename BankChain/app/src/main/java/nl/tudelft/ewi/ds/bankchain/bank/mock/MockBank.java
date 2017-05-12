@@ -11,7 +11,6 @@ import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
-import nl.tudelft.ewi.ds.bankchain.bank.TransactionAbstract;
 
 /**
  * Created by Richard-HP on 09/05/2017.
@@ -30,7 +29,7 @@ public class MockBank extends Bank {
     }
 
     @Override
-    public List<Transaction> listTransactions(Session session) {
+    public CompletableFuture<List<? extends Transaction>> listTransactions() {
         return null;
     }
 

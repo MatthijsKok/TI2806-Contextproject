@@ -17,13 +17,11 @@ public abstract class Bank {
      *
      * TODO: currently not returned. Need to see how it turns out with futures etc.
      */
-    public abstract CompletableFuture<Session> createSession();
+    public abstract CompletableFuture<? extends Session> createSession();
+
+    public abstract CompletableFuture<List<? extends Transaction>> listTransactions();
 //
-//    public abstract Optional<Session> createSession();
-//
-     public abstract List<Transaction> listTransactions(Session session);
-//
-//    public abstract boolean sendTransaction(Session, TransactionAbstract);
+//    public abstract CompletableFuture<Boolean> sendTransaction(Transaction transaction);
 
     /**
      * Get the current session of the bank.

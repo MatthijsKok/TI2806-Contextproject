@@ -7,6 +7,7 @@ import java8.util.concurrent.CompletableFuture;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 import java8.util.concurrent.CompletionException;
@@ -16,16 +17,13 @@ import nl.tudelft.ewi.ds.bankchain.bank.BankException;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.GetTransactionsService;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.InstallationService;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.PaymentService;
 
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.retrofit.Java8CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * Bank implementation for the Bunq bank.
@@ -100,34 +98,24 @@ public final class BunqBank extends Bank {
     }
 
     @Override
-    public ArrayList<Transaction> listTransactions(Session session) {
-        session = this.session;
-        CompletableFuture<GetTransactionsService.CreateResponse> future;
-        GetTransactionsService service;
-        InstallationService.CreateRequest request;
-        service = retrofit.create(GetTransactionsService.class);
-        ArrayList<Transaction> transactions = new ArrayList<Transaction>();
+    public CompletableFuture<List<? extends Transaction>> listTransactions() {
+        CompletableFuture<PaymentService.ListResponse> future;
+        PaymentService service;
 
-        future = service.GetTransactions();
-        future.thenAccept((GetTransactionsService.CreateResponse response) ->{
-            for (GetTransactionsService.CreateResponse.element trans:
-                    response.items) {
-                if(trans != null && trans.payment != null && trans.payment.description != null) {
-                    Log.d("TRANS", trans.payment.description);
-                    Transaction t = new Transaction();
-                    t.Description = trans.payment.description;
-                    t.Name = trans.payment.counterParty.name;
-                    t.Value = trans.payment.amount.value;
-                    t.IBAN = trans.payment.counterParty.iban;
-                    transactions.add(t);
-                }
-                else{
-                    Log.d("TRANS", "NULL ERROR");
-                }
+        service = retrofit.create(PaymentService.class);
+
+        // TODO: get values somewhere else
+        future = service.listPayments(2002, 2021);
+
+        return future.thenApply((PaymentService.ListResponse response) -> {
+            List<BunqTransaction> transactions = new ArrayList<BunqTransaction>();
+
+            for (PaymentService.ListResponse.Item item : response.items) {
+                transactions.add(new BunqTransaction(item.payment));
             }
-        });
 
-        return new ArrayList<Transaction>();
+            return transactions;
+        });
     }
 
     @Override
