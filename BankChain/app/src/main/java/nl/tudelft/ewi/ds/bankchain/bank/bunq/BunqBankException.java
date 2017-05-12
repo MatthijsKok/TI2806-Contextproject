@@ -49,7 +49,7 @@ public class BunqBankException extends BankException {
             throw new IllegalArgumentException("Bank is not of type Bunq");
         }
 
-        this.error = ApiError.parseError((BunqBank)bank, httpException);
+        this.error = ApiError.parseError((BunqBank) bank, httpException);
     }
 
     @Override

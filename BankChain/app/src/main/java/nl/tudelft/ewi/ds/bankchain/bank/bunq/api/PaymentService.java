@@ -20,7 +20,8 @@ import retrofit2.http.Path;
  */
 public interface PaymentService {
     @GET("/v1/user/{user}/monetary-account/{account}/payment")
-    CompletableFuture<ListResponse> listPayments(@Path("user") int user, @Path("account") int account);
+    CompletableFuture<ListResponse> listPayments(@Path("user") int user,
+                                                 @Path("account") int account);
 
   //  @POST("/v1/user/1/monetary-account/11/payment")
    // CompletableFuture<InstallationService.CreateResponse> createPayment(@Body t);

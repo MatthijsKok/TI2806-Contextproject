@@ -2,7 +2,8 @@ package nl.tudelft.ewi.ds.bankchain.bank;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Richard-HP on 09/05/2017.
@@ -34,17 +35,17 @@ public class IBANVerifierTest {
     }
 
     @Test
-    public void verifySingleDigitError(){
+    public void verifySingleDigitError() {
         assertFalse(IBANVerifier.verify("NL29INGB0006105849"));
     }
 
     @Test
-    public void testoversized(){
+    public void testoversized() {
         assertFalse(IBANVerifier.verify("123456789123456789123456789123456789"));
     }
 
     @Test
-    public void testLongestBigInt(){
+    public void testLongestBigInt() {
         assertFalse(IBANVerifier.verify("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"));
     }
 }

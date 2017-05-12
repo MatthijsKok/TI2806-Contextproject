@@ -22,25 +22,21 @@ import okio.Buffer;
  * @author Jos Kuijpers
  */
 class BunqInterceptor implements Interceptor {
-    private final static String USER_AGENT = "BankChain";
+    private static final String USER_AGENT = "BankChain";
 
-    private final static String SERVER_SIGNATURE = "X-Bunq-Server-Signature";
-    private final static String CLIENT_SIGNATURE = "X-Bunq-Client-Signature";
+    private static final String SERVER_SIGNATURE = "X-Bunq-Server-Signature";
+    private static final String CLIENT_SIGNATURE = "X-Bunq-Client-Signature";
 
-    private final static String CLIENT_REQUEST_ID = "X-Bunq-Client-Request-Id";
-    private final static String CLIENT_RESPONSE_ID = "X-Bunq-Client-Response-Id";
+    private static final String CLIENT_REQUEST_ID = "X-Bunq-Client-Request-Id";
+    private static final String CLIENT_RESPONSE_ID = "X-Bunq-Client-Response-Id";
 
-    private final static String REGION = "X-Bunq-Region";
-    private final static String LANGUAGE = "X-Bunq-Language";
-    private final static String GEOLOCATION = "X-Bunq-Geolocation";
+    private static final String REGION = "X-Bunq-Region";
+    private static final String LANGUAGE = "X-Bunq-Language";
+    private static final String GEOLOCATION = "X-Bunq-Geolocation";
 
-    private final static String CLIENT_AUTHENTICATION = "X-Bunq-Client-Authentication";
+    private static final String CLIENT_AUTHENTICATION = "X-Bunq-Client-Authentication";
 
     private BunqBank bank;
-
-    BunqInterceptor(BunqBank bank) {
-        this.bank = bank;
-    }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
@@ -48,6 +44,10 @@ class BunqInterceptor implements Interceptor {
         Response response = chain.proceed(request);
 
         return createResponse(response);
+    }
+
+    BunqInterceptor(BunqBank bank) {
+        this.bank = bank;
     }
 
     private Request createRequest(Request incoming) throws IOException {
@@ -107,7 +107,8 @@ class BunqInterceptor implements Interceptor {
     @NonNull
     private String createSignable(Request request) throws IOException {
         String body = "";
-        if(request.body() != null) {
+
+        if (request.body() != null) {
             okio.Buffer buffer = new Buffer();
             request.body().writeTo(buffer);
             body = buffer.readByteString().string(StandardCharsets.UTF_8);
@@ -122,15 +123,18 @@ class BunqInterceptor implements Interceptor {
     private String createSignable(Response response, Response.Builder builder) throws IOException {
         // Because both this interceptor and the code down the chain reads the body,
         // we need to make a new one: the body can only be read once.
-        // http://stackoverflow.com/questions/38641565/okhttp-throwing-an-illegal-state-exception-when-i-try-to-log-the-network-respons
+        // http://stackoverflow.com/questions/38641565/okhttp-throwing-an-illegal-state-exception
+        // -when-i-try-to-log-the-network-respons
         // https://github.com/square/okhttp/issues/1240
+
         ResponseBody body = response.body();
         String bodyString = body.string();
         MediaType contentType = body.contentType();
 
         builder.body(ResponseBody.create(contentType, bodyString));
 
-        return createSignable(String.valueOf(response.code()), response.headers(), bodyString, true);
+        return createSignable(String.valueOf(response.code()),
+                response.headers(), bodyString, true);
     }
 
     /**
@@ -139,7 +143,8 @@ class BunqInterceptor implements Interceptor {
      * @url https://doc.bunq.com/api/1/page/signing
      */
     @NonNull
-    private String createSignable(String prefix, Headers headers, String body, boolean bunqHeadersOnly) {
+    private String createSignable(String prefix, Headers headers,
+                                  String body, boolean bunqHeadersOnly) {
         StringBuilder sb = new StringBuilder();
 
         // Add prefix

@@ -1,7 +1,6 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java8.util.concurrent.CompletableFuture;
 
@@ -83,7 +82,7 @@ public final class BunqBank extends Bank {
                 .thenComposeAsync(session::doSessionStart)
 
                 // Set the session as a value (use an upcast)
-                .thenApply((v) -> (Session)session);
+                .thenApply((v) -> (Session) session);
     }
 
     /**
@@ -152,7 +151,7 @@ public final class BunqBank extends Bank {
         }
 
         if (e instanceof CompletionException && e.getCause() instanceof BankException) {
-            BankException be = (BankException)e.getCause();
+            BankException be = (BankException) e.getCause();
 
             // Set the bank to allow the exception code to get better information
             be.setBank(this);

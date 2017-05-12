@@ -34,7 +34,9 @@ public final class NetUtils {
     // http://stackoverflow.com/questions/6064510/how-to-get-ip-address-of-the-device-from-code
     public static String getIPAddress(IPVersion version) {
         try {
-            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            List<NetworkInterface> interfaces;
+
+            interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
 
             for (NetworkInterface iface : interfaces) {
                 List<InetAddress> adresses = Collections.list(iface.getInetAddresses());
@@ -53,7 +55,8 @@ public final class NetUtils {
                         // Drop ip6 zone suffix
                         int delim = address.indexOf('%');
 
-                        return delim < 0 ? address.toUpperCase() : address.substring(0, delim).toUpperCase();
+                        return delim < 0 ? address.toUpperCase()
+                                : address.substring(0, delim).toUpperCase();
                     }
                 }
             }

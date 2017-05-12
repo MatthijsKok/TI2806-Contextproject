@@ -24,7 +24,9 @@ public final class BunqTools {
      * @return string
      */
     public static String publicKeyToString(PublicKey pubkey) {
-        return "-----BEGIN PUBLIC KEY-----\n" + new String(Base64.encode(pubkey.getEncoded(), 0)) + "-----END PUBLIC KEY-----\n";
+        return "-----BEGIN PUBLIC KEY-----\n"
+                + new String(Base64.encode(pubkey.getEncoded(), 0))
+                + "-----END PUBLIC KEY-----\n";
     }
 
     /**

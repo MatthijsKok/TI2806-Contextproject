@@ -36,31 +36,34 @@ public class MainActivity extends AppCompatActivity {
 
         Bank b = new BankFactory(v).create();
 
+        b.createSession()
+                .thenAccept(t -> Tools.runOnMainThread(() -> {
+                    Log.d("GUI", "Created session");
+                    Toast.makeText(getApplicationContext(),
+                            "Created session!",
+                            Toast.LENGTH_LONG).show();
 
+                    b.listTransactions().thenAccept(ts -> Tools.runOnMainThread(() -> {
+                        Toast.makeText(getApplicationContext(),
+                                "Got list of transactions!",
+                                Toast.LENGTH_LONG).show();
 
-        b.createSession().thenAccept(t -> Tools.runOnMainThread(() -> {
-            Log.d("GUI", "Created session");
-            Toast.makeText(getApplicationContext(), "Created session!", Toast.LENGTH_LONG).show();
+                        Log.i("GUI", ts.toString());
+                    }));
 
-            b.listTransactions().thenAccept(ts -> Tools.runOnMainThread(() -> {
-                Toast.makeText(getApplicationContext(), "Got list of transactions!", Toast.LENGTH_LONG).show();
+                }))
+                .exceptionally(e -> {
+                    final Throwable t = b.confirmException(e);
 
-                Log.i("GUI", ts.toString());
-            }));
+                    Tools.runOnMainThread(() -> {
+                        Log.d("GUI", "Failed session " + t.getMessage());
+                        Toast.makeText(getApplicationContext(),
+                                "Failed to create session: " + t.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    });
 
-        })).exceptionally(e -> {
-            final Throwable t = b.confirmException(e);
-
-            Tools.runOnMainThread(() -> {
-                Log.d("GUI", "Failed session " + t.getMessage());
-                Toast.makeText(getApplicationContext(), "Failed to create session: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            });
-
-            return null;
-        });
-
-
-
+                    return null;
+                });
     }
 
     @Override

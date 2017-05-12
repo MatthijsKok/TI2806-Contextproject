@@ -26,8 +26,6 @@ public abstract class Bank {
     /**
      * Get the current session of the bank.
      *
-     * TODO: it would, at the moment, be possible to switch sessions. For that it might be better to expose SessionStore.
-     *
      * @return current session or null;
      */
     @Nullable

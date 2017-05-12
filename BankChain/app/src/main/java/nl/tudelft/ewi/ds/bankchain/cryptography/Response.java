@@ -23,7 +23,8 @@ public class Response {
      * Stores a private key.
      * @param challenge The Challenge to respond to.
      * @param responderSK Your private key to sign the Response with.
-     * @throws SignatureException If the Challenge signature is invalid. This is a sign of malicious activity.
+     * @throws SignatureException If the Challenge signature is invalid.
+     *   This is a sign of malicious activity.
      */
     public Response(Challenge challenge, PrivateKey responderSK) throws SignatureException {
         this.challenge = challenge;
@@ -45,7 +46,8 @@ public class Response {
     /**
      * Verify the signature of the Challenge.
      * @return Whether the signature is valid.
-     * @throws SignatureException If the Challenge signature is invalid. This is a sign of malicious activity.
+     * @throws SignatureException If the Challenge signature is invalid.
+     *   This is a sign of malicious activity.
      */
     private boolean verifyChallengeSignature() throws SignatureException {
         if (!challenge.getPublicKey().verifySignedMessage(secret, challenge.getSignature())) {

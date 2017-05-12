@@ -15,7 +15,7 @@ import retrofit2.http.POST;
  */
 public interface DeviceServerService {
     @POST("v1/device-server")
-    CompletableFuture<DeviceServerService.CreateResponse> createDevice(@Body DeviceServerService.CreateRequest request);
+    CompletableFuture<CreateResponse> createDevice(@Body CreateRequest request);
 
     /**
      * Response POJO for POST /device-server.

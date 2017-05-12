@@ -90,7 +90,7 @@ public class ApiError {
         // Often, the http exception is contained by an interrupt, completion or other functional
         // exception.
         if (obj.getCause() instanceof HttpException) {
-            return ApiError.parseError(bank, ((HttpException)obj.getCause()).response());
+            return ApiError.parseError(bank, ((HttpException) obj.getCause()).response());
         }
 
         return new ApiError(obj.getMessage(), obj.getLocalizedMessage());
