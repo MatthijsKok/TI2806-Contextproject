@@ -10,7 +10,6 @@ public abstract class PrivateKey extends Key {
     /**
      * The public key that belongs to this private key.
      */
-    @SuppressWarnings("unused")
     private PublicKey publicKey;
 
     /**
