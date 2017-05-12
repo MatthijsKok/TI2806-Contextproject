@@ -5,9 +5,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import nl.tudelft.ewi.ds.bankchain.bank.Bank;
+import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
+import nl.tudelft.ewi.ds.bankchain.bank.Environment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,13 +24,46 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        fab.setOnClickListener((view) ->
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+                        .setAction("Action", null).show()
+        );
+
+        Environment v = new Environment();
+        v.bank = "Bunq";
+        v.url = "https://sandbox.public.api.bunq.com/";
+        v.apiKey = "";
+
+        Bank b = new BankFactory(v).create();
+
+        b.createSession()
+                .thenAccept(t -> Tools.runOnMainThread(() -> {
+                    Log.d("GUI", "Created session");
+                    Toast.makeText(getApplicationContext(),
+                            "Created session!",
+                            Toast.LENGTH_LONG).show();
+
+                    b.listTransactions().thenAccept(ts -> Tools.runOnMainThread(() -> {
+                        Toast.makeText(getApplicationContext(),
+                                "Got list of transactions!",
+                                Toast.LENGTH_LONG).show();
+
+                        Log.i("GUI", ts.toString());
+                    }));
+
+                }))
+                .exceptionally(e -> {
+                    final Throwable t = b.confirmException(e);
+
+                    Tools.runOnMainThread(() -> {
+                        Log.d("GUI", "Failed session " + t.getMessage());
+                        Toast.makeText(getApplicationContext(),
+                                "Failed to create session: " + t.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    });
+
+                    return null;
+                });
     }
 
     @Override
