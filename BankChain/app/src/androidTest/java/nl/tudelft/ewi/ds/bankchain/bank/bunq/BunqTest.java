@@ -57,9 +57,6 @@ public class BunqTest {
         // Run directly
         future.get();
 
-        throwable.printStackTrace();
-        System.err.println(throwable.getClass().getName());
-
         assertNull(session);
         assertNotNull(throwable);
         assertTrue(throwable instanceof BunqBankException);
@@ -92,9 +89,6 @@ public class BunqTest {
         // Run directly
         future.get();
 
-        throwable.printStackTrace();
-        System.err.println(throwable.getClass().getName());
-
         assertNull(session);
         assertNotNull(throwable);
         assertTrue(throwable instanceof BunqBankException);
@@ -110,7 +104,7 @@ public class BunqTest {
         env = new Environment();
         env.bank = "Bunq";
         env.url = "https://sandbox.public.api.bunq.com/";
-        env.apiKey = "a7214ea680c514b4fa278b3cc5f97a65ff37053483976c8203fbc916a38c2db1";
+        env.apiKey = "";
 
         bank = new BankFactory(env).create();
 

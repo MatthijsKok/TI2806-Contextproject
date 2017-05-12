@@ -1,5 +1,7 @@
 package nl.tudelft.ewi.ds.bankchain.bank;
 
+import android.support.annotation.NonNull;
+
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 import nl.tudelft.ewi.ds.bankchain.bank.mock.MockBank;
 
@@ -11,7 +13,11 @@ import nl.tudelft.ewi.ds.bankchain.bank.mock.MockBank;
 public class BankFactory {
     private Environment env;
 
-    public BankFactory(Environment env) {
+    public BankFactory(@NonNull Environment env) {
+        if (env == null) {
+            throw new IllegalArgumentException("env == null");
+        }
+
         this.env = env;
     }
 
@@ -22,7 +28,7 @@ public class BankFactory {
             case "Mock":
                 return new MockBank();
             default:
-                return new MockBank();
+                return null;
         }
     }
 }
