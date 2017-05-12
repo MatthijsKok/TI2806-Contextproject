@@ -1,103 +1,48 @@
 package nl.tudelft.ewi.ds.bankchain.cryptography;
 
-import android.util.Base64;
+import net.i2p.crypto.eddsa.Utils;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.security.SignatureException;
-
-import nl.tudelft.ewi.ds.bankchain.cryptography.keys.PrivateKey;
-import nl.tudelft.ewi.ds.bankchain.cryptography.keys.PublicKey;
 
 /**
  * Challenge class.
- * Signs a given random string with a private key, and encrypts it with a responder's public key.
- * Will also be able to check any Response on its Challenge.
+ * A challenge is the following:
+ * "MESSAGE:SIGNATURE"
  */
-public class Challenge {
+public final class Challenge {
 
-    private static final int SEED_LENGTH = 16;
-    private byte[] seed;
-    private String secret;
-    private String signature;
-    private String encryptedSecret;
-    private PrivateKey challengerPrivateKey;
+    private static final int CHALLENGE_LENGTH = 40;
 
-    /**
-     * Create a Challenge.
-     * This will generate a secret, sign it and encrypt it with the responders public key.
-     * @param challengerPrivateKey
-     * @param responderPublicKey The responders public key to encrypt the secret with.
-     */
-    public Challenge(PrivateKey challengerPrivateKey, PublicKey responderPublicKey) {
-        this.challengerPrivateKey = challengerPrivateKey;
+    public static byte[] generateChallengeBytes() {
+        return new SecureRandom().generateSeed(CHALLENGE_LENGTH);
+    }
 
-        generateChallenge();
-        signChallenge();
-        encryptChallenge(responderPublicKey);
+    public static String encodeMessage(byte[] challenge) {
+        return Utils.bytesToHex(challenge);
+    }
+
+    public static byte[] decodeMessage(String challenge) {
+        return Utils.hexToBytes(challenge);
+    }
+
+    public static String createChallenge(PrivateKey privateKey) {
+        byte[] cb = generateChallengeBytes();
+        byte[] sb = ED25519.createSignature(cb, privateKey);
+        return encodeMessage(cb) + ":" + encodeMessage(sb);
     }
 
     /**
-     * Uses SecureRandom to generate a seed.
-     * This seed is encoded to the secret as a base64 String.
-     */
-    private void generateChallenge() {
-        this.seed = new SecureRandom().generateSeed(SEED_LENGTH);
-        this.secret = Base64.encodeToString(seed, Base64.NO_WRAP);
-    }
-
-    /**
-     * Create a signature of the secret using your private and store it with the object.
-     */
-    private void signChallenge() {
-        this.signature = challengerPrivateKey.signMessage(secret);
-    }
-
-    /**
-     * Encrypt the secret using the challengers public key.
-     * @param responderPublicKey The challengers public key.
-     */
-    private void encryptChallenge(PublicKey responderPublicKey) {
-        this.encryptedSecret = responderPublicKey.encryptMessage(secret);
-    }
-
-    public String getEncryptedChallenge() {
-        return this.encryptedSecret;
-    }
-
-    public String getSignature() {
-        return this.signature;
-    }
-
-    public PublicKey getPublicKey() {
-        return this.challengerPrivateKey.getPublicKey();
-    }
-
-    /**
-     * Verifies whether the signature of the Response is valid,
-     * and the decrypted secret equals our secret.
-     * @param response The Response object to verify.
+     * Verifies whether the signature of the Response is valid.
+     * @param response The Response String to verify.
+     * @param publicKey The public key to verify the signature with.
      * @return A boolean whether the response is valid.
      */
-    public boolean verifyResponse(Response response) {
-        try {
-            verifyResponseSignature(response);
-        } catch (SignatureException e) {
-            return false;
-        }
-        return secret.equals(challengerPrivateKey.decodeMessage(response.getEncryptedResponse()));
-    }
-
-    /**
-     * Verifies the signature of the response.
-     * @param response The Response to verify the signature of
-     * @return Whether the signature is valid.
-     * @throws SignatureException If the signature is invalid.
-     * Invalid signatures are signs of malicious activity and therefore throw an Exception.
-     */
-    private boolean verifyResponseSignature(Response response) throws SignatureException {
-        if (!response.getPublicKey().verifySignedMessage(secret, response.getSignature())) {
-            throw new SignatureException("The signature of the Response is invalid!");
-        }
-        return true;
+    public static boolean verifyResponse(String response, PublicKey publicKey) {
+        String[] responseArray = response.split(":");
+        byte[] message = decodeMessage(responseArray[0]);
+        byte[] signature = decodeMessage(responseArray[1]);
+        return ED25519.verifySignature(message, signature, publicKey);
     }
 }
