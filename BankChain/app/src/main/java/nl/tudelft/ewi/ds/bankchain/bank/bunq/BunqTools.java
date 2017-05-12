@@ -70,8 +70,8 @@ public final class BunqTools {
 
             pair = keygen.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-
+            // The algorithm is available on all Android versions supported
+            // This should never happen
             return null;
         }
 

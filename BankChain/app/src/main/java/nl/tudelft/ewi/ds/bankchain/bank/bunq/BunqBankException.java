@@ -81,6 +81,7 @@ public class BunqBankException extends BankException {
     }
 
     @Override
+    @SuppressWarnings("PMD")
     public void printStackTrace() {
         httpException.printStackTrace();
     }

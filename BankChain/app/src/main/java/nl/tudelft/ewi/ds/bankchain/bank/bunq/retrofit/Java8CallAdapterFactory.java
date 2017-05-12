@@ -82,15 +82,15 @@ public final class Java8CallAdapterFactory extends CallAdapter.Factory {
     }
 
     private static final class BodyCallAdapter<R> implements CallAdapter<R, CompletableFuture<R>> {
-        private final Type responseType;
+        private final Type respType;
 
         BodyCallAdapter(Type responseType) {
-            this.responseType = responseType;
+            this.respType = responseType;
         }
 
         @Override
         public Type responseType() {
-            return responseType;
+            return respType;
         }
 
         @Override
@@ -128,15 +128,15 @@ public final class Java8CallAdapterFactory extends CallAdapter.Factory {
 
     private static final class ResponseCallAdapter<R>
             implements CallAdapter<R, CompletableFuture<Response<R>>> {
-        private final Type responseType;
+        private final Type respType;
 
         ResponseCallAdapter(Type responseType) {
-            this.responseType = responseType;
+            this.respType = responseType;
         }
 
         @Override
         public Type responseType() {
-            return responseType;
+            return respType;
         }
 
         @Override

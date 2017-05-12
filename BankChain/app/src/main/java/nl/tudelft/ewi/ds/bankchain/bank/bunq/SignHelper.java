@@ -1,6 +1,7 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import android.util.Base64;
+import android.util.Log;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -53,8 +54,10 @@ class SignHelper {
             byte[] encoded = Base64.encode(signature, Base64.NO_WRAP);
 
             return new String(encoded, StandardCharsets.UTF_8);
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            // The algorithm does exist on all android versions this app supports
+        } catch (InvalidKeyException | SignatureException e) {
+            Log.e("BUNQ_SEC", e.toString());
         }
 
         return null;
@@ -75,8 +78,10 @@ class SignHelper {
             s.update(message.getBytes(StandardCharsets.UTF_8));
 
             return s.verify(decodedSign);
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            // The algorithm does exist on all android versions this app supports
+        } catch (InvalidKeyException | SignatureException e) {
+            Log.e("BUNQ_SEC", e.toString());
         }
 
         return false;

@@ -109,7 +109,7 @@ class BunqInterceptor implements Interceptor {
         String body = "";
 
         if (request.body() != null) {
-            okio.Buffer buffer = new Buffer();
+            Buffer buffer = new Buffer();
             request.body().writeTo(buffer);
             body = buffer.readByteString().string(StandardCharsets.UTF_8);
         }
@@ -148,8 +148,7 @@ class BunqInterceptor implements Interceptor {
         StringBuilder sb = new StringBuilder();
 
         // Add prefix
-        sb.append(prefix);
-        sb.append('\n');
+        sb.append(prefix).append('\n');
 
         /*
         Sorted order of supported headers.
@@ -182,10 +181,8 @@ class BunqInterceptor implements Interceptor {
 
         // Bunq: Two '\n' (linefeed) newlines (even when there is no body).
         // The first one is already done at the end of the last header
-        sb.append('\n');
-
-        // Add content
-        sb.append(body);
+        // Then the body
+        sb.append('\n').append(body);
 
         return sb.toString();
     }
