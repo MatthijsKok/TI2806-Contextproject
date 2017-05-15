@@ -122,6 +122,9 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    Updates the error display if the recent transactions could not be retrieved.
+     */
     public TextView updateErrorDisplay(String message) {
         TextView textView = (TextView) findViewById(R.id.recentTransactionsError);
         textView.setText(message);
