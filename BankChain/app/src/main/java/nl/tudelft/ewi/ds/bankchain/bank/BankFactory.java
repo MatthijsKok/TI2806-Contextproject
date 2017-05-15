@@ -14,10 +14,6 @@ public class BankFactory {
     private Environment env;
 
     public BankFactory(@NonNull Environment env) {
-        if (env == null) {
-            throw new IllegalArgumentException("env == null");
-        }
-
         this.env = env;
     }
 

@@ -2,7 +2,6 @@ package nl.tudelft.ewi.ds.bankchain.bank;
 
 import org.junit.Test;
 
-import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 
 import static org.junit.Assert.assertNotNull;
