@@ -92,33 +92,33 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
 
-        if (transactionList != null) {
-            if (transactionList.size() > 0) {
-                for (int i = 0; i < transactionList.size(); i++) {
-                    listDataHeader.add(transactionList.get(i).getDescription());
-                    List<String> details = new ArrayList<>();
+        if (transactionList == null) {
+            updateErrorDisplay("Could not retrieve transactions.");
+            return;
+        }
+        if (transactionList.size() == 0) {
+            updateErrorDisplay("No transactions have been made yet.");
+            return;
+        }
 
-                    if (transactionList.get(i).getValue() != null && transactionList.get(i).getCurrency() != null) {
-                        details.add(transactionList.get(i).getValue().toString() + " " + transactionList.get(i).getCurrency().toString());
-                    }
-                    if (transactionList.get(i).getDirection() != null) {
-                        details.add("" + transactionList.get(i).getDirection().toString());
-                    }
-// TODO: implement once getDate functions correctly
+        for (int i = 0; i < transactionList.size(); i++) {
+            listDataHeader.add(transactionList.get(i).getDescription());
+            List<String> details = new ArrayList<>();
+
+            if (transactionList.get(i).getValue() != null && transactionList.get(i).getCurrency() != null) {
+                details.add(transactionList.get(i).getValue().toString() + " " + transactionList.get(i).getCurrency().toString());
+            }
+            if (transactionList.get(i).getDirection() != null) {
+                details.add("" + transactionList.get(i).getDirection().toString());
+            }
+//                     TODO: implement once getDate functions correctly
 //                    if (transactionList.get(i).getDate() != null) {
 //                        details.add(transactionList.get(i).getDate().toString());
 //                    }
-
-                    if (transactionList.get(i).getCounterparty() != null) {
-                        details.add("" + transactionList.get(i).getCounterparty().toString());
-                    }
-                    listDataChild.put(listDataHeader.get(i), details);
-                }
-            } else {
-                updateErrorDisplay("No transactions have been made yet.");
+            if (transactionList.get(i).getCounterparty() != null) {
+                details.add("" + transactionList.get(i).getCounterparty().toString());
             }
-        } else {
-            updateErrorDisplay("Could not retrieve transactions.");
+            listDataChild.put(listDataHeader.get(i), details);
         }
     }
 
@@ -130,7 +130,6 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         textView.setText(message);
         textView.setTextSize(20);
         return textView;
-
     }
 
 }
