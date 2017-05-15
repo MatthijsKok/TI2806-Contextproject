@@ -10,9 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
-import nl.tudelft.ewi.ds.bankchain.bank.Environment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,12 +30,15 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show()
         );
 
-        Environment v = new Environment();
-        v.bank = "Bunq";
-        v.url = "https://sandbox.public.api.bunq.com/";
-        v.apiKey = "";
+        try {
+            Environment.loadDefaults(this.getResources(), R.raw.environment);
+        } catch (IOException e) {
+            e.printStackTrace();
 
-        Bank b = new BankFactory(v).create();
+            return;
+        }
+
+        Bank b = new BankFactory(Environment.getDefaults()).create();
 
         b.createSession()
                 .thenAccept(t -> Tools.runOnMainThread(() -> {

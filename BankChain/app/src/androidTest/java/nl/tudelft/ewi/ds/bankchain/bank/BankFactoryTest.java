@@ -2,7 +2,7 @@ package nl.tudelft.ewi.ds.bankchain.bank;
 
 import org.junit.Test;
 
-import java8.util.concurrent.CompletableFuture;
+import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 
 import static org.junit.Assert.assertNotNull;
@@ -13,18 +13,13 @@ import static org.junit.Assert.assertTrue;
  * @author Jos Kuijpers
  */
 public class BankFactoryTest {
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullEnvironment() throws Exception {
-        new BankFactory(null).create();
-    }
-
     @Test
     public void testUnknoqnBankEnvironment() throws Exception {
         Bank bank;
         Environment env;
 
         env = new Environment();
-        env.bank = "NONE";
+        env.setBank("NONE");
 
         bank = new BankFactory(env).create();
 
@@ -37,9 +32,9 @@ public class BankFactoryTest {
         Environment env;
 
         env = new Environment();
-        env.bank = "Bunq";
-        env.url = "https://example.com/";
-        env.apiKey = "";
+        env.setBank("Bunq");
+        env.setBankUrl("https://example.com/");
+        env.setBankApiKey("");
 
         bank = new BankFactory(env).create();
 
