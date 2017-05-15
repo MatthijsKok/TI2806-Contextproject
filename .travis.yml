@@ -84,7 +84,7 @@ install:
   # Show version and download Gradle Wrapper if it's not already cached
   - cd ${TRAVIS_BUILD_DIR}/${DIR} && ./gradlew --version
   # Clean project and download missing dependencies and components
-  - cd ${TRAVIS_BUILD_DIR}/${DIR} && ./gradlew clean build
+  - cd ${TRAVIS_BUILD_DIR}/${DIR} && travis_wait ./gradlew clean build
   # Check components status
   - sdkmanager --list || true
 
@@ -99,7 +99,7 @@ before_script:
 
 script:
   # Run all device checks
-  - cd ${TRAVIS_BUILD_DIR}/${DIR} && ./gradlew connectedCheck
+  - cd ${TRAVIS_BUILD_DIR}/${DIR} && travis_wait ./gradlew connectedCheck
 
 after_script:
   # Show tests and lint results
