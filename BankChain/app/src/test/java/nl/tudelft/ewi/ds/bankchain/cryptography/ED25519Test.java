@@ -15,7 +15,7 @@ import org.junit.rules.ExpectedException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class ED25519Test {
 
@@ -23,7 +23,8 @@ public class ED25519Test {
     static final byte[] TEST_PK   = Utils.hexToBytes("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29");
     static final byte[] TEST_VK   = Utils.hexToBytes("302a300506032b65700321003b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29");
     static final byte[] TEST_MSG  = "This is a secret message".getBytes(Charset.forName("UTF-8"));
-    static final byte[] TEST_MSG_SIG = Utils.hexToBytes("94825896c7075c31bcb81f06dba2bdcd9dcf16e79288d4b9f87c248215c8468d475f429f3de3b4a2cf67fe17077ae19686020364d6d4fa7a0174bab4a123ba0f");
+    static final byte[] TEST_MSG_SIG = Utils.hexToBytes("94825896c7075c31bcb81f06dba2bdcd9dcf16e79288d4b9f87c248215c8468d475f429f3d"
+        + "e3b4a2cf67fe17077ae19686020364d6d4fa7a0174bab4a123ba0f");
 
     static final EdDSAParameterSpec parameterSpec = EdDSANamedCurveTable.getByName("Ed25519");
 
@@ -40,7 +41,7 @@ public class ED25519Test {
     @Test
     public void generatePrivateKeyWrongSeedLength() throws Exception {
         exception.expect(IllegalArgumentException.class);
-        ED25519.generatePrivateKey(new byte[]{0,0,0});
+        ED25519.generatePrivateKey(new byte[]{0, 0, 0});
     }
 
     @Test
@@ -75,5 +76,4 @@ public class ED25519Test {
 
         assertTrue(ED25519.verifySignature(TEST_MSG, TEST_MSG_SIG, publicKey));
     }
-
 }
