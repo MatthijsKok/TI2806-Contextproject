@@ -1,9 +1,5 @@
 package nl.tudelft.ewi.ds.bankchain;
 
-/**
- * Created by Isha Dijcks on 16-5-2017.
- */
-
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
