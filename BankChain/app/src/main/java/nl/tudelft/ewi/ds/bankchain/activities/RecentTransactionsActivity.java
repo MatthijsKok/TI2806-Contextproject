@@ -93,11 +93,11 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         expListView.setAdapter(listAdapter);
 
         if (transactionList == null) {
-            updateErrorDisplay("Could not retrieve transactions.");
+            updateNoTransactionsDisplay("Could not retrieve transactions.");
             return;
         }
         if (transactionList.size() == 0) {
-            updateErrorDisplay("No transactions have been made yet.");
+            updateNoTransactionsDisplay("No transactions have been made yet.");
             return;
         }
 
@@ -125,7 +125,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     /*
     Updates the error display if the recent transactions could not be retrieved.
      */
-    public TextView updateErrorDisplay(String message) {
+    public TextView updateNoTransactionsDisplay(String message) {
         TextView textView = (TextView) findViewById(R.id.recentTransactionsError);
         textView.setText(message);
         textView.setTextSize(20);
