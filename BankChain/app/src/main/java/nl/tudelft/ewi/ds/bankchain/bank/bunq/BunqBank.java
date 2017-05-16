@@ -16,9 +16,11 @@ import nl.tudelft.ewi.ds.bankchain.bank.BankException;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 
+import nl.tudelft.ewi.ds.bankchain.bank.Party;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.PaymentService;
 
 
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.UserService;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.retrofit.Java8CallAdapterFactory;
@@ -116,6 +118,25 @@ public final class BunqBank extends Bank {
             return transactions;
         });
     }
+
+    @Override
+    public CompletableFuture<List<? extends Party>> listUsers() {
+        CompletableFuture<UserService.ListResponse> future;
+        UserService service;
+
+        service = retrofit.create(UserService.class);
+        future = service.getUsers();
+        return future.thenApply((UserService.ListResponse response) -> {
+            List<BunqParty> parties = new ArrayList<BunqParty>();
+
+            for (UserService.ListResponse.Item item: response.items) {
+                parties.add(new BunqParty(item.user));
+            }
+
+            return parties;
+        });
+    }
+
 
     @Override
     public BunqSession getCurrentSession() {

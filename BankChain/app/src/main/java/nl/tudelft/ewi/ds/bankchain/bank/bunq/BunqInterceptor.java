@@ -61,8 +61,8 @@ class BunqInterceptor implements Interceptor {
         builder.addHeader(GEOLOCATION, "0 0 0 0 000");
         builder.addHeader("Cache-Control", "nocache");
 
-        builder.removeHeader("User-Agent");
-        builder.addHeader("User-Agent", USER_AGENT);
+        builder.removeHeader("Party-Agent");
+        builder.addHeader("Party-Agent", USER_AGENT);
 
         if (session.clientAuthenticationToken != null) {
             builder.addHeader(CLIENT_AUTHENTICATION, session.clientAuthenticationToken);
@@ -156,7 +156,7 @@ class BunqInterceptor implements Interceptor {
         calculating them.
 
         Cache-Control
-        User-Agent
+        Party-Agent
         X-Bunq-Client-Authentication
         X-Bunq-Client-Request-Id
         X-Bunq-Client-Response-Id
@@ -170,7 +170,7 @@ class BunqInterceptor implements Interceptor {
         // Add all required headers, alphabetically
         if (!bunqHeadersOnly) {
             buildHeader(headers, "Cache-Control", sb);
-            buildHeader(headers, "User-Agent", sb);
+            buildHeader(headers, "Party-Agent", sb);
         }
         buildHeader(headers, CLIENT_AUTHENTICATION, sb);
         buildHeader(headers, CLIENT_REQUEST_ID, sb);

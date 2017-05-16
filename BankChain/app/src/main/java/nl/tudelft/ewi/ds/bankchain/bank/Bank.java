@@ -20,6 +20,8 @@ public abstract class Bank {
     public abstract CompletableFuture<? extends Session> createSession();
 
     public abstract CompletableFuture<List<? extends Transaction>> listTransactions();
+
+    public abstract CompletableFuture<List<? extends Party>>   listUsers();
 //
 //    public abstract CompletableFuture<Boolean> sendTransaction(Transaction transaction);
 
