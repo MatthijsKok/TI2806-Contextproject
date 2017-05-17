@@ -29,6 +29,11 @@ public class MockBank extends Bank {
     }
 
     @Override
+    public CompletableFuture<Void> destroySession() {
+        return null;
+    }
+
+    @Override
     public CompletableFuture<List<? extends Transaction>> listTransactions() {
         return null;
     }

@@ -9,16 +9,13 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import nl.tudelft.ewi.ds.bankchain.Environment;
+import nl.tudelft.ewi.ds.bankchain.Manager;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.Tools;
-import nl.tudelft.ewi.ds.bankchain.bank.Bank;
-import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 
 public class RecentTransactionsActivity extends AppCompatActivity {
@@ -43,18 +40,8 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     This method will have to be moved to a singleton manager. So a new bank doesn't have to be made every time the activity is opened.
      */
     public void retrieveRecentTransactions() {
-        try {
-            Environment.loadDefaults(getResources(), R.raw.environment);
-        } catch (IOException e) {
-            Log.e("GUI", "Failed to load environment");
-            return;
-        }
-        Environment v = Environment.getDefaults();
-
-        Bank b = new BankFactory(v).create();
-
-        b.createSession()
-                .thenAccept(t -> Tools.runOnMainThread(() -> {
+        Manager.getInstance().getBankWithSession()
+                .thenAccept(b -> Tools.runOnMainThread(() -> {
                     Log.d("GUI", "Created session");
                     Toast.makeText(getApplicationContext(),
                             "Created session!",
@@ -72,7 +59,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
                 }))
                 .exceptionally(e -> {
-                    final Throwable t = b.confirmException(e);
+                    final Throwable t = Manager.getInstance().getBank().confirmException(e);
 
                     Tools.runOnMainThread(() -> {
                         Log.d("GUI", "Failed session " + t.getMessage());

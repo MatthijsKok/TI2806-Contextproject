@@ -85,6 +85,15 @@ public final class BunqBank extends Bank {
                 .thenApply((v) -> (Session) session);
     }
 
+    @Override
+    public CompletableFuture<Void> destroySession() {
+        // TODO: remove session from storage
+
+        session = null;
+
+        return CompletableFuture.completedFuture(null);
+    }
+
     /**
      * Load or create a new set of client keys
      */

@@ -14,10 +14,14 @@ public abstract class Bank {
 
     /**
      * Create a new session.
-     *
-     * TODO: currently not returned. Need to see how it turns out with futures etc.
      */
     public abstract CompletableFuture<? extends Session> createSession();
+
+    /**
+     * Destroy current session
+     * @return completable
+     */
+    public abstract CompletableFuture<Void> destroySession();
 
     public abstract CompletableFuture<List<? extends Transaction>> listTransactions();
 //

@@ -3,10 +3,15 @@ package nl.tudelft.ewi.ds.bankchain.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.io.IOException;
+
+import nl.tudelft.ewi.ds.bankchain.Environment;
+import nl.tudelft.ewi.ds.bankchain.Manager;
 import nl.tudelft.ewi.ds.bankchain.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -14,6 +19,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Create the manager
+        try {
+            // TODO: replace this with in-app settings on release.
+            Environment environment = Environment.loadDefaults(getResources(), R.raw.environment);
+
+            Manager.getInstance().setEnvironment(environment);
+        } catch (IOException e) {
+            Log.e("ENVIRONMENT", "Environment could not be loaded: " + e.getMessage());
+
+            return;
+        }
+
         setContentView(R.layout.activity_main);
     }
 
