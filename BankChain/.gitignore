@@ -56,3 +56,5 @@ freeline/
 freeline_project_description.json
 
 .externalNativeBuild
+
+app/src/main/res/raw/environment.xml

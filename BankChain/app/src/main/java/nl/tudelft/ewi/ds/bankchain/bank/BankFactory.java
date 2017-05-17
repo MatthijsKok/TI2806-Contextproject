@@ -2,6 +2,7 @@ package nl.tudelft.ewi.ds.bankchain.bank;
 
 import android.support.annotation.NonNull;
 
+import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 import nl.tudelft.ewi.ds.bankchain.bank.mock.MockBank;
 
@@ -18,9 +19,9 @@ public class BankFactory {
     }
 
     public Bank create() {
-        switch (env.bank) {
+        switch (env.getBank()) {
             case "Bunq":
-                return new BunqBank(env.url, env.apiKey);
+                return new BunqBank(env.getBankUrl(), env.getBankApiKey());
             case "Mock":
                 return new MockBank();
             default:

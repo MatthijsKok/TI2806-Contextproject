@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.Tools;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
@@ -42,10 +43,8 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     This method will have to be moved to a singleton manager. So a new bank doesn't have to be made every time the activity is opened.
      */
     public void retrieveRecentTransactions() {
-        Environment v = new Environment();
-        v.bank = "Bunq";
-        v.url = "";
-        v.apiKey = "";
+        Environment.loadDefaults(R.raw.environment);
+        Environment v = Environment.getDefaults();
 
         Bank b = new BankFactory(v).create();
 
