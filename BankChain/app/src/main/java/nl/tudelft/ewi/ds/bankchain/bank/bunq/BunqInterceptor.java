@@ -156,7 +156,7 @@ class BunqInterceptor implements Interceptor {
         calculating them.
 
         Cache-Control
-        Party-Agent
+        User-Agent
         X-Bunq-Client-Authentication
         X-Bunq-Client-Request-Id
         X-Bunq-Client-Response-Id

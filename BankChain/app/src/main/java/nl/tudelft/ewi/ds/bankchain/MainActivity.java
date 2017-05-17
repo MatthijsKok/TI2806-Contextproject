@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         Environment v = new Environment();
         v.bank = "Bunq";
         v.url = "http://178.62.218.153:8080/";
-        v.apiKey = "";
+        v.apiKey = "55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c";
 
         Bank b = new BankFactory(v).create();
 

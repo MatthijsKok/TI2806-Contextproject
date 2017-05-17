@@ -23,16 +23,16 @@ public class BunqParty implements Party {
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override
     public int getId() {
-        return 0;
+        return id;
     }
 
     @Override
     public List<Account> getAccounts() {
-        return null;
+        return accounts;
     }
 }
