@@ -75,13 +75,16 @@ public class Environment {
 
                     case XmlPullParser.END_TAG:
                         // Set key + value
+
                         if (key.equalsIgnoreCase("bank")) {
-                            env.setBank(text);
+                            env.bank = text;
                         } else if (key.equalsIgnoreCase("bankUrl")) {
-                            env.setBankUrl(text);
+                            env.bankUrl = text;
                         } else if (key.equalsIgnoreCase("bankApiKey")) {
-                            env.setBankApiKey(text);
+                            env.bankApiKey = text;
                         }
+
+                        key = "";
 
                         break;
 
