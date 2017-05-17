@@ -2,6 +2,8 @@ package nl.tudelft.ewi.ds.bankchain;
 
 import org.junit.Test;
 
+import nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

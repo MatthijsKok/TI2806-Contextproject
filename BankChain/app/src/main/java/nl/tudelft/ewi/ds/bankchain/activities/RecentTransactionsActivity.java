@@ -17,9 +17,12 @@ import java.util.List;
 import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.Tools;
+import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
 
 public class RecentTransactionsActivity extends AppCompatActivity {
 
@@ -60,7 +63,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                             "Created session!",
                             Toast.LENGTH_LONG).show();
 
-                    b.listTransactions().thenAccept(ts -> Tools.runOnMainThread(() -> {
+                    b.listTransactions(new BunqAccount("AT611904300234573201",2021,new BunqParty("hello world", 2002))).thenAccept(ts -> Tools.runOnMainThread(() -> {
                         Toast.makeText(getApplicationContext(),
                                 "Got list of transactions!",
                                 Toast.LENGTH_LONG).show();
@@ -114,15 +117,18 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             if (transactionList.get(i).getValue() != null && transactionList.get(i).getCurrency() != null) {
                 details.add(transactionList.get(i).getValue().toString() + " " + transactionList.get(i).getCurrency().toString());
             }
-            if (transactionList.get(i).getDirection() != null) {
-                details.add("" + transactionList.get(i).getDirection().toString());
+            if(transactionList.get(i).getValue() < 0){
+                details.add("OUT");
+            }
+            else {
+                details.add("IN");
             }
 //                     TODO: implement once getDate functions correctly
 //                    if (transactionList.get(i).getDate() != null) {
 //                        details.add(transactionList.get(i).getDate().toString());
 //                    }
-            if (transactionList.get(i).getCounterparty() != null) {
-                details.add("" + transactionList.get(i).getCounterparty().toString());
+            if (transactionList.get(i).getCounterAccount() != null) {
+                details.add("" + transactionList.get(i).getCounterAccount().getParty().toString());
             }
             listDataChild.put(listDataHeader.get(i), details);
         }

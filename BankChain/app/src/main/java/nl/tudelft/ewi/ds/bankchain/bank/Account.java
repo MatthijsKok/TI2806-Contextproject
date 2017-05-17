@@ -12,4 +12,6 @@ public interface Account {
 
     public Party getParty();
 
+    public int getId();
+
 }
