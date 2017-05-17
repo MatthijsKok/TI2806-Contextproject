@@ -121,6 +121,7 @@ public final class BunqBank extends Bank {
 
     /**
      * returns a list of users that are linked to this account
+     *
      * @return List of Parties
      */
     @Override
