@@ -9,6 +9,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,6 @@ import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.Tools;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
-import nl.tudelft.ewi.ds.bankchain.bank.Environment;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 
 public class RecentTransactionsActivity extends AppCompatActivity {
@@ -43,7 +43,12 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     This method will have to be moved to a singleton manager. So a new bank doesn't have to be made every time the activity is opened.
      */
     public void retrieveRecentTransactions() {
-        Environment.loadDefaults(R.raw.environment);
+        try {
+            Environment.loadDefaults(getResources(), R.raw.environment);
+        } catch (IOException e) {
+            Log.e("GUI", "Failed to load environment");
+            return;
+        }
         Environment v = Environment.getDefaults();
 
         Bank b = new BankFactory(v).create();
