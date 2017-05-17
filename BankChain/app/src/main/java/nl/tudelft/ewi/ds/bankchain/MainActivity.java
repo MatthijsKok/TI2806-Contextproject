@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         Environment v = new Environment();
         v.bank = "Bunq";
-        v.url = "https://sandbox.public.api.bunq.com/";
+        v.url = "";
         v.apiKey = "";
 
         Bank b = new BankFactory(v).create();
