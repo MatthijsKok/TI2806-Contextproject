@@ -121,8 +121,4 @@ public class BunqTest {
         assertNotNull(session);
         assertNull(throwable);
     }
-
-
-
-
 }

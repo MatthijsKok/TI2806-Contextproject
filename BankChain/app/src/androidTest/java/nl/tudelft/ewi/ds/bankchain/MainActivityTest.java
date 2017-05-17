@@ -42,9 +42,6 @@ public class MainActivityTest {
         intended(allOf(
                 hasComponent(hasShortClassName(".activities.RecentTransactionsActivity")),
                 toPackage(PACKAGE_NAME)));
-
     }
-
-
 }
 
