@@ -2,7 +2,6 @@ package nl.tudelft.ewi.ds.bankchain.cryptography;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SignatureException;
 
 import static nl.tudelft.ewi.ds.bankchain.cryptography.Challenge.decodeMessage;
 import static nl.tudelft.ewi.ds.bankchain.cryptography.Challenge.encodeMessage;

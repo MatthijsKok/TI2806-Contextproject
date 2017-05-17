@@ -1,8 +1,7 @@
 package nl.tudelft.ewi.ds.bankchain;
 
-import android.app.Activity;
+
 import android.support.test.annotation.UiThreadTest;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.TextView;
@@ -12,11 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import nl.tudelft.ewi.ds.bankchain.activities.RecentTransactionsActivity;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 
 
