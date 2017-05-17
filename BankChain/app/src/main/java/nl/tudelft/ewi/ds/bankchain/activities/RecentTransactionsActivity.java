@@ -22,10 +22,10 @@ import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 
 public class RecentTransactionsActivity extends AppCompatActivity {
 
-    ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
-    List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
+    private ExpandableListAdapter listAdapter;
+    private ExpandableListView expListView;
+    private List<String> listDataHeader;
+    private HashMap<String, List<String>> listDataChild;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,9 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         retrieveRecentTransactions();
     }
 
-
+    /*
+    This method will have to be moved to a singleton manager. So a new bank doesn't have to be made every time the activity is opened.
+     */
     public void retrieveRecentTransactions() {
         Environment v = new Environment();
         v.bank = "Bunq";
@@ -130,7 +132,6 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         textView.setText(message);
         textView.setTextSize(20);
     }
-
 
 
 }
