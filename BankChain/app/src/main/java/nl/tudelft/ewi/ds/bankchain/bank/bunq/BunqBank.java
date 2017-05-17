@@ -49,7 +49,7 @@ public final class BunqBank extends Bank {
 
     /**
      * Create a new bank inferface with given API url.
-     *
+     * <p>
      * Creates a proper HTTP client and a session store.
      *
      * @param url URL of the Bunq API
@@ -119,6 +119,10 @@ public final class BunqBank extends Bank {
         });
     }
 
+    /**
+     * returns a list of users that are linked to this account
+     * @return List of Parties
+     */
     @Override
     public CompletableFuture<List<? extends Party>> listUsers() {
         CompletableFuture<UserService.ListResponse> future;
@@ -129,7 +133,7 @@ public final class BunqBank extends Bank {
         return future.thenApply((UserService.ListResponse response) -> {
             List<BunqParty> parties = new ArrayList<BunqParty>();
 
-            for (UserService.ListResponse.Item item: response.items) {
+            for (UserService.ListResponse.Item item : response.items) {
                 parties.add(new BunqParty(item.user));
             }
 
@@ -155,7 +159,7 @@ public final class BunqBank extends Bank {
 
     /**
      * Get the API key.
-     *
+     * <p>
      * Only accessable by the Bunq package.
      *
      * @return Api key

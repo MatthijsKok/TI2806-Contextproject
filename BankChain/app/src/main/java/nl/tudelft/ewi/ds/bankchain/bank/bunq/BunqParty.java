@@ -8,6 +8,7 @@ import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.UserService;
 
 /**
  * Created by Richard-HP on 15/05/2017.
+ * Bunq implementation of a party this can be either a company or person
  */
 
 public class BunqParty implements Party {
@@ -15,8 +16,7 @@ public class BunqParty implements Party {
     private int id;
     List<Account> accounts;
 
-
-    public BunqParty(UserService.ListResponse.UserCompany user){
+    public BunqParty(UserService.ListResponse.UserCompany user) {
         id = user.id;
         name = user.name;
     }

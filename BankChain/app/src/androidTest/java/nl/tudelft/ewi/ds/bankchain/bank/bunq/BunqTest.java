@@ -1,7 +1,5 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
-import android.util.Log;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +9,6 @@ import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankchain.bank.Environment;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
-import retrofit2.HttpException;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

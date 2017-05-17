@@ -1,3 +1,4 @@
+/*
 package nl.tudelft.ewi.ds.bankchain;
 
 import android.os.Bundle;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("GUI", ts.toString());
 
                     }));
-                    */
+
                     b.listUsers().thenAccept(ts -> Tools.runOnMainThread(() ->{
                         String user = ts.toString(); //ts.get(0).getName() +" ("+ ts.get(0).getId()+")";
                        Toast.makeText(getApplicationContext(),user,Toast.LENGTH_LONG).show();
@@ -99,3 +100,4 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+*/

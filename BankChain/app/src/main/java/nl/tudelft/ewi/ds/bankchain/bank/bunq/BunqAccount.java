@@ -7,10 +7,10 @@ import nl.tudelft.ewi.ds.bankchain.bank.Party;
  * Created by Richard-HP on 15/05/2017.
  */
 
-public class BunqAccount implements Account{
+public class BunqAccount implements Account {
 
     private Party party;
-    private String Iban;
+    private String iban;
 
     @Override
     public String getIban() {

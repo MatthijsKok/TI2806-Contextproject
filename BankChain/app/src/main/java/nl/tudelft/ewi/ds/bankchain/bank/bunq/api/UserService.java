@@ -16,22 +16,22 @@ public interface UserService {
     @GET("/v1/user")
     CompletableFuture<ListResponse> getUsers();
 
-     class ListResponse{
-         @SerializedName("Response")
-         public List<Item> items;
+    class ListResponse {
+        @SerializedName("Response")
+        public List<Item> items;
 
-         public class Item {
-             @SerializedName("UserCompany")
-             public UserCompany user;
-         }
+        public class Item {
+            @SerializedName("UserCompany")
+            public UserCompany user;
+        }
 
-         public class UserCompany {
-             @SerializedName("id")
-             public int id;
+        public class UserCompany {
+            @SerializedName("id")
+            public int id;
 
-             @SerializedName("name")
-             public String name;
-         }
-     }
+            @SerializedName("name")
+            public String name;
+        }
+    }
 
 }

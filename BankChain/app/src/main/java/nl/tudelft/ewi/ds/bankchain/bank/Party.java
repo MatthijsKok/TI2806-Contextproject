@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface Party {
 
-
     /**
      * Get name of the party, if available
      *
@@ -18,12 +17,14 @@ public interface Party {
 
     /**
      * return user id
+     *
      * @return ID or 0
      */
     int getId();
 
     /**
      * if the user is linked to this api key return the list of all connected accounts
+     *
      * @return
      */
     List<Account> getAccounts();

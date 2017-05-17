@@ -15,18 +15,21 @@ public abstract class TransactionCounterparty {
 
     /**
      * Get IBAN of the counterparty, if available.
+     *
      * @return IBAN, or null
      */
     public abstract String getIBAN();
 
     /**
      * Get e-mail of the counterparty, if available.
+     *
      * @return Email, or null
      */
     public abstract String getEmail();
 
     /**
      * Get name of the counterparty, if available
+     *
      * @return Name, or null
      */
     public abstract String getName();
