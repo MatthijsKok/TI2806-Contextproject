@@ -1,0 +1,28 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="pref_key_bung_title"
+        android:title="@string/pref_bunq_title">
+        <EditTextPreference
+            android:defaultValue="true"
+            android:key="pref_api_key"
+            android:summary="@string/pref_api_key_summ"
+            android:title="@string/pref_api_key" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_key_keys"
+        android:title="@string/pref_keys">
+        <EditTextPreference
+            android:defaultValue="true"
+            android:key="pref_public_key_key"
+            android:summary="@string/pref_public_key_summ"
+            android:title="@string/pref_public_key" />
+        <EditTextPreference
+            android:defaultValue="true"
+            android:key="pref_private_key_key"
+            android:summary="@string/pref_private_key_summ"
+            android:title="@string/pref_private_key" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

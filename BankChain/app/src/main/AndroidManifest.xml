@@ -24,10 +24,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:parentActivityName=".activities.MainActivity"
             android:name=".activities.RecentTransactionsActivity"
-            android:label="@string/app_name" />
-
+            android:label="@string/app_name"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>
