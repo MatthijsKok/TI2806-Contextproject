@@ -10,9 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.Iterator;
+
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankchain.bank.Environment;
+import nl.tudelft.ewi.ds.bankchain.bank.Party;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "Created session!",
                             Toast.LENGTH_LONG).show();
-
+                    /*
                     b.listTransactions().thenAccept(ts -> Tools.runOnMainThread(() -> {
                         Toast.makeText(getApplicationContext(),
                                 "Got list of transactions!",
@@ -52,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("GUI", ts.toString());
 
                     }));
-
+                    */
                     b.listUsers().thenAccept(ts -> Tools.runOnMainThread(() ->{
-                        String user = ts.get(0).getName() +" ("+ ts.get(0).getId()+")";
-                        Toast.makeText(getApplicationContext(),user,Toast.LENGTH_LONG).show();
+                        String user = ts.toString(); //ts.get(0).getName() +" ("+ ts.get(0).getId()+")";
+                       Toast.makeText(getApplicationContext(),user,Toast.LENGTH_LONG).show();
 
                     }));
 
