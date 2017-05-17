@@ -7,7 +7,7 @@ import java8.util.concurrent.CompletableFuture;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
-import nl.tudelft.ewi.ds.bankchain.bank.Environment;
+import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
 
 import static org.junit.Assert.assertNotNull;
