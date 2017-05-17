@@ -1,4 +1,4 @@
-package nl.tudelft.ewi.ds.bankchain.bank;
+package nl.tudelft.ewi.ds.bankchain;
 
 import org.junit.Test;
 
