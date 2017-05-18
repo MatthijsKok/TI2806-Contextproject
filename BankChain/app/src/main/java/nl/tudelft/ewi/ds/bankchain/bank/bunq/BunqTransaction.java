@@ -3,8 +3,8 @@ package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 import java.util.Currency;
 import java.util.Date;
 
+import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
-import nl.tudelft.ewi.ds.bankchain.bank.TransactionCounterparty;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.PaymentService;
 
 /**
@@ -12,43 +12,55 @@ import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.PaymentService;
  *
  * @author Jos Kuijpers
  */
-final class BunqTransaction extends Transaction {
-    private PaymentService.ListResponse.Payment payment;
+final class BunqTransaction implements Transaction {
 
-    BunqTransaction(PaymentService.ListResponse.Payment payment) {
-        this.payment = payment;
+    private Date date;
+    private float value;
+    private String description;
+    private Currency currency;
+    private Account counterAccount;
+    private Account account;
+
+
+    BunqTransaction(PaymentService.ListResponse.Payment payment, Account account) {
+        date = new Date(22111990); //payment.getCreationDate(); Todo fix payment
+        value = payment.amount.getValue();
+        currency = payment.amount.getCurrency();
+        description = payment.description;
+        this.account = account;
+        this.counterAccount = new BunqAccount(payment.counterParty.iban, -1, new BunqParty(payment.counterParty.name, -1));
     }
 
-    @Override
-    // TODO: implement
-    public Direction getDirection() {
-        return null;
-    }
 
     @Override
     public Date getDate() {
-        return payment.getCreationDate();
+        return date;
     }
 
     @Override
     public Float getValue() {
-        return payment.amount.getValue();
+        return value;
     }
 
     @Override
     public Currency getCurrency() {
-        return payment.amount.getCurrency();
+        return currency;
     }
 
     @Override
-    // TODO: implement
-    public TransactionCounterparty getCounterparty() {
-        return null;
+    public Account getCounterAccount() {
+        return counterAccount;
     }
+
+    @Override
+    public Account getAcount() {
+        return account;
+    }
+
 
     @Override
     public String getDescription() {
-        return payment.description;
+        return description;
     }
 
     @Override

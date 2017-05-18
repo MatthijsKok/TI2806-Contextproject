@@ -3,55 +3,46 @@ package nl.tudelft.ewi.ds.bankchain.bank;
 import java.util.Currency;
 import java.util.Date;
 
-public abstract class Transaction {
-
-    public enum Direction {
-        IN,
-        OUT
-    }
-
-    // id => BunqTransaction
-
-    /**
-     * Get direction of the transaction: into the account or
-     * out fromt he account.
-     *
-     * @return in or out
-     */
-    public abstract Direction getDirection();
+public interface Transaction {
 
     /**
      * Get date of the transaction.
      *
      * @return date, or null when transaction is new.
      */
-    public abstract Date getDate();
+    public Date getDate();
 
     /**
      * Get the amount of money transferred, in #currency.
      *
      * @return value of the money (defaults to 0)
      */
-    public abstract Float getValue();
+    public Float getValue();
 
     /**
      * Get the currency the value is in.
      *
      * @return currency (defaults to EUR)
      */
-    public abstract Currency getCurrency();
+    public Currency getCurrency();
 
     /**
-     * Get the counterparty for this transaction
+     * Get the CounterAccount for this transaction
      *
-     * @return counterparty object.
+     * @return Account object.
      */
-    public abstract TransactionCounterparty getCounterparty();
+    public Account getCounterAccount();
+
+    /**
+     * get the account the money is added to (negative means it's a payment)
+     * @return
+     */
+    public Account getAcount();
 
     /**
      * Get the description of the transaction.
      *
      * @return description or null
      */
-    public abstract String getDescription();
+    public String getDescription();
 }

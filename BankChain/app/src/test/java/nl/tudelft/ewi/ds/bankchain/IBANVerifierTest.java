@@ -2,6 +2,8 @@ package nl.tudelft.ewi.ds.bankchain;
 
 import org.junit.Test;
 
+import nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -15,12 +17,12 @@ public class IBANVerifierTest {
     }
 
     @Test
-    public void  verifyTrue() throws Exception {
+    public void verifyTrue() throws Exception {
         assertTrue(IBANVerifier.verify("GB82WEST12345698765432"));
     }
 
     @Test
-    public void  verifyTrueIng() throws Exception {
+    public void verifyTrueIng() throws Exception {
         assertTrue(IBANVerifier.verify("NL29INGB0006108849"));
     }
 
@@ -30,7 +32,7 @@ public class IBANVerifierTest {
     }
 
     @Test
-    public void verifyGerman() throws  Exception {
+    public void verifyGerman() throws Exception {
         assertTrue(IBANVerifier.verify("DE89370400440532013000"));
     }
 
