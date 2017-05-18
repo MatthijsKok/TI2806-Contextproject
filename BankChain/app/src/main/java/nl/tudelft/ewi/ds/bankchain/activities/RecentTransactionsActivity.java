@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -34,7 +35,10 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getActionBar() != null) {
+            Log.d("GUI", "onCreate: Actionbar found");
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        };
         retrieveRecentTransactions();
     }
 
@@ -133,5 +137,23 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         textView.setTextSize(20);
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Log.d("GUI", "onBackPressed: RecentTransActions");
+
+        this.finish();
+        overridePendingTransition  (R.anim.left_slide_in, R.anim.right_slide_out);
+    }
 
 }

@@ -3,6 +3,7 @@ package nl.tudelft.ewi.ds.bankchain.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     public void startRecentTransactionActivity(View view) {
         Intent intent = new Intent(MainActivity.this, RecentTransactionsActivity.class);
         startActivity(intent);
+        overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
     }
 
     public void startSettingsActivity(MenuItem item) {
@@ -41,13 +43,10 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (id == R.id.action_settings) {
+            Log.d("GUI", "MainActivity");
             this.finish();
+            overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
             return true;
         }
 
