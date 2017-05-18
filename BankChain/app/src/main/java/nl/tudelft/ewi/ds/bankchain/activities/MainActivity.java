@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

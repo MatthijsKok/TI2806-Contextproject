@@ -11,14 +11,18 @@ import java.util.List;
 
 import java8.util.concurrent.CompletionException;
 
+import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankException;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 
+import nl.tudelft.ewi.ds.bankchain.bank.Party;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.AccountService;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.PaymentService;
 
 
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.UserService;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.retrofit.Java8CallAdapterFactory;
@@ -47,7 +51,7 @@ public final class BunqBank extends Bank {
 
     /**
      * Create a new bank inferface with given API url.
-     *
+     * <p>
      * Creates a proper HTTP client and a session store.
      *
      * @param url URL of the Bunq API
@@ -97,25 +101,67 @@ public final class BunqBank extends Bank {
     }
 
     @Override
-    public CompletableFuture<List<? extends Transaction>> listTransactions() {
+    public CompletableFuture<List<? extends Transaction>> listTransactions(Account account) {
         CompletableFuture<PaymentService.ListResponse> future;
         PaymentService service;
 
         service = retrofit.create(PaymentService.class);
 
         // TODO: get values somewhere else
-        future = service.listPayments(2002, 2021);
+        future = service.listPayments(account.getParty().getId(), account.getId());
 
         return future.thenApply((PaymentService.ListResponse response) -> {
             List<BunqTransaction> transactions = new ArrayList<BunqTransaction>();
 
             for (PaymentService.ListResponse.Item item : response.items) {
-                transactions.add(new BunqTransaction(item.payment));
+                transactions.add(new BunqTransaction(item.payment, account));
             }
 
             return transactions;
         });
     }
+
+    /**
+     * returns a list of users that are linked to this account
+     *
+     * @return List of Parties
+     */
+    @Override
+    public CompletableFuture<List<? extends Party>> listUsers() {
+        CompletableFuture<UserService.ListResponse> future;
+        UserService service;
+
+        service = retrofit.create(UserService.class);
+        future = service.getUsers();
+        return future.thenApply((UserService.ListResponse response) -> {
+            List<BunqParty> parties = new ArrayList<BunqParty>();
+
+            for (UserService.ListResponse.Item item : response.items) {
+                parties.add(new BunqParty(item.user));
+            }
+
+            return parties;
+        });
+    }
+
+    @Override
+    public CompletableFuture<List<Account>> listAccount(Party party) {
+        CompletableFuture<AccountService.ListResponse> future;
+        AccountService service;
+
+        service = retrofit.create(AccountService.class);
+        future = service.listAccounts(party.getId());
+        return future.thenApply((AccountService.ListResponse response) -> {
+            List<Account> accounts = new ArrayList<Account>();
+
+            for (AccountService.ListResponse.Item item : response.items) {
+                accounts.add(new BunqAccount(item.account, party));
+            }
+
+            return accounts;
+        });
+    }
+
 
     @Override
     public BunqSession getCurrentSession() {
@@ -134,7 +180,7 @@ public final class BunqBank extends Bank {
 
     /**
      * Get the API key.
-     *
+     * <p>
      * Only accessable by the Bunq package.
      *
      * @return Api key

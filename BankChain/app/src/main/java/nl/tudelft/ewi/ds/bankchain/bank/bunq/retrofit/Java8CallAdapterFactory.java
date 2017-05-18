@@ -35,15 +35,15 @@ import retrofit2.Retrofit;
  * <pre><code>
  * interface MyService {
  *   &#64;GET("user/me")
- *   CompletableFuture&lt;User&gt; getUser()
+ *   CompletableFuture&lt;Party&gt; getParty()
  * }
  * </code></pre>
  * There are two configurations supported for the {@code CompletableFuture} type parameter:
  * <ul>
- * <li>Direct body (e.g., {@code CompletableFuture<User>}) returns the deserialized body for 2XX
+ * <li>Direct body (e.g., {@code CompletableFuture<Party>}) returns the deserialized body for 2XX
  * responses, sets {@link retrofit2.HttpException HttpException} errors for non-2XX responses, and
  * sets {@link IOException} for network errors.</li>
- * <li>Response wrapped body (e.g., {@code CompletableFuture<Response<User>>}) returns a
+ * <li>Response wrapped body (e.g., {@code CompletableFuture<Response<Party>>}) returns a
  * {@link Response} object for all HTTP responses and sets {@link IOException} for network
  * errors</li>
  * </ul>

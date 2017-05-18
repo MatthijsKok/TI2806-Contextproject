@@ -3,6 +3,7 @@ package nl.tudelft.ewi.ds.bankchain.activities;
 /**
  * Taken from
  * http://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/
+ *
  * @author Isha Dijcks
  */
 

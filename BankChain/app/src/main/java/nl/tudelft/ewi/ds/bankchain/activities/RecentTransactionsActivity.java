@@ -10,16 +10,22 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.Tools;
+import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
-import nl.tudelft.ewi.ds.bankchain.bank.Environment;
+import nl.tudelft.ewi.ds.bankchain.bank.Party;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
 
 public class RecentTransactionsActivity extends AppCompatActivity {
 
@@ -47,10 +53,13 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     This method will have to be moved to a singleton manager. So a new bank doesn't have to be made every time the activity is opened.
      */
     public void retrieveRecentTransactions() {
-        Environment v = new Environment();
-        v.bank = "Bunq";
-        v.url = "";
-        v.apiKey = "";
+        try {
+            Environment.loadDefaults(getResources(), R.raw.environment);
+        } catch (IOException e) {
+            Log.e("GUI", "Failed to load environment");
+            return;
+        }
+        Environment v = Environment.getDefaults();
 
         Bank b = new BankFactory(v).create();
 
@@ -61,7 +70,17 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                             "Created session!",
                             Toast.LENGTH_LONG).show();
 
-                    b.listTransactions().thenAccept(ts -> Tools.runOnMainThread(() -> {
+                    Party p = new BunqParty("hello world", 2002);
+                    Account ac = null;
+                    try {
+                        ac = b.listAccount(p).get().stream().findFirst().orElse(new BunqAccount("error", -1, p));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
+                    b.listTransactions(ac).thenAccept(ts -> Tools.runOnMainThread(() -> {
                         Toast.makeText(getApplicationContext(),
                                 "Got list of transactions!",
                                 Toast.LENGTH_LONG).show();
@@ -115,15 +134,12 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             if (transactionList.get(i).getValue() != null && transactionList.get(i).getCurrency() != null) {
                 details.add(transactionList.get(i).getValue().toString() + " " + transactionList.get(i).getCurrency().toString());
             }
-            if (transactionList.get(i).getDirection() != null) {
-                details.add("" + transactionList.get(i).getDirection().toString());
-            }
 //                     TODO: implement once getDate functions correctly
 //                    if (transactionList.get(i).getDate() != null) {
 //                        details.add(transactionList.get(i).getDate().toString());
 //                    }
-            if (transactionList.get(i).getCounterparty() != null) {
-                details.add("" + transactionList.get(i).getCounterparty().toString());
+            if (transactionList.get(i).getCounterAccount() != null && transactionList.get(i).getCounterAccount().getParty() != null) {
+                details.add("" + transactionList.get(i).getCounterAccount().getParty().toString());
             }
             listDataChild.put(listDataHeader.get(i), details);
         }
