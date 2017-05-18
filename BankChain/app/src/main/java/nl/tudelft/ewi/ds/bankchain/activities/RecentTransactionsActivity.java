@@ -129,16 +129,11 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             if (transactionList.get(i).getValue() != null && transactionList.get(i).getCurrency() != null) {
                 details.add(transactionList.get(i).getValue().toString() + " " + transactionList.get(i).getCurrency().toString());
             }
-            if (transactionList.get(i).getValue() < 0) {
-                details.add("OUT");
-            } else {
-                details.add("IN");
-            }
 //                     TODO: implement once getDate functions correctly
 //                    if (transactionList.get(i).getDate() != null) {
 //                        details.add(transactionList.get(i).getDate().toString());
 //                    }
-            if (transactionList.get(i).getCounterAccount() != null) {
+            if (transactionList.get(i).getCounterAccount() != null && transactionList.get(i).getCounterAccount().getParty() != null) {
                 details.add("" + transactionList.get(i).getCounterAccount().getParty().toString());
             }
             listDataChild.put(listDataHeader.get(i), details);
