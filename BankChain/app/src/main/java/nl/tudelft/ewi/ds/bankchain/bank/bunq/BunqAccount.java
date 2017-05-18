@@ -27,7 +27,7 @@ public class BunqAccount implements Account {
         iban = ac.get().value;
     }
 
-    public BunqAccount(String iban, int id, Party party){
+    public BunqAccount(String iban, int id, Party party) {
         this.iban = iban;
         this.party = party;
         this.id = id;

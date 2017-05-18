@@ -114,7 +114,7 @@ public final class BunqBank extends Bank {
             List<BunqTransaction> transactions = new ArrayList<BunqTransaction>();
 
             for (PaymentService.ListResponse.Item item : response.items) {
-                transactions.add(new BunqTransaction(item.payment,account));
+                transactions.add(new BunqTransaction(item.payment, account));
             }
 
             return transactions;
@@ -145,17 +145,17 @@ public final class BunqBank extends Bank {
     }
 
     @Override
-    public CompletableFuture<List<? extends Account>> listAccount(Party party) {
+    public CompletableFuture<List<Account>> listAccount(Party party) {
         CompletableFuture<AccountService.ListResponse> future;
         AccountService service;
 
         service = retrofit.create(AccountService.class);
         future = service.listAccounts(party.getId());
-        return  future.thenApply((AccountService.ListResponse response) -> {
-            List<BunqAccount> accounts = new ArrayList<BunqAccount>();
+        return future.thenApply((AccountService.ListResponse response) -> {
+            List<Account> accounts = new ArrayList<Account>();
 
             for (AccountService.ListResponse.Item item : response.items) {
-                accounts.add(new BunqAccount(item.account,party));
+                accounts.add(new BunqAccount(item.account, party));
             }
 
             return accounts;

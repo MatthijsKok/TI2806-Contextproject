@@ -37,7 +37,7 @@ public interface AccountService {
             public List<Alias> aliases;
         }
 
-        public class Alias{
+        public class Alias {
             @SerializedName("type")
             public String type;
             @SerializedName("value")

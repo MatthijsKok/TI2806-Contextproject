@@ -41,7 +41,7 @@ public class MockBank extends Bank {
     }
 
     @Override
-    public CompletableFuture<List<? extends Account>> listAccount(Party party) {
+    public CompletableFuture<List<Account>> listAccount(Party party) {
         return null;
     }
 

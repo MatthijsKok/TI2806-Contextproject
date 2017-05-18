@@ -23,7 +23,7 @@ final class BunqTransaction implements Transaction {
 
 
     BunqTransaction(PaymentService.ListResponse.Payment payment, Account account) {
-        date = payment.getCreationDate();
+        date = new Date(22111990); //payment.getCreationDate();
         value = payment.amount.getValue();
         currency = payment.amount.getCurrency();
         description = payment.description;
