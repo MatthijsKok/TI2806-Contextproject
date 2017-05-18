@@ -39,7 +39,6 @@ public class BunqTest {
         env.url = "https://example.com/";
         env.apiKey = "";
 
-
         bank = new BankFactory(env).create();
 
         future = bank.createSession()
