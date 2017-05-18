@@ -17,7 +17,9 @@ import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 
 import nl.tudelft.ewi.ds.bankchain.R;
@@ -122,7 +124,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
-        // Display the fragment as the main content.
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+
         getFragmentManager().beginTransaction().replace(android.R.id.content,
                 new PrefsFragment()).commit();
     }
@@ -147,7 +151,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
 
-
+    @Override
+    public void onBackPressed()
+    {
+        this.finish();
+        overridePendingTransition  (R.anim.left_slide_in, R.anim.right_slide_out);
+    }
 
 
     /**

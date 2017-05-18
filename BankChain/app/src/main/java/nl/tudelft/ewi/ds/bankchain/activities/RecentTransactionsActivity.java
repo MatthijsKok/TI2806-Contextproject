@@ -35,9 +35,10 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if(getActionBar() != null) {
+        if(getSupportActionBar() != null) {
             Log.d("GUI", "onCreate: Actionbar found");
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
         };
         retrieveRecentTransactions();
     }
@@ -143,15 +144,12 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed()
     {
-        Log.d("GUI", "onBackPressed: RecentTransActions");
-
         this.finish();
         overridePendingTransition  (R.anim.left_slide_in, R.anim.right_slide_out);
     }
