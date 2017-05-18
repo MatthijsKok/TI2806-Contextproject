@@ -14,12 +14,14 @@ public abstract class Bank {
 
     /**
      * Create a new session.
-     *
+     * <p>
      * TODO: currently not returned. Need to see how it turns out with futures etc.
      */
     public abstract CompletableFuture<? extends Session> createSession();
 
     public abstract CompletableFuture<List<? extends Transaction>> listTransactions();
+
+    public abstract CompletableFuture<List<? extends Party>> listUsers();
 //
 //    public abstract CompletableFuture<Boolean> sendTransaction(Transaction transaction);
 

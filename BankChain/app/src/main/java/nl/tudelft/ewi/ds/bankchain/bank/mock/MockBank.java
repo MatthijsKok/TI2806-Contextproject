@@ -9,6 +9,7 @@ import java.util.List;
 import java8.util.concurrent.CompletableFuture;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
+import nl.tudelft.ewi.ds.bankchain.bank.Party;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 
@@ -30,6 +31,11 @@ public class MockBank extends Bank {
 
     @Override
     public CompletableFuture<List<? extends Transaction>> listTransactions() {
+        return null;
+    }
+
+    @Override
+    public CompletableFuture<List<? extends Party>> listUsers() {
         return null;
     }
 
