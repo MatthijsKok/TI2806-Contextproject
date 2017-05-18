@@ -1,5 +1,6 @@
 package nl.tudelft.ewi.ds.bankchain.cryptography;
 
+import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.Utils;
 
 import java.security.PrivateKey;
@@ -8,8 +9,8 @@ import java.security.SecureRandom;
 
 /**
  * Challenge class.
- * A challenge is the following:
- * "MESSAGE:SIGNATURE"
+ * A challenge is the following format:
+ * "CH:MESSAGE:SIGNATURE:PUBLICKEY"
  */
 public final class Challenge {
 
@@ -30,19 +31,20 @@ public final class Challenge {
     public static String createChallenge(PrivateKey privateKey) {
         byte[] cb = generateChallengeBytes();
         byte[] sb = ED25519.createSignature(cb, privateKey);
-        return encodeMessage(cb) + ":" + encodeMessage(sb);
+        byte[] vk = ED25519.getPublicKey((EdDSAPrivateKey) privateKey).getEncoded();
+        return "CH:" + encodeMessage(cb) + ":" + encodeMessage(sb) + ":" + encodeMessage(vk);
     }
 
     /**
      * Verifies whether the signature of the Response is valid.
      * @param response The Response String to verify.
-     * @param publicKey The public key to verify the signature with.
      * @return A boolean whether the response is valid.
      */
-    public static boolean verifyResponse(String response, PublicKey publicKey) {
+    public static boolean verifyResponse(String response) {
         String[] responseArray = response.split(":");
-        byte[] message = decodeMessage(responseArray[0]);
-        byte[] signature = decodeMessage(responseArray[1]);
-        return ED25519.verifySignature(message, signature, publicKey);
+        byte[] message = decodeMessage(responseArray[1]);
+        byte[] signature = decodeMessage(responseArray[2]);
+        byte[] publicKey = decodeMessage(responseArray[3]);
+        return responseArray[0].equals("RE") && ED25519.verifySignature(message, signature, publicKey);
     }
 }
