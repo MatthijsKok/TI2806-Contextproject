@@ -35,9 +35,9 @@ public class BunqTest {
         Environment env;
 
         env = new Environment();
-        env.bank = "Bunq";
-        env.url = "https://example.com/";
-        env.apiKey = "";
+        env.setBank("Bunq");
+        env.setBankUrl("https://example.com/");
+        env.setBankApiKey("");
 
         bank = new BankFactory(env).create();
 
@@ -67,9 +67,9 @@ public class BunqTest {
         Environment env;
 
         env = new Environment();
-        env.bank = "Bunq";
-        env.url = "https://sandbox.public.api.bunq.com/";
-        env.apiKey = "";
+        env.setBank("Bunq");
+        env.setBankUrl("https://sandbox.public.api.bunq.com/");
+        env.setBankApiKey("");
 
         bank = new BankFactory(env).create();
 
@@ -99,9 +99,9 @@ public class BunqTest {
         Environment env;
 
         env = new Environment();
-        env.bank = "Bunq";
-        env.url = "https://sandbox.public.api.bunq.com/";
-        env.apiKey = "";
+        env.setBank("Bunq");
+        env.setBankUrl("https://sandbox.public.api.bunq.com/");
+        env.setBankApiKey("");
 
         bank = new BankFactory(env).create();
 
@@ -121,6 +121,4 @@ public class BunqTest {
         assertNotNull(session);
         assertNull(throwable);
     }
-
-
 }
