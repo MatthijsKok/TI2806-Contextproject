@@ -53,15 +53,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         }
 
         SwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_recent_transactions_swipe_refresh_layout);
-        SwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                retrieveRecentTransactions();
-            }
-
-        });
-
-
+        SwipeRefreshLayout.setOnRefreshListener(() -> retrieveRecentTransactions());
         retrieveRecentTransactions();
     }
 
