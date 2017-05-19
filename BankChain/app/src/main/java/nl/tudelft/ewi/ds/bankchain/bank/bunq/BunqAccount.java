@@ -1,6 +1,7 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Party;
@@ -19,7 +20,7 @@ public class BunqAccount implements Account {
 
     public BunqAccount(AccountService.ListResponse.BunqBankAccount account, Party party) {
         //retreive IBAN from list of aliases
-        Optional<AccountService.ListResponse.Alias> ac = account.aliases.stream()
+        java8.util.Optional<AccountService.ListResponse.Alias> ac = java8.util.stream.StreamSupport.stream(account.aliases)
                 .filter((c) -> c.type.equals("IBAN"))
                 .findFirst();
         id = account.id;

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.StreamSupport;
 
 import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
@@ -26,6 +27,8 @@ import nl.tudelft.ewi.ds.bankchain.bank.Party;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
+
+import static android.media.CamcorderProfile.get;
 
 public class RecentTransactionsActivity extends AppCompatActivity {
 
@@ -73,7 +76,14 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                     Party p = new BunqParty("hello world", 2002);
                     Account ac = null;
                     try {
-                        ac = b.listAccount(p).get().stream().findFirst().orElse(new BunqAccount("error", -1, p));
+                        //ac = java8.util.stream.StreamSupport.stream(b.listAccount(p).get()).findFirst().orElse(new BunqAccount("error", -1, p));
+                        List<Account> list = b.listAccount(p).get();
+                        if(list.size() == 0){
+                            ac = new BunqAccount("error",-1,p);
+                        }
+                        ac = b.listAccount(p).get().get(0);
+
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
