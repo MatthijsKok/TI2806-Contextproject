@@ -45,6 +45,11 @@ public class MockBank extends Bank {
         return null;
     }
 
+    @Override
+    public CompletableFuture<Boolean> sendTransaction(Transaction transaction) {
+        return null;
+    }
+
     @Nullable
     @Override
     public Session getCurrentSession() {

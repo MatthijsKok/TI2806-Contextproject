@@ -11,10 +11,12 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.Tools;
@@ -25,6 +27,7 @@ import nl.tudelft.ewi.ds.bankchain.bank.Party;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTransaction;
 
 public class RecentTransactionsActivity extends AppCompatActivity {
 
@@ -69,6 +72,19 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                     Account ac = null;
                     try {
                         ac = b.listAccount(p).get().stream().findFirst().orElse(new BunqAccount("error", -1, p));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
+                    BunqParty cp = new BunqParty("Branda Monoghan",-1);
+                    BunqAccount ca = new BunqAccount("NL77BUNQ9900016947",-1,cp);
+                    BunqTransaction pay = new BunqTransaction(-0.01f,ac,ca, Currency.getInstance("EUR"),"first api post test");
+
+                    CompletableFuture<Boolean> z = b.sendTransaction(pay);
+                    try {
+                        z.get();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
