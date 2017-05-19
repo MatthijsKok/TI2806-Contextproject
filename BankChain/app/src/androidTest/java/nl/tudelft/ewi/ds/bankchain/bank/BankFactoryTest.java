@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class BankFactoryTest {
     @Test
-    public void testUnknoqnBankEnvironment() throws Exception {
+    public void testUnknownBankEnvironment() throws Exception {
         Bank bank;
         Environment env;
 
