@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("GUI", "onCreate: Actionbar found");
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.newVerification);
-        myFab.setOnClickListener(v -> newVerification());
+        FloatingActionButton newVerificationFab = (FloatingActionButton)  findViewById(R.id.newVerification);
+        newVerificationFab.setOnClickListener(v -> newVerification());
     }
 
     public void startRecentTransactionActivity(View view) {
