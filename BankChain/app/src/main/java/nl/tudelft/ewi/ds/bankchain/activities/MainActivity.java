@@ -35,11 +35,7 @@ public class MainActivity extends AppCompatActivity {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
         FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.newVerification);
-        myFab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                newVerification();
-            }
-        });
+        myFab.setOnClickListener(v -> newVerification());
     }
 
     public void startRecentTransactionActivity(View view) {
@@ -65,24 +61,16 @@ public class MainActivity extends AppCompatActivity {
         Button cancelButton = (Button) dialog.findViewById(R.id.cancelButton);
         Button verifyButton = (Button) dialog.findViewById(R.id.verifyButton);
         // if button is clicked, close the custom dialog
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        verifyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                EditText publicKeyText = (EditText) dialog.findViewById(R.id.publicKeyInput);
-                EditText ibanText = (EditText) dialog.findViewById(R.id.ibanInput);
-                String publicKey = publicKeyText.getText().toString();
-                String iban = ibanText.getText().toString();
-                Log.d("GUI", "onClick: Gonna verify, but not really...");
-                Log.d("GUI", "Public key: " + publicKey);
-                Log.d("GUI", "IBAN: " + iban);
-            }
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+        verifyButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            EditText publicKeyText = (EditText) dialog.findViewById(R.id.publicKeyInput);
+            EditText ibanText = (EditText) dialog.findViewById(R.id.ibanInput);
+            String publicKey = publicKeyText.getText().toString();
+            String iban = ibanText.getText().toString();
+            Log.d("GUI", "onClick: Gonna verify, but not really...");
+            Log.d("GUI", "Public key: " + publicKey);
+            Log.d("GUI", "IBAN: " + iban);
         });
 
         dialog.show();
