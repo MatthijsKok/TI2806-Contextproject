@@ -1,5 +1,6 @@
 package nl.tudelft.ewi.ds.bankchain.activities;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +37,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     private ExpandableListView expListView;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
+    private SwipeRefreshLayout SwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +46,14 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             Log.d("GUI", "onCreate: Actionbar found");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-        };
+        }
+
+        SwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_recent_transactions_swipe_refresh_layout);
+        SwipeRefreshLayout.setOnRefreshListener(() -> retrieveRecentTransactions());
         retrieveRecentTransactions();
     }
 
@@ -78,8 +83,8 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                     try {
                         //ac = java8.util.stream.StreamSupport.stream(b.listAccount(p).get()).findFirst().orElse(new BunqAccount("error", -1, p));
                         List<Account> list = b.listAccount(p).get();
-                        if(list.size() == 0){
-                            ac = new BunqAccount("error",-1,p);
+                        if (list.size() == 0) {
+                            ac = new BunqAccount("error", -1, p);
                         }
                         ac = b.listAccount(p).get().get(0);
 
@@ -130,10 +135,12 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
         if (transactionList == null) {
             updateNoTransactionsDisplay("Could not retrieve transactions.");
+            SwipeRefreshLayout.setRefreshing(false);
             return;
         }
         if (transactionList.size() == 0) {
             updateNoTransactionsDisplay("No transactions have been made yet.");
+            SwipeRefreshLayout.setRefreshing(false);
             return;
         }
 
@@ -153,6 +160,8 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             }
             listDataChild.put(listDataHeader.get(i), details);
         }
+
+        SwipeRefreshLayout.setRefreshing(false);
     }
 
     /*
@@ -174,10 +183,9 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         this.finish();
-        overridePendingTransition  (R.anim.left_slide_in, R.anim.right_slide_out);
+        overridePendingTransition(R.anim.left_slide_in, R.anim.right_slide_out);
     }
 
 }
