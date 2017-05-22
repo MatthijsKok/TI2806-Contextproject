@@ -3,32 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/verificationImage"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:background="@color/colorPrimary"
-            android:contentDescription="@string/app_name"
-            android:scaleType="center" />
-
-        <TextView
-            android:id="@+id/myImageViewText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/verificationImage"
-            android:layout_alignLeft="@+id/verificationImage"
-            android:layout_alignRight="@+id/verificationImage"
-            android:layout_alignTop="@+id/verificationImage"
-            android:layout_margin="1dp"
-            android:gravity="center"
-            android:text="@string/new_verification"
-            android:textColor="@android:color/white"
-            android:textSize="20dp"/>
-    </RelativeLayout>
+    <include layout="@layout/toolbar" />
 
     <EditText
         android:id="@+id/publicKeyInput"

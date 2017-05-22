@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.StreamSupport;
-
 import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.Tools;
@@ -28,8 +26,6 @@ import nl.tudelft.ewi.ds.bankchain.bank.Party;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
-
-import static android.media.CamcorderProfile.get;
 
 public class RecentTransactionsActivity extends AppCompatActivity {
 
