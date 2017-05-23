@@ -130,8 +130,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         this.finish();
         overridePendingTransition  (R.anim.left_slide_in, R.anim.right_slide_out);
     }
