@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if(getActionBar() != null) {
+        if (getActionBar() != null) {
             Log.d("GUI", "onCreate: Actionbar found");
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
     }
 
-    public void newVerification(){
+    public void newVerification() {
         // custom dialog
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.new_verification);
