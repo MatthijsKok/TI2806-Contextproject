@@ -5,6 +5,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Network utilities
@@ -55,8 +56,8 @@ public final class NetUtils {
                         // Drop ip6 zone suffix
                         int delim = address.indexOf('%');
 
-                        return delim < 0 ? address.toUpperCase()
-                                : address.substring(0, delim).toUpperCase();
+                        return delim < 0 ? address.toUpperCase(Locale.ENGLISH)
+                                : address.substring(0, delim).toUpperCase(Locale.ENGLISH);
                     }
                 }
             }
