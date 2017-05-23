@@ -42,16 +42,21 @@ public class Environment {
         return bankUrl;
     }
 
+    public static Environment loadDefaults(Resources resources, int resourceId) throws IOException {
+        try (InputStream stream = resources.openRawResource(resourceId)) {
+            return loadDefaults(stream);
+        }
+    }
+
     /**
      * Load the default environment from given resource
      *
-     * @param resourceId resource id
+     * @param stream stream
      * @return environment
      */
-    public static Environment loadDefaults(Resources resources, int resourceId) throws IOException {
-        Environment env = new Environment();
-
-        try (InputStream stream = resources.openRawResource(resourceId)) {
+    static Environment loadDefaults(@NonNull InputStream stream) throws IOException {
+        try {
+            Environment env = new Environment();
             XmlPullParser parser = Xml.newPullParser();
             String key = "", text = "";
 

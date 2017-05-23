@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<environment>
+    <value name="bank">Bunq</value>
+    <value name="bankUrl">http://a.b.com/</value>
+    <value name="bankApiKey">aaaaaaa</value>
+</environment>
