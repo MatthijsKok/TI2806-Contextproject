@@ -1,5 +1,7 @@
 package nl.tudelft.ewi.ds.bankchain.cryptography;
 
+import android.util.Log;
+
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
@@ -17,7 +19,7 @@ import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
 
-public final class ED25519 {
+final class ED25519 {
 
     private ED25519() {
     }
@@ -30,36 +32,36 @@ public final class ED25519 {
         return generatePrivateKey(seed);
     }
 
-    public static EdDSAPrivateKey generatePrivateKey(byte[] seed) {
+    static EdDSAPrivateKey generatePrivateKey(byte[] seed) {
         EdDSAPrivateKeySpec privateKeySpec = new EdDSAPrivateKeySpec(seed, parameterSpec);
         return new EdDSAPrivateKey(privateKeySpec);
     }
 
-    public static EdDSAPublicKey getPublicKey(EdDSAPrivateKey privateKey) {
+    static EdDSAPublicKey getPublicKey(EdDSAPrivateKey privateKey) {
         EdDSAPublicKeySpec publicKeySpec = new EdDSAPublicKeySpec(privateKey.getAbyte(), parameterSpec);
         return new EdDSAPublicKey(publicKeySpec);
     }
 
-    public static byte[] createSignature(byte[] message, PrivateKey privateKey) {
+    static byte[] createSignature(byte[] message, PrivateKey privateKey) {
         try {
             Signature signature = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
             signature.initSign(privateKey);
             signature.update(message);
             return signature.sign();
         } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
-            e.printStackTrace();
+            Log.e("CRYPTO", e.getMessage());
         }
         return null;
     }
 
-    public static boolean verifySignature(byte[] message, byte[] signature, PublicKey publicKey) {
+    static boolean verifySignature(byte[] message, byte[] signature, PublicKey publicKey) {
         try {
             Signature sgr = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
             sgr.initVerify(publicKey);
             sgr.update(message);
             return sgr.verify(signature);
         } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
-            e.printStackTrace();
+            Log.e("CRYPTO", e.getMessage());
         }
         return false;
     }

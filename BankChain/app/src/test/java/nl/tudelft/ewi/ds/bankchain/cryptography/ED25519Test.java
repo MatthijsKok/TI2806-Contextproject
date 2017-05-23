@@ -34,7 +34,7 @@ public class ED25519Test {
     @Test
     public void generatePrivateKey() throws Exception {
         EdDSAPrivateKey pk = ED25519.generatePrivateKey(TEST_SEED);
-        System.out.println("SIGNING_KEY: " + Utils.bytesToHex(pk.getAbyte()));
+
         assertTrue(Arrays.equals(pk.getAbyte(), TEST_PK));
     }
 
@@ -64,8 +64,6 @@ public class ED25519Test {
         EdDSAPrivateKeySpec privateKeySpec = new EdDSAPrivateKeySpec(TEST_SEED, parameterSpec);
         EdDSAPrivateKey privateKey = new EdDSAPrivateKey(privateKeySpec);
 
-        System.out.println("TEST_SIG: " + Utils.bytesToHex(TEST_MSG_SIG));
-        System.out.println("CREATED_SIG: " + Utils.bytesToHex(ED25519.createSignature(TEST_MSG, privateKey)));
         assertTrue(Arrays.equals(ED25519.createSignature(TEST_MSG, privateKey), TEST_MSG_SIG));
     }
 
