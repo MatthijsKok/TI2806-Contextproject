@@ -61,6 +61,8 @@ public final class NetUtils {
                 }
             }
         } catch (SocketException e) {
+            // Thrown when the android app does not have INTERNET permissions
+            // Can't be tested in the same program.
             return null;
         }
 
