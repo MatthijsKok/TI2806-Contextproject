@@ -100,8 +100,8 @@ public class BunqTest {
 
         env = new Environment();
         env.setBank("Bunq");
-        env.setBankUrl("https://sandbox.public.api.bunq.com/");
-        env.setBankApiKey("");
+        env.setBankUrl("http://178.62.218.153:8080/");
+        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
 
         bank = new BankFactory(env).create();
 

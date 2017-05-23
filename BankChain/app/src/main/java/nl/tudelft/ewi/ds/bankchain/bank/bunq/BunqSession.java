@@ -81,6 +81,8 @@ public final class BunqSession extends Session {
         InstallationService service;
         InstallationService.CreateRequest request;
 
+        // TODO: test if this is necessary. if not, return completed
+
         service = bank.getRetrofit().create(InstallationService.class);
 
         // Create the object to send to Bunq
@@ -110,6 +112,8 @@ public final class BunqSession extends Session {
         DeviceServerService service;
         DeviceServerService.CreateRequest request;
 
+        // TODO: test if this is necessary. if not, return completed
+
         service = bank.getRetrofit().create(DeviceServerService.class);
 
         request = new DeviceServerService.CreateRequest();
@@ -136,6 +140,8 @@ public final class BunqSession extends Session {
         CompletableFuture<SessionServerService.CreateResponse> future;
         SessionServerService service;
         SessionServerService.CreateRequest request;
+
+        // TODO: test if this is necessary. if not, return completed
 
         service = bank.getRetrofit().create(SessionServerService.class);
 
@@ -187,4 +193,18 @@ public final class BunqSession extends Session {
     }
 
     // TODO: add saving to and loading from disk
+
+    /**
+     * Save the current session to storage
+     */
+    public void save() {
+
+    }
+
+    /**
+     * Load session from storage into this class
+     */
+    public boolean load() {
+        return false;
+    }
 }

@@ -93,9 +93,10 @@ public final class BunqBank extends Bank {
      * Load or create a new set of client keys
      */
     private Void loadOrCreateClientKeys() {
-        // TODO: if available on disk, try
-        // TODO: if failed to load from disk, make new
-        session.createKeys();
+        // Attempt to load
+        if (!session.load()) {
+            session.createKeys();
+        }
 
         return null;
     }
