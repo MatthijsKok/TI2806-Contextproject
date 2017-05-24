@@ -1,9 +1,11 @@
 package nl.tudelft.ewi.ds.bankchain.activities;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -29,12 +31,14 @@ import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTransaction;
 
+
 public class RecentTransactionsActivity extends AppCompatActivity {
 
     private ExpandableListAdapter listAdapter;
     private ExpandableListView expListView;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,14 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            Log.d("GUI", "onCreate: Actionbar found");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_recent_transactions_swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(() -> retrieveRecentTransactions());
         retrieveRecentTransactions();
     }
 
@@ -71,11 +82,16 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                     Party p = new BunqParty("hello world", 2002);
                     Account ac = null;
                     try {
-                        ac = b.listAccount(p).get().stream().findFirst().orElse(new BunqAccount("error", -1, p));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                        //ac = java8.util.stream.StreamSupport.stream(b.listAccount(p).get()).findFirst().orElse(new BunqAccount("error", -1, p));
+                        List<Account> list = b.listAccount(p).get();
+                        if (list.size() == 0) {
+                            ac = new BunqAccount("error", -1, p);
+                        }
+                        ac = b.listAccount(p).get().get(0);
+
+
+                    } catch (InterruptedException | ExecutionException e) {
+                        Log.e("CRYPTO", e.getMessage());
                     }
 
                     BunqParty cp = new BunqParty("Branda Monoghan",-1);
@@ -133,10 +149,12 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
         if (transactionList == null) {
             updateNoTransactionsDisplay("Could not retrieve transactions.");
+            swipeRefreshLayout.setRefreshing(false);
             return;
         }
         if (transactionList.size() == 0) {
             updateNoTransactionsDisplay("No transactions have been made yet.");
+            swipeRefreshLayout.setRefreshing(false);
             return;
         }
 
@@ -156,6 +174,8 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             }
             listDataChild.put(listDataHeader.get(i), details);
         }
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     /*
@@ -167,5 +187,19 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         textView.setTextSize(20);
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
+        overridePendingTransition(R.anim.left_slide_in, R.anim.right_slide_out);
+    }
 
 }

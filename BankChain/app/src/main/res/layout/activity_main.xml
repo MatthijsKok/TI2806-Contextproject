@@ -5,16 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="nl.tudelft.ewi.ds.bankchain.activities.RecentTransactionsActivity">
-    
-    <LinearLayout
+
+    <include layout="@layout/toolbar" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="60dp"
         android:orientation="horizontal"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="114dp"
-        android:layout_marginTop="118dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        tools:layout_editor_absoluteY="114dp">
 
         <Button
             android:id="@+id/recentTransactionActivityButton"
@@ -24,6 +26,20 @@
             android:text="View recent transactions"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp" />
-    </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/newVerification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="32dp"
+            android:src="@android:drawable/ic_menu_add"
+            app:backgroundTint="@color/colorPrimary"
+            app:elevation="4dp" />
+
+
+    </RelativeLayout>
 
 </RelativeLayout>

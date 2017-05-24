@@ -22,6 +22,17 @@ public class BunqTest {
     private Session session;
     private Throwable throwable;
 
+    private Bank createDummyBank() {
+        Environment env;
+
+        env = new Environment();
+        env.setBank("Bunq");
+        env.setBankUrl("https://sandbox.public.api.bunq.com/");
+        env.setBankApiKey("");
+
+        return new BankFactory(env).create();
+    }
+
     @Before
     public void before() {
         session = null;
@@ -35,9 +46,9 @@ public class BunqTest {
         Environment env;
 
         env = new Environment();
-        env.bank = "Bunq";
-        env.url = "https://example.com/";
-        env.apiKey = "";
+        env.setBank("Bunq");
+        env.setBankUrl("https://example.com/");
+        env.setBankApiKey("");
 
         bank = new BankFactory(env).create();
 
@@ -64,14 +75,8 @@ public class BunqTest {
     public void testBadApiKey() throws Exception {
         CompletableFuture<Void> future;
         Bank bank;
-        Environment env;
 
-        env = new Environment();
-        env.bank = "Bunq";
-        env.url = "https://sandbox.public.api.bunq.com/";
-        env.apiKey = "";
-
-        bank = new BankFactory(env).create();
+        bank = createDummyBank();
 
         future = bank.createSession()
                 .thenAccept(t -> {
@@ -99,9 +104,9 @@ public class BunqTest {
         Environment env;
 
         env = new Environment();
-        env.bank = "Bunq";
-        env.url = "https://sandbox.public.api.bunq.com/";
-        env.apiKey = "";
+        env.setBank("Bunq");
+        env.setBankUrl("");
+        env.setBankApiKey("");
 
         bank = new BankFactory(env).create();
 
@@ -120,5 +125,23 @@ public class BunqTest {
 
         assertNotNull(session);
         assertNull(throwable);
+    }
+
+    // When running confirmation through null it should not crash but return null
+    @Test
+    public void testExceptionConfirmationNull() {
+        Bank bank = createDummyBank();
+
+        assertNull(bank.confirmException(null));
+    }
+
+    // When running confirmation through an unsupported exception, the exception must not be altered
+    @Test
+    public void testExceptionConfirmationNotFuture() {
+        Bank bank = createDummyBank();
+
+        Throwable thr = new IllegalArgumentException("test");
+
+        assertTrue(bank.confirmException(thr) == thr);
     }
 }

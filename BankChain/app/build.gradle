@@ -1,15 +1,18 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+
+apply from: '../config/quality/quality.gradle'
+apply from: '../config/quality/coverage.gradle'
+
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+        classpath 'me.tatarka:gradle-retrolambda:3.6.1'
     }
 }
-
-apply plugin: 'com.android.application'
-apply from: '../config/quality/quality.gradle'
-apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion 25
@@ -21,10 +24,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions {
-            enabled true
-            additionalParameters("jack.incremental": "true")
-        }
     }
     lintOptions {
         abortOnError false
@@ -48,9 +47,16 @@ android {
     }
 }
 
+retrolambda {
+    javaVersion JavaVersion.VERSION_1_7
+    defaultMethods false
+    incremental true
+}
+
 repositories {
     jcenter()
     maven { url "https://jitpack.io" }
+    mavenCentral()
 }
 
 dependencies {
@@ -74,9 +80,9 @@ dependencies {
     })
 
     // Android support
-    compile 'com.android.support:appcompat-v7:25.+'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:25.+'
+    compile 'com.android.support:design:25.3.1'
 
     // HTTP library
     compile 'com.squareup.retrofit2:retrofit:2.2.0'

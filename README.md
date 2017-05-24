@@ -10,6 +10,11 @@ For TI2806 Contextproject at Delft University of Technology, 2017
 
 `BankChain` contains the android app. `docs` contains design documents.
 
+## Building
+
+To build, you need to supply an environment configuration with Bunq URL and Bunq API key. (See Bunq documentation on doc.bunq.com).
+Copy the example file in res/raw and name it environment.xml, and fill in the values.
+
 ## Contributions
 
 At this moment, we are not accepting any contributions, due to the nature
