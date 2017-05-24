@@ -1,16 +1,12 @@
 package nl.tudelft.ewi.ds.bankchain.activities;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +14,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import nl.tudelft.ewi.ds.bankchain.R;
 
@@ -30,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if(getActionBar() != null) {
+        if (getActionBar() != null) {
             Log.d("GUI", "onCreate: Actionbar found");
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -50,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
     }
 
-    public void newVerification(){
+    public void newVerification() {
         // custom dialog
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.new_verification);
