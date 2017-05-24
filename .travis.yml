@@ -49,6 +49,8 @@ before_install:
   - echo 'count=0' > /home/travis/.android/repositories.cfg # Avoid warning
   - echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><environment><value name=\"bank\">Bunq</value><value name=\"bankUrl\">$BUNQ_URL</value><value name=\"bankApiKey\">$BUNQ_KEY</value></environment>" > ${TRAVIS_BUILD_DIR}/${DIR}/app/src/main/res/raw/environment.xml
   - pip install --user codecov
+  - find ${TRAVIS_BUILD_DIR}/${DIR}/app/src/androidTest -type f -name *.java -exec sed -i '' "s?REAL BUNQ URL?$BUNQ_URL?g" {} \;
+  - find ${TRAVIS_BUILD_DIR}/${DIR}/app/src/androidTest -type f -name *.java -exec sed -i '' "s?REAL BUNQ API KEY?$BUNQ_KEY?g" {} \;
 
 install:
   - sdkmanager --list || true
