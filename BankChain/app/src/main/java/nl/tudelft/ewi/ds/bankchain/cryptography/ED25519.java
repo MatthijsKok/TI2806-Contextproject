@@ -19,7 +19,7 @@ import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
 
-final class ED25519 {
+public final class ED25519 {
 
     private ED25519() {
     }
@@ -32,12 +32,12 @@ final class ED25519 {
         return generatePrivateKey(seed);
     }
 
-    static EdDSAPrivateKey generatePrivateKey(byte[] seed) {
+    public static EdDSAPrivateKey generatePrivateKey(byte[] seed) {
         EdDSAPrivateKeySpec privateKeySpec = new EdDSAPrivateKeySpec(seed, parameterSpec);
         return new EdDSAPrivateKey(privateKeySpec);
     }
 
-    static EdDSAPublicKey getPublicKey(EdDSAPrivateKey privateKey) {
+    public static EdDSAPublicKey getPublicKey(EdDSAPrivateKey privateKey) {
         EdDSAPublicKeySpec publicKeySpec = new EdDSAPublicKeySpec(privateKey.getAbyte(), parameterSpec);
         return new EdDSAPublicKey(publicKeySpec);
     }
