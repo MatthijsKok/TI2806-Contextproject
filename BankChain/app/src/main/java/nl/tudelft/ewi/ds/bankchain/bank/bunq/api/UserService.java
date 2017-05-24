@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import java8.util.concurrent.CompletableFuture;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 
 /**

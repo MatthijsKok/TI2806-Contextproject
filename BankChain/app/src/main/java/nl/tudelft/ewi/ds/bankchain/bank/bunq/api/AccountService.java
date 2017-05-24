@@ -5,8 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import java8.util.concurrent.CompletableFuture;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
