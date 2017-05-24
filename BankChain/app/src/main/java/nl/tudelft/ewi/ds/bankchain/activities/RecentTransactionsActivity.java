@@ -88,6 +88,8 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
+                        Throwable throwable = b.confirmException(e);
+                        throwable.printStackTrace();
                         e.printStackTrace();
                     }
 
