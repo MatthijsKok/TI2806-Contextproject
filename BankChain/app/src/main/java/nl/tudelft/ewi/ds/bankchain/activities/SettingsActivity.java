@@ -1,14 +1,8 @@
 package nl.tudelft.ewi.ds.bankchain.activities;
 
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -16,15 +10,9 @@ import android.preference.PreferenceActivity;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.MenuItem;
 
 import nl.tudelft.ewi.ds.bankchain.R;
 
-import java.util.List;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -130,8 +118,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         this.finish();
         overridePendingTransition  (R.anim.left_slide_in, R.anim.right_slide_out);
     }

@@ -1,5 +1,7 @@
 package nl.tudelft.ewi.ds.bankchain.cryptography;
 
+import android.util.Log;
+
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
@@ -40,26 +42,26 @@ public final class ED25519 {
         return new EdDSAPublicKey(publicKeySpec);
     }
 
-    public static byte[] createSignature(byte[] message, PrivateKey privateKey) {
+    static byte[] createSignature(byte[] message, PrivateKey privateKey) {
         try {
             Signature signature = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
             signature.initSign(privateKey);
             signature.update(message);
             return signature.sign();
         } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
-            e.printStackTrace();
+            Log.e("CRYPTO", e.getMessage());
         }
         return null;
     }
 
-    public static boolean verifySignature(byte[] message, byte[] signature, PublicKey publicKey) {
+    static boolean verifySignature(byte[] message, byte[] signature, PublicKey publicKey) {
         try {
             Signature sgr = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
             sgr.initVerify(publicKey);
             sgr.update(message);
             return sgr.verify(signature);
         } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
-            e.printStackTrace();
+            Log.e("CRYPTO", e.getMessage());
         }
         return false;
     }

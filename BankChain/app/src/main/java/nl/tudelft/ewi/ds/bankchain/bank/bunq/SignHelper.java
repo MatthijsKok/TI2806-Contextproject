@@ -35,8 +35,7 @@ class SignHelper {
      * @param serverPublicKey Public key of the server
      */
     SignHelper(KeyPair clientKeyPair, PublicKey serverPublicKey) {
-        this.clientPrivateKey = clientKeyPair.getPrivate();
-        this.serverPublicKey = serverPublicKey;
+        this(clientKeyPair.getPrivate(), serverPublicKey);
     }
 
     /**
