@@ -1,15 +1,18 @@
-package nl.tudelft.ewi.ds.bankchain;
+package nl.tudelft.ewi.ds.bankchain.activities;
 
 
 import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.WindowManager;
 import android.widget.TextView;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.activities.RecentTransactionsActivity;
 import static junit.framework.Assert.assertEquals;
 
@@ -27,9 +30,17 @@ public class RecentTransactionsActivityTest {
     public ActivityTestRule<RecentTransactionsActivity> activityRule =
             new ActivityTestRule<>(RecentTransactionsActivity.class);
 
-    private RecentTransactionsActivity activity = activityRule.getActivity();
-    @Test
+    @Before
+    public void unlockScreen() {
+        final RecentTransactionsActivity activity = activityRule.getActivity();
+        activity.runOnUiThread(() -> {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        });
+    }
 
+    @Test
     @UiThreadTest
     public void verifyUpdateNoTransactionsDisplay() {
         // Clicks a button to send an intent to another activity
