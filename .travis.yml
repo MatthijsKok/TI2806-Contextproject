@@ -48,6 +48,7 @@ before_install:
   - export EMULATOR="system-images;android-${API};${TAG};${ABI}" # Used to install/create emulator
   - echo 'count=0' > /home/travis/.android/repositories.cfg # Avoid warning
   - echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><environment><value name=\"bank\">Bunq</value><value name=\"bankUrl\">$BUNQ_URL</value><value name=\"bankApiKey\">$BUNQ_KEY</value></environment>" > ${TRAVIS_BUILD_DIR}/${DIR}/app/src/main/res/raw/environment.xml
+  - pip install --user codecov
 
 install:
   - sdkmanager --list || true
@@ -100,9 +101,12 @@ before_script:
 
 script:
   # Run all device checks
-  - cd ${TRAVIS_BUILD_DIR}/${DIR} && travis_wait ./gradlew connectedCheck
+  - cd ${TRAVIS_BUILD_DIR}/${DIR} && travis_wait ./gradlew check jacocoTestReport connectedAndroidTest
 
 after_script:
   # Show tests and lint results
   - cat ${TRAVIS_BUILD_DIR}/${DIR}/*/build/outputs/androidTest-results/connected/*
   - cat ${TRAVIS_BUILD_DIR}/${DIR}/*/build/reports/lint-results.xml
+
+after_success:
+  - codecov
