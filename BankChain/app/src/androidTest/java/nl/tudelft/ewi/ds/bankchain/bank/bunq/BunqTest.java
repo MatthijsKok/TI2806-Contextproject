@@ -105,8 +105,8 @@ public class BunqTest {
 
         env = new Environment();
         env.setBank("Bunq");
-        env.setBankUrl("REAL BUNQ URL");
-        env.setBankApiKey("REAL BUNQ API KEY");
+        env.setBankUrl("REAL_BUNQ_URL");
+        env.setBankApiKey("REAL_BUNQ_API_KEY");
 
         bank = new BankFactory(env).create();
 
