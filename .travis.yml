@@ -101,7 +101,7 @@ before_script:
 
 script:
   # Run all device checks
-  - cd ${TRAVIS_BUILD_DIR}/${DIR} && travis_wait ./gradlew check jacocoTestReport connectedAndroidTest
+  - cd ${TRAVIS_BUILD_DIR}/${DIR} && travis_wait ./gradlew check connectedAndroidTest jacocoTestReport
 
 after_script:
   # Show tests and lint results
