@@ -12,6 +12,9 @@ import nl.tudelft.ewi.ds.bankchain.R;
 
 public class NewVerificationActivity extends AppCompatActivity {
 
+    private String publicKey;
+    private String iban;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +42,11 @@ public class NewVerificationActivity extends AppCompatActivity {
             Log.d("GUI", "onClick: Gonna verify, but not really...");
             Log.d("GUI", "Public key: " + publicKey);
             Log.d("GUI", "IBAN: " + iban);
-            onBackPressed();
+            this.publicKey = publicKey;
+            this.iban = iban;
         });
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -62,4 +67,11 @@ public class NewVerificationActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.left_slide_in, R.anim.right_slide_out);
     }
 
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public String getIban() {
+        return iban;
+    }
 }
