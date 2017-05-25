@@ -26,8 +26,8 @@ public interface PaymentService {
 
     @POST("/v1/user/{user}/monetary-account/{account}/payment")
     CompletableFuture<PostResponse> createPayment(@Body PostRequest request,
-                                                                        @Path("user") int user,
-                                                                        @Path("account") int account);
+                                                  @Path("user") int user,
+                                                  @Path("account") int account);
 
     class ListResponse {
         @SerializedName("Response")
@@ -78,7 +78,7 @@ public interface PaymentService {
         }
     }
 
-    class PostResponse{
+    class PostResponse {
         @SerializedName("Response")
         public List<Item> items;
 
@@ -88,7 +88,7 @@ public interface PaymentService {
             public Id id;
         }
 
-        public class Id{
+        public class Id {
             public int id;
         }
     }
@@ -96,16 +96,18 @@ public interface PaymentService {
     class PostRequest {
 
         public Amount amount;
-        public Counterparty_alias counterparty_alias;
+        @SerializedName("Counterparty_alias")
+        public CounterpartyAlias counterparty_alias;
         public String description;
 
     }
+
     public class Amount {
         public String value;
         public String currency;
     }
 
-    public class Counterparty_alias {
+    public class CounterpartyAlias {
         public String type = "IBAN";
         public String value;
         public String name;

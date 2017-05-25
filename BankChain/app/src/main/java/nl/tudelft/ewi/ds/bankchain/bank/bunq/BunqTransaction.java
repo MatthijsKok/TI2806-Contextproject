@@ -2,9 +2,7 @@ package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import java.util.Currency;
 import java.util.Date;
-import java.util.List;
 
-import java8.util.concurrent.CompletableFuture;
 import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.PaymentService;
@@ -38,13 +36,14 @@ public class BunqTransaction implements Transaction {
 
     /**
      * used to create an outgoing trasnaction
-     * @param amount should be negative
-     * @param account source of the money
+     *
+     * @param amount
+     * @param account        source of the money
      * @param counterAccount recepient
      * @param currency
      * @param description
      */
-    public BunqTransaction(float amount, Account account, Account counterAccount,Currency currency, String description){
+    public BunqTransaction(float amount, Account account, Account counterAccount, Currency currency, String description) {
         date = getDate();
         id = -1;
         this.currency = currency;
@@ -91,7 +90,7 @@ public class BunqTransaction implements Transaction {
         return id;
     }
 
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -100,15 +99,17 @@ public class BunqTransaction implements Transaction {
         return "<Payment desc:'" + getDescription() + "'>";
     }
 
-    public PaymentService.PostRequest convertToRequest(){
+    public PaymentService.PostRequest convertToRequest() {
         PaymentService.PostRequest p = new PaymentService.PostRequest();
         PaymentService.Amount a = new PaymentService.Amount();
-        PaymentService.Counterparty_alias c = new PaymentService.Counterparty_alias();
+        PaymentService.CounterpartyAlias c = new PaymentService.CounterpartyAlias();
         c.name = counterAccount.getParty().getName();
         c.value = counterAccount.getIban();
         a.currency = "EUR";
-        a.value = Float.toString(value);
+        a.value = Float.toString(Math.abs(value)); //usually the outgoing amount should be negative this is the exception so it's covered here
         p.description = description;
+        p.amount = a;
+        p.counterparty_alias = c;
         return p;
     }
 }
