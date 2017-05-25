@@ -40,7 +40,6 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent_transactions);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -48,7 +47,6 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_recent_transactions_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(() -> retrieveRecentTransactions());
         retrieveRecentTransactions();
@@ -65,9 +63,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             return;
         }
         Environment v = Environment.getDefaults();
-
         Bank b = new BankFactory(v).create();
-
         b.createSession()
                 .thenAccept(t -> Tools.runOnMainThread(() -> {
                     Log.d("GUI", "Created session");
@@ -121,13 +117,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     Takes the list of recent transactions and outputs them to the UI
      */
     public void showRecentTransactions(List<? extends Transaction> transactionList) {
-        listDataHeader = new ArrayList<>();
-        listDataChild = new HashMap<>();
-
-        expListView = (ExpandableListView) findViewById(R.id.recentTransactionsList);
-        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
-        expListView.setAdapter(listAdapter);
-
+        initializeTransactionListView();
         if (transactionList == null) {
             updateNoTransactionsDisplay("Could not retrieve transactions.");
             swipeRefreshLayout.setRefreshing(false);
@@ -154,8 +144,19 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             }
             listDataChild.put(listDataHeader.get(i), details);
         }
-
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+
+    /*
+    Initialize the ListView related objects.
+     */
+    private void initializeTransactionListView(){
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+        expListView = (ExpandableListView) findViewById(R.id.recentTransactionsList);
+        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
+        expListView.setAdapter(listAdapter);
     }
 
     /*
@@ -166,7 +167,6 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         textView.setText(message);
         textView.setTextSize(20);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -181,5 +181,4 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         this.finish();
         overridePendingTransition(R.anim.left_slide_in, R.anim.right_slide_out);
     }
-
 }
