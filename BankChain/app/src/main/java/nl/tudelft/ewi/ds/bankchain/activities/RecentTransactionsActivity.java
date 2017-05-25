@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
 import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.Tools;
@@ -145,10 +146,9 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             if (transactionList.get(i).getValue() != null && transactionList.get(i).getCurrency() != null) {
                 details.add(transactionList.get(i).getValue().toString() + " " + transactionList.get(i).getCurrency().toString());
             }
-//                     TODO: implement once getDate functions correctly
-//                    if (transactionList.get(i).getDate() != null) {
-//                        details.add(transactionList.get(i).getDate().toString());
-//                    }
+            if (transactionList.get(i).getDate() != null) {
+                details.add(transactionList.get(i).getDate().toString());
+            }
             if (transactionList.get(i).getCounterAccount() != null && transactionList.get(i).getCounterAccount().getParty() != null) {
                 details.add("" + transactionList.get(i).getCounterAccount().getParty().toString());
             }
