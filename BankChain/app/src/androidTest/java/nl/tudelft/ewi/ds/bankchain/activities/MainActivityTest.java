@@ -26,7 +26,7 @@ import static org.hamcrest.core.AllOf.allOf;
  */
 
 @RunWith(AndroidJUnit4.class)
-@Ignore
+//@Ignore
 public class MainActivityTest {
 
     private static final String PACKAGE_NAME = "nl.tudelft.ewi.ds.bankchain";
