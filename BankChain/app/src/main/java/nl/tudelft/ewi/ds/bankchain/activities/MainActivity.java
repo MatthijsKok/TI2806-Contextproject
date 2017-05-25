@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getActionBar() != null) {
-            Log.d("GUI", "onCreate: Actionbar found");
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
@@ -53,35 +52,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
-
-    }
-    public void newVerification() {
-        // custom dialog
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.new_verification);
-        dialog.setTitle("New verification");
-
-        // set the custom dialog components - text, image and button
-
-        Button cancelButton = (Button) dialog.findViewById(R.id.cancelButton);
-        Button verifyButton = (Button) dialog.findViewById(R.id.verifyButton);
-        // if button is clicked, close the custom dialog
-        cancelButton.setOnClickListener(v -> dialog.dismiss());
-        verifyButton.setOnClickListener(v -> {
-            dialog.dismiss();
-            EditText publicKeyText = (EditText) dialog.findViewById(R.id.publicKeyInput);
-            EditText ibanText = (EditText) dialog.findViewById(R.id.ibanInput);
-            String publicKey = publicKeyText.getText().toString();
-            String iban = ibanText.getText().toString();
-            Log.d("GUI", "onClick: Gonna verify, but not really...");
-            Log.d("GUI", "Public key: " + publicKey);
-            Log.d("GUI", "IBAN: " + iban);
-        });
-
-        dialog.show();
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -91,11 +61,5 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return super.onOptionsItemSelected(item);
-    }
+
 }
