@@ -1,4 +1,4 @@
-package nl.tudelft.ewi.ds.bankchain;
+package nl.tudelft.ewi.ds.bankchain.activities;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
