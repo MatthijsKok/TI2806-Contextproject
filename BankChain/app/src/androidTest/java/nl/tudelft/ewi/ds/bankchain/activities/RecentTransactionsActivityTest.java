@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import nl.tudelft.ewi.ds.bankchain.R;
-import nl.tudelft.ewi.ds.bankchain.activities.RecentTransactionsActivity;
 import static junit.framework.Assert.assertEquals;
 
 
