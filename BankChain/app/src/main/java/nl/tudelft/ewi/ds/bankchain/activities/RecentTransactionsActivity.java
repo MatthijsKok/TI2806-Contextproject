@@ -33,7 +33,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     private ExpandableListView expListView;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
-    private SwipeRefreshLayout SwipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +48,8 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        SwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_recent_transactions_swipe_refresh_layout);
-        SwipeRefreshLayout.setOnRefreshListener(() -> retrieveRecentTransactions());
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_recent_transactions_swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(() -> retrieveRecentTransactions());
         retrieveRecentTransactions();
     }
 
@@ -85,10 +85,8 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                         ac = b.listAccount(p).get().get(0);
 
 
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                    } catch (InterruptedException | ExecutionException e) {
+                        Log.e("CRYPTO", e.getMessage());
                     }
 
                     b.listTransactions(ac).thenAccept(ts -> Tools.runOnMainThread(() -> {
@@ -131,12 +129,12 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
         if (transactionList == null) {
             updateNoTransactionsDisplay("Could not retrieve transactions.");
-            SwipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
             return;
         }
         if (transactionList.size() == 0) {
             updateNoTransactionsDisplay("No transactions have been made yet.");
-            SwipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
             return;
         }
 
@@ -157,7 +155,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             listDataChild.put(listDataHeader.get(i), details);
         }
 
-        SwipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     /*

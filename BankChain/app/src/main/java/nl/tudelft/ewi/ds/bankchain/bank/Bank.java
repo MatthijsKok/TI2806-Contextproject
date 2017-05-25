@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import java8.util.concurrent.CompletableFuture;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.AccountService;
 
 
 public abstract class Bank {

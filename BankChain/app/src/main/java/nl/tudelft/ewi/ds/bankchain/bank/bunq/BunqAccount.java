@@ -1,8 +1,5 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
-import java.util.Optional;
-import java.util.stream.StreamSupport;
-
 import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Party;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.AccountService;

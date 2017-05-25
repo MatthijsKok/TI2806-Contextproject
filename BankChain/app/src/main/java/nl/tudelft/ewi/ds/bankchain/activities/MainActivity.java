@@ -1,5 +1,8 @@
 package nl.tudelft.ewi.ds.bankchain.activities;
 
+
+import android.app.Dialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +12,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import nl.tudelft.ewi.ds.bankchain.R;
 
@@ -20,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if(getActionBar() != null) {
+        if (getActionBar() != null) {
             Log.d("GUI", "onCreate: Actionbar found");
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -44,7 +52,36 @@ public class MainActivity extends AppCompatActivity {
     public void startSettingsActivity(MenuItem item) {
         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(intent);
-        overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
+        overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
+
+    }
+    public void newVerification() {
+        // custom dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.new_verification);
+        dialog.setTitle("New verification");
+
+        // set the custom dialog components - text, image and button
+
+        Button cancelButton = (Button) dialog.findViewById(R.id.cancelButton);
+        Button verifyButton = (Button) dialog.findViewById(R.id.verifyButton);
+        // if button is clicked, close the custom dialog
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+        verifyButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            EditText publicKeyText = (EditText) dialog.findViewById(R.id.publicKeyInput);
+            EditText ibanText = (EditText) dialog.findViewById(R.id.ibanInput);
+            String publicKey = publicKeyText.getText().toString();
+            String iban = ibanText.getText().toString();
+            Log.d("GUI", "onClick: Gonna verify, but not really...");
+            Log.d("GUI", "Public key: " + publicKey);
+            Log.d("GUI", "IBAN: " + iban);
+        });
+
+        dialog.show();
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
