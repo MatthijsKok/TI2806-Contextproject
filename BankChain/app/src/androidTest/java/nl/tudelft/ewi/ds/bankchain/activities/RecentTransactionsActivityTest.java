@@ -22,7 +22,7 @@ import static junit.framework.Assert.assertEquals;
  */
 
 @RunWith(AndroidJUnit4.class)
-//@Ignore
+@Ignore
 public class RecentTransactionsActivityTest {
 
     private static final String PACKAGE_NAME = "nl.tudelft.ewi.ds.bankchain";
