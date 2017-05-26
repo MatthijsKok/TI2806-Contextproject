@@ -34,21 +34,18 @@ env:
     - TOOLS=${ANDROID_HOME}/tools # PATH order matters, exists more than one emulator script
     - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
     - ADB_INSTALL_TIMEOUT=20 # minutes (2 minutes by default)
-
-matrix:
-  include: # More Emulator API levels to build in parallel
-    - env: API=24
-    - env: API=23
-  allow_failures:
-    - env: API=23
-  fast_finish: false
+    - secure: UF07+efyIkFbSqs4kBoR0QEBncjfgqn2XDqawQaU61/HzmsZcW5U42PdTCmnIkx2+17phrr75NqfCMpxTppsaI1moc/cq23jassVBR6hJjzMuZnm7XhB5OoLznvwdqpEINzY+7ju9MBy4Ie11DzMfdFXHlP5yBzWHo9k5ULhJ1zDLCvodC5b9AAJcDL3kbQwiA470PjgxCUS2wPas5sH8r4k7W8wr0AGCfPHjbr13NKidsRJTK/ye3LDT7TBAaJ58wkY0HZE3Ckdt0+J6JokKk28dpNMUj3uiyG6AQ7r6CX93tkil6oRfc6egdap4DeBtrXI1MDjCNfenkI68NFr47nFQOZRY8cIBIVH9ro2K/lvpQrdok5TZgVqOz2CPXFX/2iH2cv75lqTkOGsYPLembxKYZqwm0YB6WatMnjYFQCCMpv/YB0EjW+dK4QPIXGYlekd4nP9A7D5F+kjQABGX39zEX5LRvZOScvbhta1GfvRNtWq6olJSWzGVX7uBQmHRlPvZ55ILNFXUR1UcGT6JVPWIdh6NPF5GqBfmjNHIfRLHlVY+2AwKOmL9gZk2zfT1jJsHWsAkh/zU4zHA5fND7fw+QUfG7znXiuas3hNbSrDMvhHdmrFs3fQ/ZPfgp11nbMn8CNW9hJt6rA+odhHa76UCZ02qydvJWBqgFGayYY=
+    - secure: Yc7FVU97+j+mWTwdtL8KM5wHsNqCgDbAPfcNgP5ac1hj8v4qu0zBW3Un1JDMUEQHTc6pERxPTfdH409bH/3t+dUni5OcjaQmXjzp6j4nDC0l801RYQJzEuhazButP5gP5vLOhU3YngE5apN8vuJc+FHbz6DFv1MnZ6TowP7rM0GXDpaLObD+nVTKBl2i3SYq+LyhH/sl4jd+CeF0XKgXZ0uRVpUZ3m6iLno52SHHQNxjCHGBzsyv4SwwPftnBz05+GEdD3zlLOZsihPfA7IpT3MN1Wz3BfBTeYQMmCj/KypJihd/Bt+45/sOP3d1omhw3i2Jf/2/9IUdM64HUab0eK42hhahJYWPIE1bUfwSTBuGObn8wQN3IfL5gez2wI1ocUYmivNkKqDRv5Zgy1k4P6axpXLLenoCFygZ1GBecyDIcInrFyRtvFNUd2md9hrcHz6UnNipRke1OuVQHvmI5GwziRK8MAWkJu/Z5hgtHIpAHXDavndoaPAdkAO5AUq5Nlo3mv5V+1ujYV5lXrFDg0ucjGzM5H6q0kmRO4onmkkmJSRflQvUTvA6sg5z3QPm93e88tEbqqy56RYpVF3RNSrSO5nNEJ60g02RY8EhFd7SZPxmJiTHlQGQ3HMHJWK2w0gEMCKjMD5SzkzI0PSvod4EJVCG96U3/v/Jivh2wh8=
 
 before_install:
   - export EMULATOR="system-images;android-${API};${TAG};${ABI}" # Used to install/create emulator
   - echo 'count=0' > /home/travis/.android/repositories.cfg # Avoid warning
+  - echo "<?xml version=\"1.0\" encoding=\"utf-8\"?><environment><value name=\"bank\">Bunq</value><value name=\"bankUrl\">$BUNQ_URL</value><value name=\"bankApiKey\">$BUNQ_KEY</value></environment>" > ${TRAVIS_BUILD_DIR}/${DIR}/app/src/main/res/raw/environment.xml
+  - pip install --user codecov
+  - find ${TRAVIS_BUILD_DIR}/${DIR}/app/src/androidTest -type f -name *.java -exec sed -i -e "s?REAL_BUNQ_URL?$BUNQ_URL?g" {} \;
+  - find ${TRAVIS_BUILD_DIR}/${DIR}/app/src/androidTest -type f -name *.java -exec sed -i -e "s?REAL_BUNQ_API_KEY?$BUNQ_KEY?g" {} \;
 
 install:
-  # List and delete unnecessary components to free space
   - sdkmanager --list || true
   - sdkmanager --uninstall "system-images;android-15;default;armeabi-v7a"
   - sdkmanager --uninstall "system-images;android-16;default;armeabi-v7a"
@@ -99,9 +96,12 @@ before_script:
 
 script:
   # Run all device checks
-  - cd ${TRAVIS_BUILD_DIR}/${DIR} && travis_wait ./gradlew connectedCheck
+  - cd ${TRAVIS_BUILD_DIR}/${DIR} && travis_wait ./gradlew check connectedAndroidTest jacocoTestReport
 
 after_script:
   # Show tests and lint results
   - cat ${TRAVIS_BUILD_DIR}/${DIR}/*/build/outputs/androidTest-results/connected/*
   - cat ${TRAVIS_BUILD_DIR}/${DIR}/*/build/reports/lint-results.xml
+
+after_success:
+  - codecov
