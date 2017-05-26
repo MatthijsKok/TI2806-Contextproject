@@ -96,7 +96,7 @@ public interface PaymentService {
     class PostRequest {
 
         public Amount amount;
-        @SerializedName("Counterparty_alias")
+        @SerializedName("counterparty_alias")
         public CounterpartyAlias counterparty_alias;
         public String description;
 

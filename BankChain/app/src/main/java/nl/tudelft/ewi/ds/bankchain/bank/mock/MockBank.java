@@ -31,12 +31,12 @@ public class MockBank extends Bank {
     }
 
     @Override
-    public CompletableFuture<List<? extends Transaction>> listTransactions(Account account) {
+    public CompletableFuture<List<Transaction>> listTransactions(Account account) {
         return null;
     }
 
     @Override
-    public CompletableFuture<List<? extends Party>> listUsers() {
+    public CompletableFuture<List<Party>> listUsers() {
         return null;
     }
 
