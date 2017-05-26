@@ -3,13 +3,18 @@ package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import java8.util.concurrent.CompletableFuture;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankchain.Environment;
+import nl.tudelft.ewi.ds.bankchain.bank.Party;
 import nl.tudelft.ewi.ds.bankchain.bank.Session;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -105,8 +110,12 @@ public class BunqTest {
 
         env = new Environment();
         env.setBank("Bunq");
+        /*
         env.setBankUrl("REAL_BUNQ_URL");
         env.setBankApiKey("REAL_BUNQ_API_KEY");
+    */
+        env.setBank("http://178.62.218.153:8080/");
+        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
 
         bank = new BankFactory(env).create();
 
@@ -143,5 +152,30 @@ public class BunqTest {
         Throwable thr = new IllegalArgumentException("test");
 
         assertTrue(bank.confirmException(thr) == thr);
+    }
+
+    @Test
+    public void testGetUsers() throws ExecutionException, InterruptedException {
+        CompletableFuture<Void> future;
+        Bank bank;
+        Environment env;
+
+        env = new Environment();
+        env.setBank("Bunq");
+        /*
+        env.setBankUrl("REAL_BUNQ_URL");
+        env.setBankApiKey("REAL_BUNQ_API_KEY");
+    */
+        env.setBank("http://178.62.218.153:8080/");
+        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
+
+
+        List<Party> Users;
+        bank = new BankFactory(env).create();
+        bank.createSession().get();
+        Users =  bank.listUsers().get();
+        Party firstUser = Users.get(0);
+        assertEquals(firstUser.getId(),2002);
+        assertEquals(firstUser.getName(),"test");
     }
 }
