@@ -5,4 +5,4 @@ import java.security.PublicKey
 
 import nl.tudelft.ewi.ds.bankchain.bank.Account
 
-class Verification(var account: Account?, var publicKey: PublicKey?)
+class Verification(var account: Account, var publicKey: PublicKey)
