@@ -66,7 +66,7 @@ public class BunqTransactionParser extends TransactionParser {
      */
     private boolean isValidDescriptionFormat(String description) {
         String[] array = description.split(":");
-        return (array[0].equals("CH") || array[0].equals("RE")) &&
+        return (isChallenge(description) || isResponse(description)) &&
                 array[1].length() == CHALLENGE_LENGTH &&
                 array[2].length() == SIGNATURE_LENGTH &&
                 array[3].length() == PUBLICKEY_LENGTH;
