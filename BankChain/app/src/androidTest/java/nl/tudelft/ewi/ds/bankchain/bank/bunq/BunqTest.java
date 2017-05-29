@@ -167,7 +167,6 @@ public class BunqTest {
         env.setBankApiKey("REAL_BUNQ_API_KEY");
 
 
-
         List<Party> users;
         bank = new BankFactory(env).create();
         bank.createSession().get();
@@ -191,7 +190,6 @@ public class BunqTest {
         env.setBankApiKey("REAL_BUNQ_API_KEY");
 
 
-
         bank = new BankFactory(env).create();
         bank.createSession().get();
 
@@ -205,7 +203,6 @@ public class BunqTest {
     }
 
 
-
     @Test
     public void testPostTransaction() throws ExecutionException, InterruptedException {
         Bank bank;
@@ -216,7 +213,6 @@ public class BunqTest {
 
         env.setBankUrl("REAL_BUNQ_URL");
         env.setBankApiKey("REAL_BUNQ_API_KEY");
-
 
 
         bank = new BankFactory(env).create();
@@ -242,7 +238,6 @@ public class BunqTest {
 
         env.setBankUrl("REAL_BUNQ_URL");
         env.setBankApiKey("REAL_BUNQ_API_KEY");
-
 
 
         bank = new BankFactory(env).create();
