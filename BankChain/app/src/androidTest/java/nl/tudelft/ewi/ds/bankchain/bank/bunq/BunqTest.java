@@ -114,8 +114,9 @@ public class BunqTest {
         env = new Environment();
         env.setBank("Bunq");
 
-        env.setBankUrl("http://178.62.218.153:8080/");
-        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
+        env.setBankUrl("REAL_BUNQ_URL");
+        env.setBankApiKey("REAL_BUNQ_API_KEY");
+
 
         bank = new BankFactory(env).create();
 
@@ -162,8 +163,9 @@ public class BunqTest {
         env = new Environment();
         env.setBank("Bunq");
 
-        env.setBankUrl("http://178.62.218.153:8080/");
-        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
+        env.setBankUrl("REAL_BUNQ_URL");
+        env.setBankApiKey("REAL_BUNQ_API_KEY");
+
 
 
         List<Party> users;
@@ -185,8 +187,9 @@ public class BunqTest {
         env = new Environment();
         env.setBank("Bunq");
 
-        env.setBankUrl("http://178.62.218.153:8080/");
-        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
+        env.setBankUrl("REAL_BUNQ_URL");
+        env.setBankApiKey("REAL_BUNQ_API_KEY");
+
 
 
         bank = new BankFactory(env).create();
@@ -211,8 +214,9 @@ public class BunqTest {
         env = new Environment();
         env.setBank("Bunq");
 
-        env.setBankUrl("http://178.62.218.153:8080/");
-        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
+        env.setBankUrl("REAL_BUNQ_URL");
+        env.setBankApiKey("REAL_BUNQ_API_KEY");
+
 
 
         bank = new BankFactory(env).create();
@@ -236,8 +240,9 @@ public class BunqTest {
         env = new Environment();
         env.setBank("Bunq");
 
-        env.setBankUrl("http://178.62.218.153:8080/");
-        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
+        env.setBankUrl("REAL_BUNQ_URL");
+        env.setBankApiKey("REAL_BUNQ_API_KEY");
+
 
 
         bank = new BankFactory(env).create();
