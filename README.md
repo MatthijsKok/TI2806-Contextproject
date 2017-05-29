@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/MatthijsKok/TI2806-Contextproject.svg?branch=master)](https://travis-ci.org/MatthijsKok/TI2806-Contextproject)
+[![Build Status](https://travis-ci.org/MatthijsKok/TI2806-Contextproject.svg?branch=develop)](https://travis-ci.org/MatthijsKok/TI2806-Contextproject)
 [![codecov](https://codecov.io/gh/MatthijsKok/TI2806-Contextproject/branch/develop/graph/badge.svg)](https://codecov.io/gh/MatthijsKok/TI2806-Contextproject)
 
 BankChain: increasing trust on the blockchain using IBAN verification
