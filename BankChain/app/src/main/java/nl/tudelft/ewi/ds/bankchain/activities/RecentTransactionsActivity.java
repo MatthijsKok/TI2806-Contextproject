@@ -76,7 +76,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                     try {
                         //ac = java8.util.stream.StreamSupport.stream(b.listAccount(p).get()).findFirst().orElse(new BunqAccount("error", -1, p));
                         List<Account> list = b.listAccount(p).get();
-                        if (list.size() == 0) {
+                        if (list.isEmpty()) {
                             ac = new BunqAccount("error", -1, p);
                         }
                         ac = b.listAccount(p).get().get(0);
@@ -123,7 +123,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false);
             return;
         }
-        if (transactionList.size() == 0) {
+        if (transactionList.isEmpty()) {
             updateNoTransactionsDisplay("No transactions have been made yet.");
             swipeRefreshLayout.setRefreshing(false);
             return;
