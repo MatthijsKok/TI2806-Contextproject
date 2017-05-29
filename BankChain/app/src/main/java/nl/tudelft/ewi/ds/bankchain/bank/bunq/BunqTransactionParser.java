@@ -1,13 +1,9 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import android.util.Log;
 import android.util.Pair;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
-import net.i2p.crypto.eddsa.math.Curve;
-import net.i2p.crypto.eddsa.math.GroupElement;
-import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
-import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
-import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -20,7 +16,6 @@ import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.bank.TransactionParser;
 import nl.tudelft.ewi.ds.bankchain.cryptography.Challenge;
-import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
 import nl.tudelft.ewi.ds.bankchain.cryptography.Response;
 
 public class BunqTransactionParser extends TransactionParser {
@@ -36,11 +31,9 @@ public class BunqTransactionParser extends TransactionParser {
             if (!isValidDescriptionFormat(description)) {
                 continue;
             }
-            if (isChallenge(description)) {
-                if (Response.verifyChallenge(description)) {
-                    String response = Response.createResponse(description, privateKey);
-                    //TODO BankTransActionSender.sendTransaction with this String as description
-                }
+            if (isChallenge(description) && Response.verifyChallenge(description)) {
+                String response = Response.createResponse(description, privateKey);
+                //TODO BankTransActionSender.sendTransaction with this String as description
             }
         }
     }
@@ -53,10 +46,8 @@ public class BunqTransactionParser extends TransactionParser {
             if (!isValidDescriptionFormat(description)) {
                 continue;
             }
-            if (isResponse(description)) {
-                if (Challenge.verifyResponse(description)) {
-                    returnCollection.add(new Pair<>(transaction.getAcount(), getPublicKeyFromTransaction(transaction)));
-                }
+            if (isResponse(description) && Challenge.verifyResponse(description)) {
+                returnCollection.add(new Pair<>(transaction.getAcount(), getPublicKeyFromTransaction(transaction)));
             }
         }
         return returnCollection;
@@ -96,7 +87,7 @@ public class BunqTransactionParser extends TransactionParser {
         try {
             return new EdDSAPublicKey(x509EncodedKeySpec);
         } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
+            Log.e("BunqTransActionParser", e.toString());
         }
         return null;
     }

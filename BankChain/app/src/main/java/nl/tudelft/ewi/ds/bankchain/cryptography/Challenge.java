@@ -4,7 +4,6 @@ import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.Utils;
 
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.SecureRandom;
 
 /**

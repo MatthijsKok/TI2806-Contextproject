@@ -3,7 +3,6 @@ package nl.tudelft.ewi.ds.bankchain.cryptography;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 
 import java.security.PrivateKey;
-import java.security.PublicKey;
 
 import static nl.tudelft.ewi.ds.bankchain.cryptography.Challenge.decodeMessage;
 import static nl.tudelft.ewi.ds.bankchain.cryptography.Challenge.encodeMessage;

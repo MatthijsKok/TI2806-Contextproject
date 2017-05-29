@@ -5,7 +5,6 @@ import android.util.Pair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Collection;
-import java.util.Optional;
 
 public abstract class TransactionParser {
 
