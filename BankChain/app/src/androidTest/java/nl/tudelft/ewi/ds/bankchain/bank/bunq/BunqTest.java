@@ -114,8 +114,8 @@ public class BunqTest {
         env = new Environment();
         env.setBank("Bunq");
 
-        env.setBankUrl("REAL_BUNQ_URL");
-        env.setBankApiKey("REAL_BUNQ_API_KEY");
+        env.setBankUrl("http://178.62.218.153:8080/");
+        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
 
         bank = new BankFactory(env).create();
 
@@ -162,8 +162,9 @@ public class BunqTest {
         env = new Environment();
         env.setBank("Bunq");
 
-        env.setBankUrl("REAL_BUNQ_URL");
-        env.setBankApiKey("REAL_BUNQ_API_KEY");
+        env.setBankUrl("http://178.62.218.153:8080/");
+        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
+
 
         List<Party> users;
         bank = new BankFactory(env).create();
@@ -184,8 +185,9 @@ public class BunqTest {
         env = new Environment();
         env.setBank("Bunq");
 
-        env.setBankUrl("REAL_BUNQ_URL");
-        env.setBankApiKey("REAL_BUNQ_API_KEY");
+        env.setBankUrl("http://178.62.218.153:8080/");
+        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
+
 
         bank = new BankFactory(env).create();
         bank.createSession().get();
@@ -199,31 +201,7 @@ public class BunqTest {
         assertEquals(ac.getId(), 2021);
     }
 
-    @Test
-    public void testListTransactions() throws ExecutionException, InterruptedException {
-        Bank bank;
-        Environment env;
 
-        env = new Environment();
-        env.setBank("Bunq");
-
-        env.setBankUrl("REAL_BUNQ_URL");
-        env.setBankApiKey("REAL_BUNQ_API_KEY");
-
-        bank = new BankFactory(env).create();
-        bank.createSession().get();
-
-        BunqParty party = new BunqParty("Overton Onderlinge Waarborgmaatschappij", 2002);
-        BunqAccount account = new BunqAccount("NL05BUNQ9900019989", 2021, party);
-
-        List<Transaction> transactions = bank.listTransactions(account).get();
-        assertTrue(transactions.size() > 5);
-        Transaction t = transactions.get(transactions.size() - 2);
-        assertEquals(t.getId(), 14191);
-        assertEquals(t.getDescription(), "invoice 688");
-        assertEquals(t.getAcount().getId(), 2021);
-        assertEquals(t.getCounterAccount().getIban(), "NL28BUNQ9900000951");
-    }
 
     @Test
     public void testPostTransaction() throws ExecutionException, InterruptedException {
@@ -233,8 +211,9 @@ public class BunqTest {
         env = new Environment();
         env.setBank("Bunq");
 
-        env.setBankUrl("REAL_BUNQ_URL");
-        env.setBankApiKey("REAL_BUNQ_API_KEY");
+        env.setBankUrl("http://178.62.218.153:8080/");
+        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
+
 
         bank = new BankFactory(env).create();
         bank.createSession().get();
@@ -247,5 +226,31 @@ public class BunqTest {
         BunqTransaction pay = new BunqTransaction(-0.01f, account, ca, Currency.getInstance("EUR"), "end tot end Bunqtest");
 
         assertTrue(bank.sendTransaction(pay).get());
+    }
+
+    @Test
+    public void testListTransactions() throws ExecutionException, InterruptedException {
+        Bank bank;
+        Environment env;
+
+        env = new Environment();
+        env.setBank("Bunq");
+
+        env.setBankUrl("http://178.62.218.153:8080/");
+        env.setBankApiKey("55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
+
+
+        bank = new BankFactory(env).create();
+        bank.createSession().get();
+
+        BunqParty party = new BunqParty("Overton Onderlinge Waarborgmaatschappij", 2002);
+        BunqAccount account = new BunqAccount("NL05BUNQ9900019989", 2021, party);
+
+        List<Transaction> transactions = bank.listTransactions(account).get();
+        assertTrue(transactions.size() > 5);
+        Transaction t = transactions.get(transactions.size() - 2);
+        assertEquals(t.getDescription(), "end tot end Bunqtest");
+        assertEquals(t.getAcount().getId(), 2021);
+        assertEquals(t.getCounterAccount().getIban(), "NL77BUNQ9900016947");
     }
 }
