@@ -151,7 +151,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     /*
     Initialize the ListView related objects.
      */
-    private void initializeTransactionListView(){
+    private void initializeTransactionListView() {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
         expListView = (ExpandableListView) findViewById(R.id.recentTransactionsList);
