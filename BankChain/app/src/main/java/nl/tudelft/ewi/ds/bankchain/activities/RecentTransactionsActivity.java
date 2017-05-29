@@ -85,7 +85,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                             ac = new BunqAccount("error", -1, p);
                         }
                         ac = b.listAccount(p).get().get(0);
-                        
+
                     } catch (InterruptedException | ExecutionException e) {
                         Log.e("CRYPTO", e.getMessage());
                     }

@@ -169,6 +169,7 @@ public class BunqTest {
         bank = new BankFactory(env).create();
         bank.createSession().get();
         users = bank.listUsers().get();
+        assertEquals(users.size(),1);
         Party firstUser = users.get(0);
         assertEquals(firstUser.getId(), 2002);
         assertEquals(firstUser.getName(), "Overton Onderlinge Waarborgmaatschappij");
@@ -190,6 +191,7 @@ public class BunqTest {
         bank.createSession().get();
 
         List<Account> accounts = bank.listAccount(new BunqParty("Overton Onderlinge Waarborgmaatschappij", 2002)).get();
+        assertEquals(accounts.size(),1);
         Account ac = accounts.get(0);
         assertEquals(ac.getParty().getId(), 2002);
         assertEquals(ac.getIban(), "NL05BUNQ9900019989" +
@@ -215,6 +217,7 @@ public class BunqTest {
         BunqAccount account = new BunqAccount("NL05BUNQ9900019989", 2021, party);
 
         List<Transaction> transactions = bank.listTransactions(account).get();
+        assertTrue(transactions.size()>5);
         Transaction t = transactions.get(transactions.size() - 2);
         assertEquals(t.getId(), 14191);
         assertEquals(t.getDescription(), "invoice 688");
