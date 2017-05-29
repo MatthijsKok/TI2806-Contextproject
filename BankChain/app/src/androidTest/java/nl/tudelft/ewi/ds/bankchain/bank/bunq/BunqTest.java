@@ -156,7 +156,6 @@ public class BunqTest {
 
     @Test
     public void testGetUsers() throws ExecutionException, InterruptedException {
-        CompletableFuture<Void> future;
         Bank bank;
         Environment env;
 
@@ -178,7 +177,6 @@ public class BunqTest {
 
     @Test
     public void testGetAccounts() throws ExecutionException, InterruptedException {
-        CompletableFuture<Void> future;
         Bank bank;
         Environment env;
 
@@ -201,7 +199,6 @@ public class BunqTest {
 
     @Test
     public void testListTransactions() throws ExecutionException, InterruptedException {
-        CompletableFuture<Void> future;
         Bank bank;
         Environment env;
 
@@ -227,7 +224,6 @@ public class BunqTest {
 
     @Test
     public void testPostTransaction() throws ExecutionException, InterruptedException {
-        CompletableFuture<Void> future;
         Bank bank;
         Environment env;
 
