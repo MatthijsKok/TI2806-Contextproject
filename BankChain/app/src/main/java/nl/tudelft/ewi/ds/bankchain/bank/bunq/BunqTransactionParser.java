@@ -1,7 +1,6 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
 import android.util.Log;
-import android.util.Pair;
 
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
@@ -12,17 +11,18 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.bank.TransactionParser;
 import nl.tudelft.ewi.ds.bankchain.cryptography.Challenge;
 import nl.tudelft.ewi.ds.bankchain.cryptography.Response;
+import nl.tudelft.ewi.ds.bankchain.cryptography.Verification;
 
 public class BunqTransactionParser extends TransactionParser {
 
-    private static final int CHALLENGE_LENGTH = 40;
+    private static final int DESCRIPTION_LENGTH = 140;
+    private static final int SECRET_LENGTH = 40;
     private static final int SIGNATURE_LENGTH = 128;
-    private static final int PUBLICKEY_LENGTH = 256;
+    private static final int PUBLIC_KEY_LENGTH = 256;
 
     @Override
     public void respondToPendingChallenges(PrivateKey privateKey, Collection<Transaction> transactionCollection) {
@@ -31,7 +31,7 @@ public class BunqTransactionParser extends TransactionParser {
             if (!isValidDescriptionFormat(description)) {
                 continue;
             }
-            if (isChallenge(description) && Response.verifyChallenge(description)) {
+            if (isValidChallenge(description)) {
                 String response = Response.createResponse(description, privateKey);
                 //TODO BankTransActionSender.sendTransaction with this String as description
             }
@@ -39,15 +39,17 @@ public class BunqTransactionParser extends TransactionParser {
     }
 
     @Override
-    public Collection<Pair<Account, PublicKey>> getVerifiedAccountsInTransactionList(PrivateKey privateKey, Collection<Transaction> transactionCollection) {
-        Collection<Pair<Account, PublicKey>> returnCollection = new ArrayList<>();
+    public Collection<Verification> getVerifiedAccountsInTransactionList(PrivateKey privateKey, Collection<Transaction> transactionCollection) {
+        Collection<Verification> returnCollection = new ArrayList<>();
         for (Transaction transaction: transactionCollection) {
             String description = transaction.getDescription();
             if (!isValidDescriptionFormat(description)) {
                 continue;
             }
-            if (isResponse(description) && Challenge.verifyResponse(description)) {
-                returnCollection.add(new Pair<>(transaction.getAcount(), getPublicKeyFromTransaction(transaction)));
+            if (isValidResponse(description) || isChallenge(description)) {
+                returnCollection.add(new Verification(
+                        transaction.getAcount(),
+                        getPublicKeyFromTransaction(transaction)));
             }
         }
         return returnCollection;
@@ -66,18 +68,27 @@ public class BunqTransactionParser extends TransactionParser {
      */
     private boolean isValidDescriptionFormat(String description) {
         String[] array = description.split(":");
-        return (isChallenge(description) || isResponse(description)) &&
-                array[1].length() == CHALLENGE_LENGTH &&
-                array[2].length() == SIGNATURE_LENGTH &&
-                array[3].length() == PUBLICKEY_LENGTH;
+        return ((description.length() == DESCRIPTION_LENGTH) &&
+                (isChallenge(description) || isResponse(description)) &&
+                (array[1].length() == SECRET_LENGTH) &&
+                (array[2].length() == SIGNATURE_LENGTH) &&
+                (array[3].length() == PUBLIC_KEY_LENGTH));
     }
 
     private boolean isChallenge(String description) {
         return description.split(":")[0].equals("CH");
     }
 
+    private boolean isValidChallenge(String description) {
+        return isChallenge(description) && Response.verifyChallenge(description);
+    }
+
     private boolean isResponse(String description) {
         return description.split(":")[0].equals("RE");
+    }
+
+    private boolean isValidResponse(String description) {
+        return isResponse(description) && Challenge.verifyResponse(description);
     }
 
     private PublicKey getPublicKeyFromTransaction(Transaction transaction) {
