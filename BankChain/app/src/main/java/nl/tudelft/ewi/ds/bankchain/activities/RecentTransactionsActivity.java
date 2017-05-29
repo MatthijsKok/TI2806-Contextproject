@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -90,6 +91,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                     } catch (InterruptedException | ExecutionException e) {
                         Log.e("CRYPTO", e.getMessage());
                     }
+
 
                     b.listTransactions(ac).thenAccept(ts -> Tools.runOnMainThread(() -> {
                         Toast.makeText(getApplicationContext(),
