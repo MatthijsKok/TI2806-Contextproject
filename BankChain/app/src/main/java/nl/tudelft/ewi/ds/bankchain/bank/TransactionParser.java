@@ -9,5 +9,5 @@ public abstract class TransactionParser {
 
     public abstract void respondToPendingChallenges(PrivateKey privateKey, Collection<Transaction> transactionCollection);
 
-    public abstract Collection<Verification> getVerifiedAccountsInTransactionList(PrivateKey privateKey, Collection<Transaction> transactionCollection);
+    public abstract Collection<Verification> getVerifiedAccountsInTransactionList(Collection<Transaction> transactionCollection);
 }

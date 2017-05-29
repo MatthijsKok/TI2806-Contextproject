@@ -39,7 +39,7 @@ public class BunqTransactionParser extends TransactionParser {
     }
 
     @Override
-    public Collection<Verification> getVerifiedAccountsInTransactionList(PrivateKey privateKey, Collection<Transaction> transactionCollection) {
+    public Collection<Verification> getVerifiedAccountsInTransactionList(Collection<Transaction> transactionCollection) {
         Collection<Verification> returnCollection = new ArrayList<>();
         for (Transaction transaction: transactionCollection) {
             String description = transaction.getDescription();
