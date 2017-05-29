@@ -53,8 +53,14 @@ public final class ED25519 {
         }
         return null;
     }
+    
+    public static boolean verifySignature(byte[] message, byte[] signature, byte[] publickey) {
+        EdDSAPublicKeySpec publicKeySpec = new EdDSAPublicKeySpec(publickey, parameterSpec);
+        EdDSAPublicKey vk = new EdDSAPublicKey(publicKeySpec);
+        return verifySignature(message, signature, vk);
+    }
 
-    static boolean verifySignature(byte[] message, byte[] signature, PublicKey publicKey) {
+    public static boolean verifySignature(byte[] message, byte[] signature, PublicKey publicKey) {
         try {
             Signature sgr = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
             sgr.initVerify(publicKey);
