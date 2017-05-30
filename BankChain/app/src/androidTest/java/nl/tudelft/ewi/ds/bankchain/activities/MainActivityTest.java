@@ -36,18 +36,11 @@ public class MainActivityTest {
 
     private static final String PACKAGE_NAME = "nl.tudelft.ewi.ds.bankchain";
 
-    /* Instantiate an IntentsTestRule object. */
     @Rule
-    public ActivityTestRule<MainActivity> activityRule =
-            new ActivityTestRule<>(MainActivity.class);
+    public IntentsTestRule<MainActivity> mIntentsRule =
+            new IntentsTestRule<>(MainActivity.class);
 
-    @Before
-    public void unlockScreen() {
-        final MainActivity activity = activityRule.getActivity();
-        Runnable wakeUpDevice = () -> activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
+    /* Instantiate an IntentsTestRule object. */
 
     @Test
     public void verifyOpenRecentTransactionsActivity() {
