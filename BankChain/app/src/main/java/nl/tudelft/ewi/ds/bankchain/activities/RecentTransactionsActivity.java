@@ -81,7 +81,6 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                         }
                         ac = b.listAccount(p).get().get(0);
 
-
                     } catch (InterruptedException | ExecutionException e) {
                         Log.e("CRYPTO", e.getMessage());
                     }

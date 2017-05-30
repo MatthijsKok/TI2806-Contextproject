@@ -12,8 +12,10 @@ import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.PaymentService;
  *
  * @author Jos Kuijpers
  */
-final class BunqTransaction implements Transaction {
+public class BunqTransaction implements Transaction {
 
+
+    private int id;
     private Date date;
     private float value;
     private String description;
@@ -22,13 +24,33 @@ final class BunqTransaction implements Transaction {
     private Account account;
 
 
-    BunqTransaction(PaymentService.ListResponse.Payment payment, Account account) {
+    public BunqTransaction(PaymentService.ListResponse.Payment payment, Account account) {
         date = new Date(22111990); //payment.getCreationDate(); Todo fix payment
         value = payment.amount.getValue();
         currency = payment.amount.getCurrency();
         description = payment.description;
         this.account = account;
+        this.id = payment.id;
         this.counterAccount = new BunqAccount(payment.counterParty.iban, -1, new BunqParty(payment.counterParty.name, -1));
+    }
+
+    /**
+     * used to create an outgoing trasnaction
+     *
+     * @param amount
+     * @param account        source of the money
+     * @param counterAccount recepient
+     * @param currency
+     * @param description
+     */
+    public BunqTransaction(float amount, Account account, Account counterAccount, Currency currency, String description) {
+        date = getDate();
+        id = -1;
+        this.currency = currency;
+        value = amount;
+        this.account = account;
+        this.counterAccount = counterAccount;
+        this.description = description;
     }
 
 
@@ -64,7 +86,30 @@ final class BunqTransaction implements Transaction {
     }
 
     @Override
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
     public String toString() {
         return "<Payment desc:'" + getDescription() + "'>";
+    }
+
+    public PaymentService.PostRequest convertToRequest() {
+        PaymentService.PostRequest p = new PaymentService.PostRequest();
+        PaymentService.Amount a = new PaymentService.Amount();
+        PaymentService.CounterpartyAlias c = new PaymentService.CounterpartyAlias();
+        c.name = counterAccount.getParty().getName();
+        c.value = counterAccount.getIban();
+        a.currency = "EUR";
+        a.value = Float.toString(Math.abs(value)); //usually the outgoing amount should be negative this is the exception so it's covered here
+        p.description = description;
+        p.amount = a;
+        p.counterparty_alias = c;
+        return p;
     }
 }
