@@ -32,7 +32,6 @@ import static org.hamcrest.core.AllOf.allOf;
  */
 
 @RunWith(AndroidJUnit4.class)
-@Ignore
 public class MainActivityTest {
 
     private static final String PACKAGE_NAME = "nl.tudelft.ewi.ds.bankchain";
@@ -44,7 +43,6 @@ public class MainActivityTest {
 
     @Before
     public void unlockScreen() {
-
         final MainActivity activity = activityRule.getActivity();
         Runnable wakeUpDevice = () -> activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |

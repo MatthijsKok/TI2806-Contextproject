@@ -30,7 +30,6 @@ import static junit.framework.Assert.assertTrue;
  */
 
 @RunWith(AndroidJUnit4.class)
-@Ignore
 public class RecentTransactionsActivityTest {
 
     /* Instantiate an IntentsTestRule object. */
