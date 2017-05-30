@@ -42,11 +42,9 @@ public class RecentTransactionsActivityTest {
     @Before
     public void unlockScreen() {
         final RecentTransactionsActivity activity = activityRule.getActivity();
-        activity.runOnUiThread(() -> {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        });
+        Runnable wakeUpDevice = () -> activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Test

@@ -3,6 +3,7 @@ package nl.tudelft.ewi.ds.bankchain.activities;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.WindowManager;
 
@@ -38,18 +39,16 @@ public class MainActivityTest {
 
     /* Instantiate an IntentsTestRule object. */
     @Rule
-    public IntentsTestRule<MainActivity> mIntentsRule =
-            new IntentsTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> activityRule =
+            new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void unlockScreen() {
-        final MainActivity activity = mIntentsRule.getActivity();
 
-        activity.runOnUiThread(() -> {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        });
+        final MainActivity activity = activityRule.getActivity();
+        Runnable wakeUpDevice = () -> activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Test
