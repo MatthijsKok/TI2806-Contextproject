@@ -37,15 +37,6 @@ public class RecentTransactionsActivityTest {
     public ActivityTestRule<RecentTransactionsActivity> activityRule =
             new ActivityTestRule<>(RecentTransactionsActivity.class);
 
-
-    @Before
-    public void unlockScreen() {
-        final RecentTransactionsActivity activity = activityRule.getActivity();
-        Runnable wakeUpDevice = () -> activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
-
     @Test
     @UiThreadTest
     public void verifyUpdateNoTransactionsDisplay() {
