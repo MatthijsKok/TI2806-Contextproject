@@ -25,7 +25,7 @@ import static junit.framework.Assert.assertTrue;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class NewVerificationActivityTest {
+public class NewVerificationActivityTest extends TestRunner{
 
     /* Instantiate an IntentsTestRule object. */
     @Rule

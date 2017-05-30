@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import nl.tudelft.ewi.ds.bankchain.R;
+import nl.tudelft.ewi.ds.bankchain.TestRunner;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -32,7 +33,7 @@ import static org.hamcrest.core.AllOf.allOf;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest {
+public class MainActivityTest extends TestRunner{
 
     private static final String PACKAGE_NAME = "nl.tudelft.ewi.ds.bankchain";
 

@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.tudelft.ewi.ds.bankchain.TestRunner;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -29,8 +30,10 @@ import static junit.framework.Assert.assertTrue;
  * @author Isha Dijcks
  */
 
+
+
 @RunWith(AndroidJUnit4.class)
-public class RecentTransactionsActivityTest {
+public class RecentTransactionsActivityTest extends TestRunner {
 
     /* Instantiate an IntentsTestRule object. */
     @Rule
