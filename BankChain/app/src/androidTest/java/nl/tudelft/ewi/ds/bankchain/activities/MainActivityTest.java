@@ -33,7 +33,7 @@ import static org.hamcrest.core.AllOf.allOf;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest extends TestRunner{
+public class MainActivityTest extends TestRunner {
 
     private static final String PACKAGE_NAME = "nl.tudelft.ewi.ds.bankchain";
 

@@ -5,13 +5,11 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.PowerManager;
 
-public class TestRunner extends android.support.test.runner.AndroidJUnitRunner
-{
+public class TestRunner extends android.support.test.runner.AndroidJUnitRunner {
     private PowerManager.WakeLock mWakeLock;
 
     @Override
-    public void callApplicationOnCreate(Application app)
-    {
+    public void callApplicationOnCreate(Application app) {
         // Unlock the screen
         KeyguardManager keyguard = (KeyguardManager) app.getSystemService(Context.KEYGUARD_SERVICE);
         keyguard.newKeyguardLock(getClass().getSimpleName()).disableKeyguard();
@@ -25,8 +23,7 @@ public class TestRunner extends android.support.test.runner.AndroidJUnitRunner
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         mWakeLock.release();
 
         super.onDestroy();

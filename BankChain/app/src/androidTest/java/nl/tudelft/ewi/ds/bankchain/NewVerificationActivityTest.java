@@ -5,10 +5,13 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.EditText;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import nl.tudelft.ewi.ds.bankchain.activities.NewVerificationActivity;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -18,14 +21,12 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 
-
-
 /**
  * @author Isha Dijcks
  */
 
 @RunWith(AndroidJUnit4.class)
-public class NewVerificationActivityTest extends TestRunner{
+public class NewVerificationActivityTest extends TestRunner {
 
     /* Instantiate an IntentsTestRule object. */
     @Rule
