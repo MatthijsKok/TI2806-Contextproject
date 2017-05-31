@@ -18,7 +18,7 @@ import static junit.framework.Assert.assertTrue;
  */
 
 @RunWith(AndroidJUnit4.class)
-// @Ignore
+//TRAVIS @Ignore
 public class SettingsActivityTest {
     @Rule
     public ActivityTestRule<SettingsActivity> activityRule =
