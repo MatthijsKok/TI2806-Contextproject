@@ -1,12 +1,9 @@
 package nl.tudelft.ewi.ds.bankchain;
 
 
-import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.widget.EditText;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,10 +36,26 @@ public class NewVerificationActivityTest extends TestRunner {
     public void verifyVerify() {
         onView(withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
         onView(withId(R.id.ibanInput)).perform(replaceText("Iban"));
-        onView(withId(R.id.verifyButton)).perform(click());
+        onView(withId(R.id.createChallengeButton)).perform(click());
         assertEquals(activityRule.getActivity().getPublicKey(), "PublicKey");
         assertEquals(activityRule.getActivity().getIban(), "Iban");
     }
+
+    @Test
+    public void verifyCreateChallenge() {
+        activityRule.getActivity().createChallenge("","");
+        assertEquals(activityRule.getActivity().getPublicKey(), "");
+        assertEquals(activityRule.getActivity().getIban(), "");
+        activityRule.getActivity().createChallenge("Public key","IBAN");
+        assertEquals(activityRule.getActivity().getPublicKey(), "Public key");
+        assertEquals(activityRule.getActivity().getIban(), "IBAN");
+    }
+
+    @Test
+    public void activateBunqVerification() {
+
+    }
+
 
     @Test
     public void onBackPressedTest() {

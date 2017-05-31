@@ -88,5 +88,8 @@
     <string name="public_key">Public key</string>
     <string name="iban">IBAN</string>
     <string name="verify">Verify</string>
->>>>>>> Stashed changes
+    <string name="create_challenge">Create Challenge</string>
+    <string name="verify_bunq">Bunq Verification</string>
+    <string name="verify_manual">Manual Verification</string>
+    >>>>>>> Stashed changes
 </resources>
