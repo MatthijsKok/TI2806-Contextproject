@@ -3,6 +3,7 @@ package nl.tudelft.ewi.ds.bankchain;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import static junit.framework.Assert.assertTrue;
  */
 
 @RunWith(AndroidJUnit4.class)
+// @Ignore
 public class SettingsActivityTest {
     @Rule
     public ActivityTestRule<SettingsActivity> activityRule =

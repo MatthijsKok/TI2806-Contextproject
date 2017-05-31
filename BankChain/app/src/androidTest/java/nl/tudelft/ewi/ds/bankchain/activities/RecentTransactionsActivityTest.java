@@ -29,10 +29,8 @@ import static junit.framework.Assert.assertTrue;
 /**
  * @author Isha Dijcks
  */
-
-
-
 @RunWith(AndroidJUnit4.class)
+//TRAVIS @Ignore
 public class RecentTransactionsActivityTest extends TestRunner {
 
     /* Instantiate an IntentsTestRule object. */
