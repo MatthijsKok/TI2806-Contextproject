@@ -28,7 +28,6 @@ import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
 
-
 public class RecentTransactionsActivity extends AppCompatActivity {
 
     private ExpandableListAdapter listAdapter;
@@ -41,7 +40,6 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent_transactions);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -49,7 +47,6 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_recent_transactions_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(() -> retrieveRecentTransactions());
         retrieveRecentTransactions();
@@ -66,9 +63,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             return;
         }
         Environment v = Environment.getDefaults();
-
         Bank b = new BankFactory(v).create();
-
         b.createSession()
                 .thenAccept(t -> Tools.runOnMainThread(() -> {
                     Log.d("GUI", "Created session");
@@ -81,7 +76,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                     try {
                         //ac = java8.util.stream.StreamSupport.stream(b.listAccount(p).get()).findFirst().orElse(new BunqAccount("error", -1, p));
                         List<Account> list = b.listAccount(p).get();
-                        if (list.size() == 0) {
+                        if (list.isEmpty()) {
                             ac = new BunqAccount("error", -1, p);
                         }
                         ac = b.listAccount(p).get().get(0);
@@ -121,19 +116,13 @@ public class RecentTransactionsActivity extends AppCompatActivity {
     Takes the list of recent transactions and outputs them to the UI
      */
     public void showRecentTransactions(List<? extends Transaction> transactionList) {
-        listDataHeader = new ArrayList<>();
-        listDataChild = new HashMap<>();
-
-        expListView = (ExpandableListView) findViewById(R.id.recentTransactionsList);
-        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
-        expListView.setAdapter(listAdapter);
-
+        initializeTransactionListView();
         if (transactionList == null) {
             updateNoTransactionsDisplay("Could not retrieve transactions.");
             swipeRefreshLayout.setRefreshing(false);
             return;
         }
-        if (transactionList.size() == 0) {
+        if (transactionList.isEmpty()) {
             updateNoTransactionsDisplay("No transactions have been made yet.");
             swipeRefreshLayout.setRefreshing(false);
             return;
@@ -146,17 +135,27 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             if (transactionList.get(i).getValue() != null && transactionList.get(i).getCurrency() != null) {
                 details.add(transactionList.get(i).getValue().toString() + " " + transactionList.get(i).getCurrency().toString());
             }
-//                     TODO: implement once getDate functions correctly
-//                    if (transactionList.get(i).getDate() != null) {
-//                        details.add(transactionList.get(i).getDate().toString());
-//                    }
+            if (transactionList.get(i).getDate() != null) {
+                details.add(transactionList.get(i).getDate().toString());
+            }
             if (transactionList.get(i).getCounterAccount() != null && transactionList.get(i).getCounterAccount().getParty() != null) {
                 details.add("" + transactionList.get(i).getCounterAccount().getParty().toString());
             }
             listDataChild.put(listDataHeader.get(i), details);
         }
-
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+
+    /*
+    Initialize the ListView related objects.
+     */
+    private void initializeTransactionListView() {
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+        expListView = (ExpandableListView) findViewById(R.id.recentTransactionsList);
+        listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
+        expListView.setAdapter(listAdapter);
     }
 
     /*
@@ -168,12 +167,16 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         textView.setTextSize(20);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -182,5 +185,4 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         this.finish();
         overridePendingTransition(R.anim.left_slide_in, R.anim.right_slide_out);
     }
-
 }

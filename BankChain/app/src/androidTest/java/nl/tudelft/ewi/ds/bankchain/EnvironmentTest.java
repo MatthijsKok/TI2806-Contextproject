@@ -28,8 +28,6 @@ public class EnvironmentTest {
 
         assertNotNull(env);
         assertEquals(env.getBank(), "Bunq");
-//        assertEquals(env.getBankUrl(), "aaaaaaa");
-//        assertEquals(env.getBankApiKey(), "sdfggfgfs");
     }
 
     @Test
@@ -49,7 +47,6 @@ public class EnvironmentTest {
     @Test
     public void testNoFile() throws IOException {
         InputStream in = getInputStream("res/raw/test_environment_none.xml");
-
         assertNull(in);
     }
 }
