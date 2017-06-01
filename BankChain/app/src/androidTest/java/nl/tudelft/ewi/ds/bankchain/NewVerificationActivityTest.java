@@ -1,6 +1,6 @@
 package nl.tudelft.ewi.ds.bankchain;
 
-
+import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -42,6 +42,7 @@ public class NewVerificationActivityTest extends TestRunner {
     }
 
     @Test
+    @UiThreadTest
     public void verifyCreateChallenge() {
         activityRule.getActivity().createChallenge("","");
         assertEquals(activityRule.getActivity().getPublicKey(), "");
