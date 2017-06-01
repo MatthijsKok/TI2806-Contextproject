@@ -1,6 +1,5 @@
 package nl.tudelft.ewi.ds.bankchain.activities;
 
-import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.support.test.annotation.UiThreadTest;
@@ -40,10 +39,10 @@ public class NewVerificationActivityTest extends TestRunner {
     @Test
     public void verifyVerify() {
         onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
-        onView(withId(R.id.ibanInput)).perform(replaceText("Iban"));
+        onView(withId(R.id.ibanInput)).perform(replaceText("GB82WEST12345698765432"));
         onView(withId(R.id.createChallengeButton)).perform(click());
         assertEquals("PublicKey",  activityRule.getActivity().getPublicKey());
-        assertEquals("Iban", activityRule.getActivity().getIban());
+        assertEquals("GB82WEST12345698765432", activityRule.getActivity().getIban());
     }
 
     @Test
@@ -76,7 +75,7 @@ public class NewVerificationActivityTest extends TestRunner {
     }
 
     @Test
-    public void BunqVerificationTest() {
+    public void bunqVerificationTest() {
         onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
         onView(withId(R.id.ibanInput)).perform(replaceText("GB82WEST12345698765432"));
         onView(withId(R.id.createChallengeButton)).perform(click());
@@ -84,7 +83,7 @@ public class NewVerificationActivityTest extends TestRunner {
     }
 
     @Test
-    public void ManualVerificationTest() {
+    public void manualVerificationTest() {
         onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
         onView(withId(R.id.ibanInput)).perform(replaceText("GB82WEST12345698765432"));
         onView(withId(R.id.createChallengeButton)).perform(click());
