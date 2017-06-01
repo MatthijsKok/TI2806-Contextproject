@@ -2,7 +2,7 @@ package nl.tudelft.ewi.ds.bankchain;
 
 
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
+import org.junit.Ignore;
 import android.widget.ExpandableListView;
 
 import org.junit.Test;
