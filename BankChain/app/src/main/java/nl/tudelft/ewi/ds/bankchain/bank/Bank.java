@@ -19,13 +19,13 @@ public abstract class Bank {
      */
     public abstract CompletableFuture<? extends Session> createSession();
 
-    public abstract CompletableFuture<List<? extends Transaction>> listTransactions(Account account);
+    public abstract CompletableFuture<List<Transaction>> listTransactions(Account account);
 
-    public abstract CompletableFuture<List<? extends Party>> listUsers();
+    public abstract CompletableFuture<List<Party>> listUsers();
 
     public abstract CompletableFuture<List<Account>> listAccount(Party party);
-//
-//    public abstract CompletableFuture<Boolean> sendTransaction(Transaction transaction);
+
+    public abstract CompletableFuture<Boolean> sendTransaction(Transaction transaction);
 
     /**
      * Get the current session of the bank.

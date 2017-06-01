@@ -6,25 +6,28 @@ import java.sql.Date;
 import java.util.Currency;
 import java.util.List;
 
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import java8.util.concurrent.CompletableFuture;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 
 /**
  * API for the payment endpoint.
  *
- * @note This is MVP
- *
  * @author Richard
+ * @note This is MVP
  */
 public interface PaymentService {
     @GET("/v1/user/{user}/monetary-account/{account}/payment")
     CompletableFuture<ListResponse> listPayments(@Path("user") int user,
                                                  @Path("account") int account);
 
-  //  @POST("/v1/user/1/monetary-account/11/payment")
-   // CompletableFuture<InstallationService.CreateResponse> createPayment(@Body t);
+    @POST("/v1/user/{user}/monetary-account/{account}/payment")
+    CompletableFuture<PostResponse> createPayment(@Body PostRequest request,
+                                                  @Path("user") int user,
+                                                  @Path("account") int account);
 
     class ListResponse {
         @SerializedName("Response")
@@ -39,6 +42,7 @@ public interface PaymentService {
             public String created;
             public String description;
             public Amount amount;
+            public int id;
 
             @SerializedName("counterparty_alias")
             public CounterParty counterParty;
@@ -73,4 +77,40 @@ public interface PaymentService {
             }
         }
     }
+
+    class PostResponse {
+        @SerializedName("Response")
+        public List<Item> items;
+
+
+        public class Item {
+            @SerializedName("Id")
+            public Id id;
+        }
+
+        public class Id {
+            public int id;
+        }
+    }
+
+    class PostRequest {
+
+        public Amount amount;
+        @SerializedName("counterparty_alias")
+        public CounterpartyAlias counterparty_alias;
+        public String description;
+
+    }
+
+    public class Amount {
+        public String value;
+        public String currency;
+    }
+
+    public class CounterpartyAlias {
+        public String type = "IBAN";
+        public String value;
+        public String name;
+    }
+
 }
