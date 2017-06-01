@@ -3,7 +3,6 @@ package nl.tudelft.ewi.ds.bankchain.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +23,6 @@ public class NewVerificationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            Log.d("GUI", "onCreate: Actionbar found");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle("New verification");
@@ -39,9 +37,6 @@ public class NewVerificationActivity extends AppCompatActivity {
             EditText ibanText = (EditText) findViewById(R.id.ibanInput);
             String publicKey = publicKeyText.getText().toString();
             String iban = ibanText.getText().toString();
-            Log.d("GUI", "onClick: Gonna verify, but not really...");
-            Log.d("GUI", "Public key: " + publicKey);
-            Log.d("GUI", "IBAN: " + iban);
             this.publicKey = publicKey;
             this.iban = iban;
         });
