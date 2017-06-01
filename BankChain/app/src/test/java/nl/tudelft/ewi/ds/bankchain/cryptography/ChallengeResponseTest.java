@@ -31,9 +31,12 @@ public class ChallengeResponseTest {
         PublicKey publicKey = new EdDSAPublicKey(new X509EncodedKeySpec(TEST_VK));
 
         assertFalse(isValidChallenge("", publicKey));
-        assertFalse(isValidChallenge("CH:12345678:12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678", publicKey));
-        assertFalse(isValidChallenge("RE:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00f", publicKey));
-        assertTrue(isValidChallenge("CH:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00f", publicKey));
+        assertFalse(isValidChallenge("CH:12345678:1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890" +
+                "1234567890123456789012345678", publicKey));
+        assertFalse(isValidChallenge("RE:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf" +
+                "98eee2c76aa70ea74be6d010e00f", publicKey));
+        assertTrue(isValidChallenge("CH:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf9" +
+                "8eee2c76aa70ea74be6d010e00f", publicKey));
     }
 
     @Test
@@ -51,9 +54,12 @@ public class ChallengeResponseTest {
         PublicKey publicKey = new EdDSAPublicKey(new X509EncodedKeySpec(TEST_VK));
 
         assertFalse(isValidResponse("", publicKey));
-        assertFalse(isValidResponse("RE:12345678:12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678", publicKey));
-        assertFalse(isValidResponse("CH:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00f", publicKey));
-        assertTrue(isValidResponse("RE:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00f", publicKey));
+        assertFalse(isValidResponse("RE:12345678:123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                "01234567890123456789012345678", publicKey));
+        assertFalse(isValidResponse("CH:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf" +
+                "98eee2c76aa70ea74be6d010e00f", publicKey));
+        assertTrue(isValidResponse("RE:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf" +
+                "98eee2c76aa70ea74be6d010e00f", publicKey));
     }
 
     @Test
@@ -70,11 +76,16 @@ public class ChallengeResponseTest {
     public void isValidDescriptionFormatTest() throws Exception {
         assertFalse(isValidDescriptionFormat(""));
         assertFalse(isValidDescriptionFormat("CH:::::::"));
-        assertFalse(isValidDescriptionFormat("FU:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00f"));
-        assertFalse(isValidDescriptionFormat("RE:12345678W:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00f"));
-        assertFalse(isValidDescriptionFormat("RE:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00fW"));
-        assertTrue(isValidDescriptionFormat("RE:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00f"));
-        assertTrue(isValidDescriptionFormat("CH:00000000:00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"));
+        assertFalse(isValidDescriptionFormat("FU:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7" +
+                "fb44ffacf98eee2c76aa70ea74be6d010e00f"));
+        assertFalse(isValidDescriptionFormat("RE:12345678W:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c" +
+                "7fb44ffacf98eee2c76aa70ea74be6d010e00f"));
+        assertFalse(isValidDescriptionFormat("RE:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7f" +
+                "b44ffacf98eee2c76aa70ea74be6d010e00fW"));
+        assertTrue(isValidDescriptionFormat("RE:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb" +
+                "44ffacf98eee2c76aa70ea74be6d010e00f"));
+        assertTrue(isValidDescriptionFormat("CH:00000000:000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" +
+                "00000000000000000000000000000000000"));
     }
 
 }
