@@ -54,8 +54,8 @@ public final class ED25519 {
         return null;
     }
     
-    public static boolean verifySignature(byte[] message, byte[] signature, byte[] publickey) {
-        EdDSAPublicKeySpec publicKeySpec = new EdDSAPublicKeySpec(publickey, parameterSpec);
+    public static boolean verifySignature(byte[] message, byte[] signature, byte[] publicKey) {
+        EdDSAPublicKeySpec publicKeySpec = new EdDSAPublicKeySpec(publicKey, parameterSpec);
         EdDSAPublicKey vk = new EdDSAPublicKey(publicKeySpec);
         return verifySignature(message, signature, vk);
     }
