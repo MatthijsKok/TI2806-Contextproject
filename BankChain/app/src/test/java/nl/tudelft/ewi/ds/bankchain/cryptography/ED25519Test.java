@@ -77,4 +77,9 @@ public class ED25519Test {
 
         assertTrue(verifySignature(TEST_MSG, TEST_MSG_SIG, publicKey));
     }
+
+    @Test
+    public void verifySignatureOverloadTest() throws Exception {
+        assertTrue(verifySignature(TEST_MSG, TEST_MSG_SIG, TEST_PK));
+    }
 }

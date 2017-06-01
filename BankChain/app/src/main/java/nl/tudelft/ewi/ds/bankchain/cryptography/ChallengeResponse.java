@@ -16,7 +16,7 @@ import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.verifySignature;
  */
 public final class ChallengeResponse {
 
-    private static final int SEED_LENGTH = 8;
+    private static final int SEED_LENGTH = 4;
 
     private static final int DESCRIPTION_LENGTH = 140;
     private static final int SECRET_LENGTH = 8;
@@ -26,19 +26,19 @@ public final class ChallengeResponse {
     private static final String RESPONSE_TOKEN = "RE";
     private static final String SPLIT = ":";
 
-    public static byte[] generateChallengeBytes() {
+    private static byte[] generateChallengeBytes() {
         return new SecureRandom().generateSeed(SEED_LENGTH);
     }
 
-    public static String encode(byte[] challenge) {
+    private static String encode(byte[] challenge) {
         return Utils.bytesToHex(challenge);
     }
 
-    public static byte[] decode(String challenge) {
+    private static byte[] decode(String challenge) {
         return Utils.hexToBytes(challenge);
     }
 
-    public static boolean isChallenge(String description) {
+    private static boolean isChallenge(String description) {
         return isValidDescriptionFormat(description) && description.split(SPLIT)[0].equals(CHALLENGE_TOKEN);
     }
 
@@ -49,14 +49,14 @@ public final class ChallengeResponse {
     public static String createChallenge(PrivateKey privateKey) {
         byte[] cb = generateChallengeBytes();
         byte[] sb = createSignature(cb, privateKey);
-        return CHALLENGE_TOKEN + encode(cb) + SPLIT + encode(sb);
+        return CHALLENGE_TOKEN + SPLIT + encode(cb) + SPLIT + encode(sb);
     }
 
     /**
      * Verify the signature of the Challenge.
      * @return Whether the signature is valid.
      */
-    public static boolean verifyChallenge(String challenge, PublicKey publicKey) {
+    private static boolean verifyChallenge(String challenge, PublicKey publicKey) {
         String[] challengeArray = challenge.split(SPLIT);
         byte[] message = decode(challengeArray[1]);
         byte[] signature = decode(challengeArray[2]);
@@ -73,7 +73,7 @@ public final class ChallengeResponse {
 
     public static String createResponse(String challenge, PrivateKey privateKey) {
         String[] challengeArray = challenge.split(SPLIT);
-        byte[] message = decode(challengeArray[0]);
+        byte[] message = decode(challengeArray[1]);
         byte[] signature = createSignature(message, privateKey);
         return RESPONSE_TOKEN + SPLIT + encode(message) + SPLIT + encode(signature);
     }
@@ -83,7 +83,7 @@ public final class ChallengeResponse {
      * @param response The Response String to verify.
      * @return A boolean whether the response is valid.
      */
-    public static boolean verifyResponse(String response, PublicKey publicKey) {
+    private static boolean verifyResponse(String response, PublicKey publicKey) {
         String[] responseArray = response.split(SPLIT);
         byte[] message = decode(responseArray[1]);
         byte[] signature = decode(responseArray[2]);
@@ -104,6 +104,7 @@ public final class ChallengeResponse {
     public static boolean isValidDescriptionFormat(String description) {
         String[] array = description.split(SPLIT);
         return ((description.length() == DESCRIPTION_LENGTH) &&
+                (description.split(SPLIT).length == 3) &&
                 (description.split(SPLIT)[0].equals(CHALLENGE_TOKEN) ||
                         description.split(SPLIT)[0].equals(RESPONSE_TOKEN)) &&
                 (array[1].length() == SECRET_LENGTH) &&
