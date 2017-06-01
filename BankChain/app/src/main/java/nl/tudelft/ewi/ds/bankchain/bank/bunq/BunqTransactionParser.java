@@ -51,16 +51,6 @@ public class BunqTransactionParser extends TransactionParser {
 
     private PublicKey getPublicKeyForTransaction(Transaction transaction) {
         //TODO implement method
-//        Account account = transaction.getCounterAccount();
-//        String IBAN = account.getIban();
-//        String description = transaction.getDescription();
-//        byte[] encodedPublicKey = decode(description.split(":")[3]);
-//        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(encodedPublicKey);
-//        try {
-//            return new EdDSAPublicKey(x509EncodedKeySpec);
-//        } catch (InvalidKeySpecException e) {
-//            Log.e("BunqTransActionParser", e.toString());
-//        }
         return null;
     }
 }
