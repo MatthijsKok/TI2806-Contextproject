@@ -5,6 +5,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.bank.TransactionParser;
 import nl.tudelft.ewi.ds.bankchain.cryptography.Verification;
@@ -17,7 +18,7 @@ import static nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse.isValid
 public class BunqTransactionParser extends TransactionParser {
 
     @Override
-    public void respondToPendingChallenges(PrivateKey privateKey, Collection<Transaction> transactionCollection) {
+    public void respondToPendingChallenges(Bank bank, PrivateKey privateKey, Collection<Transaction> transactionCollection) {
         for (Transaction transaction: transactionCollection) {
             String description = transaction.getDescription();
             if (!isValidDescriptionFormat(description)) {
