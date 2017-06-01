@@ -1,4 +1,4 @@
-package nl.tudelft.ewi.ds.bankchain;
+package nl.tudelft.ewi.ds.bankchain.activities;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;

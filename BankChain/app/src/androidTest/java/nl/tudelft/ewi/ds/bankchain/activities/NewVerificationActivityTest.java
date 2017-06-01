@@ -1,6 +1,7 @@
-package nl.tudelft.ewi.ds.bankchain;
+package nl.tudelft.ewi.ds.bankchain.activities;
 
 import android.support.test.annotation.UiThreadTest;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -8,6 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import nl.tudelft.ewi.ds.bankchain.R;
+import nl.tudelft.ewi.ds.bankchain.TestRunner;
 import nl.tudelft.ewi.ds.bankchain.activities.NewVerificationActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -34,7 +37,7 @@ public class NewVerificationActivityTest extends TestRunner {
 
     @Test
     public void verifyVerify() {
-        onView(withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
+        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
         onView(withId(R.id.ibanInput)).perform(replaceText("Iban"));
         onView(withId(R.id.createChallengeButton)).perform(click());
         assertEquals(activityRule.getActivity().getPublicKey(), "PublicKey");
