@@ -54,11 +54,18 @@ public class NewVerificationActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
                 return;
             }
+            if (iban.length() == 0) {
+                Toast.makeText(getApplicationContext(),
+                        "IBAN can not be empty",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
 
             if (!validIBAN(iban)) {
                 Toast.makeText(getApplicationContext(),
                         "IBAN is not valid",
                         Toast.LENGTH_LONG).show();
+                return;
             }
             createChallenge(publicKey, iban);
         });
