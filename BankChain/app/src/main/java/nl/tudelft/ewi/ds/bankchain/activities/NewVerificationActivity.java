@@ -6,7 +6,6 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +32,6 @@ public class NewVerificationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            Log.d("GUI", "onCreate: Actionbar found");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle("New verification");
@@ -48,6 +46,7 @@ public class NewVerificationActivity extends AppCompatActivity {
             EditText ibanText = (EditText) findViewById(R.id.ibanInput);
             String publicKey = publicKeyText.getText().toString();
             String iban = ibanText.getText().toString();
+
             if (publicKey.length() == 0) {
                 Toast.makeText(getApplicationContext(),
                         "Public Key can not be empty",
