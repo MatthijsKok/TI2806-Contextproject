@@ -4,6 +4,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Currency;
 
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
@@ -27,9 +28,14 @@ public class BunqTransactionParser extends TransactionParser {
             PublicKey publicKey = getPublicKeyForTransaction(transaction);
             if (isValidChallenge(description, publicKey)) {
                 String response = createResponse(description, privateKey);
-                //TODO BankTransActionSender.sendTransaction with this String as description
+                sendTransaction(bank, transaction, response);
             }
         }
+    }
+
+    private void sendTransaction(Bank bank, Transaction counterTransaction, String response) {
+        BunqTransaction transaction = new BunqTransaction(-0.01f, counterTransaction.getAcount(), counterTransaction.getCounterAccount(), Currency.getInstance("EUR"), response);
+        bank.sendTransaction(transaction);
     }
 
     @Override
