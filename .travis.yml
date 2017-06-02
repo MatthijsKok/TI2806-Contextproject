@@ -44,7 +44,7 @@ before_install:
   - pip install --user codecov
   - find ${TRAVIS_BUILD_DIR}/${DIR}/app/src/androidTest -type f -name *.java -exec sed -i -e "s?REAL_BUNQ_URL?$BUNQ_URL?g" {} \;
   - find ${TRAVIS_BUILD_DIR}/${DIR}/app/src/androidTest -type f -name *.java -exec sed -i -e "s?REAL_BUNQ_API_KEY?$BUNQ_KEY?g" {} \;
-  - find ${TRAVIS_BUILD_DIR}/${DIR}/app/src/androidTest -type f -name *.java -exec sed -i -e "s?//TRAVIS @Ignore?@Ignore?g" {} \;
+  - find ${TRAVIS_BUILD_DIR}/${DIR}/app/src/androidTest -type f -name *.java -exec sed -i -e "s?//TRAVIS ??g" {} \;
 
 install:
   - sdkmanager --list || true

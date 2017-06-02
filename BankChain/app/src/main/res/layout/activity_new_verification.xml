@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <include layout="@layout/toolbar" />
 
@@ -34,11 +35,45 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/verifyButton"
+            android:id="@+id/createChallengeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/verify"/>
+            android:text="@string/create_challenge" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/challengeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:id="@+id/challengeButtonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible">
+
+        <Button
+            android:id="@+id/verifyBunqButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/verify_bunq"
+            android:onClick="bunqVerification"/>
+
+        <Button
+            android:id="@+id/verifyManualButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/verify_manual"
+            android:onClick="manualVerification"/>
     </LinearLayout>
 
 </LinearLayout>
