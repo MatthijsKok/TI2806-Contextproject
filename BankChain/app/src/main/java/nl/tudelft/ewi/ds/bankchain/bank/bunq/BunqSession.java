@@ -1,5 +1,26 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Base64;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.io.Serializable;
+import java.io.Writer;
 import java.security.KeyPair;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -16,14 +37,15 @@ import nl.tudelft.ewi.ds.bankchain.bank.network.NetUtils;
  *
  * @author Jos Kuijpers
  */
-public final class BunqSession extends Session {
+final class BunqSession extends Session {
+    private final static String KEYSTORE_ALIAS = "BunqSessionKeyPair";
+
     /**
      * Store the bank to access Retrofit
      */
     private BunqBank bank;
 
     private KeyPair clientKeyPair;
-    private SignHelper signHelper;
     private PublicKey serverPublicKey;
 
     String clientAuthenticationToken;
@@ -63,9 +85,22 @@ public final class BunqSession extends Session {
         this.requestId = r.nextLong();
     }
 
-    public void createKeys() {
-        // Create a keypair for the client
-        clientKeyPair = BunqTools.createClientKeyPair();
+    private BunqSession(BunqBank bank, DiskSession disk, KeyPair keyPair) {
+        this.bank = bank;
+
+        clientKeyPair = keyPair;
+        serverPublicKey = disk.getServerPublicKey();
+        clientAuthenticationToken = disk.clientAuthenticationToken;
+        deviceServerId = disk.deviceServerId;
+        ipAddress = disk.ipAddress;
+        sessionId = disk.sessionId;
+        requestId = disk.requestId;
+    }
+
+    Void createKeys() {
+        clientKeyPair = BunqTools.createClientKeyPair(KEYSTORE_ALIAS);
+
+        return null;
     }
 
     /**
@@ -93,9 +128,6 @@ public final class BunqSession extends Session {
         return future.thenAccept((InstallationService.CreateResponse response) -> {
             clientAuthenticationToken = response.getToken().token;
             serverPublicKey = BunqTools.stringToPublicKey(response.getPublicKey().key);
-
-            // Create the sign helper, now available with the server public key
-            signHelper = new SignHelper(clientKeyPair, serverPublicKey);
         });
     }
 
@@ -156,12 +188,25 @@ public final class BunqSession extends Session {
         });
     }
 
-    public SignHelper getSignHelper() {
-        return signHelper;
+    /**
+     * Get sign helper
+     *
+     * Used by the HTTP interceptor
+     *
+     * @return sign helper
+     */
+    @NonNull
+    SignHelper getSignHelper() {
+        return new SignHelper(clientKeyPair, serverPublicKey);
     }
 
     @Override
     public boolean isValid() {
+        if (serverPublicKey == null || clientAuthenticationToken == null
+                || clientKeyPair == null) {
+            return false;
+        }
+
         // A session is useless when the IP address changed as it is bound
         // to the tokens.
         if (ipAddress != null && !ipAddress.equals(NetUtils.getIPAddress())) {
@@ -176,7 +221,7 @@ public final class BunqSession extends Session {
      *
      * @return unique id (for this app session)
      */
-    public String getNextRequestId() {
+    String getNextRequestId() {
         return String.valueOf(++requestId);
     }
 
@@ -188,23 +233,134 @@ public final class BunqSession extends Session {
      *
      * @return true when there is a server public key.
      */
-    public boolean hasServerPublicKey() {
+    boolean hasServerPublicKey() {
         return serverPublicKey != null;
     }
 
-    // TODO: add saving to and loading from disk
+    private static File getDiskFile(Context appContext) {
+        return new File(appContext.getFilesDir(), "bunq.json");
+    }
 
-    /**
-     * Save the current session to storage
-     */
-    public void save() {
+    @Nullable
+    static BunqSession loadFromDisk(BunqBank bank, Context appContext) {
+        KeyPair keyPair = BunqTools.loadClientKeyPair(KEYSTORE_ALIAS);
+        if (keyPair == null) {
+            return null;
+        }
 
+        DiskSession disk;
+
+        try (Reader reader = new FileReader(getDiskFile(appContext))) {
+            Gson gson = new GsonBuilder().create();
+
+            disk = gson.fromJson(reader, DiskSession.class);
+        } catch (IOException e) {
+            // No previously stored session found, or issues
+            return null;
+        }
+
+        return new BunqSession(bank, disk, keyPair);
+    }
+
+    boolean saveToDisk(Context appContext) {
+        DiskSession disk = new DiskSession(this);
+
+        try (Writer writer = new FileWriter(getDiskFile(appContext))) {
+            Gson gson = new GsonBuilder().create();
+
+            gson.toJson(disk, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
-     * Load session from storage into this class
+     * Delete the session from disk
+     *
+     * @return true when deletion succeeded
      */
-    public boolean load() {
-        return false;
+    boolean deleteFromDisk(Context appContext) {
+        if (!BunqTools.destroyClientKeyPair(KEYSTORE_ALIAS)) {
+            return false;
+        }
+
+        // Set to null to invalidate the session
+        clientKeyPair = null;
+
+        return getDiskFile(appContext).delete();
+    }
+
+    private static class DiskSession {
+        private String serverPublicKey;
+
+        String clientAuthenticationToken;
+        int deviceServerId;
+        String ipAddress;
+        int sessionId;
+        long requestId;
+
+        DiskSession(BunqSession session) {
+            setServerPublicKey(session.serverPublicKey);
+
+            clientAuthenticationToken = session.clientAuthenticationToken;
+            deviceServerId = session.deviceServerId;
+            ipAddress = session.ipAddress;
+            sessionId = session.sessionId;
+            requestId = session.requestId;
+        }
+
+        PublicKey getServerPublicKey() {
+            if (serverPublicKey == null) {
+                return null;
+            }
+
+            try {
+                Object res = fromString(serverPublicKey);
+                if (res instanceof PublicKey) {
+                    return (PublicKey) res;
+                } else {
+                    return null;
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+
+                return null;
+            }
+        }
+
+        void setServerPublicKey(PublicKey key) {
+            try {
+                serverPublicKey = toString(key);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // https://stackoverflow.com/questions/134492/how-to-serialize-an-object-into-a-string
+        private String toString(Serializable obj) throws IOException {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+
+            oos.writeObject(obj);
+
+            oos.close();
+
+            return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        }
+
+        private Object fromString(String s) throws IOException, ClassNotFoundException {
+            byte [] data = Base64.decode(s, Base64.DEFAULT);
+            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream( data));
+
+            Object o  = ois.readObject();
+
+            ois.close();
+
+            return o;
+        }
     }
 }

@@ -1,7 +1,18 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Currency;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import java8.util.concurrent.CompletionException;
 
 import java8.util.concurrent.CompletableFuture;
 
@@ -21,6 +32,26 @@ import static org.junit.Assert.assertTrue;
 public class BunqTest {
     private Session session;
     private Throwable throwable;
+
+    private InputStream getInputStream(String path) {
+        return this.getClass().getClassLoader().getResourceAsStream(path);
+    }
+
+    @NonNull
+    private Bank getRealBank() {
+        InputStream in = getInputStream("res/raw/environment.xml");
+        Environment env;
+
+        try {
+            env = Environment.loadDefaults(in);
+
+            Log.d("BUNQTEST", env.getBankUrl());
+        } catch (IOException e) {
+            throw new AssertionError("Environment could not be loaded");
+        }
+
+        return new BankFactory(env).create();
+    }
 
     private Bank createDummyBank() {
         Environment env;
@@ -47,7 +78,7 @@ public class BunqTest {
 
         env = new Environment();
         env.setBank("Bunq");
-        env.setBankUrl("https://example.com/");
+        env.setBankUrl("https://doesnotextexample.com/");
         env.setBankApiKey("");
 
         bank = new BankFactory(env).create();
@@ -91,6 +122,8 @@ public class BunqTest {
         // Run directly
         future.get();
 
+        Log.e("BUNQ", throwable.toString());
+
         assertNull(session);
         assertNotNull(throwable);
         assertTrue(throwable instanceof BunqBankException);
@@ -101,14 +134,8 @@ public class BunqTest {
     public void testSession() throws Exception {
         CompletableFuture<Void> future;
         Bank bank;
-        Environment env;
 
-        env = new Environment();
-        env.setBank("Bunq");
-        env.setBankUrl("REAL_BUNQ_URL");
-        env.setBankApiKey("REAL_BUNQ_API_KEY");
-
-        bank = new BankFactory(env).create();
+        bank = getRealBank();
 
         future = bank.createSession()
                 .thenAccept(t -> {
@@ -116,7 +143,9 @@ public class BunqTest {
                 })
                 .exceptionally(e -> {
                     throwable = bank.confirmException(e);
-
+                    if (e instanceof CompletionException) {
+                        e.getCause().printStackTrace();
+                    }
                     return null;
                 });
 
