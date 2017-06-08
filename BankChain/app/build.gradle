@@ -1,16 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'kotlin-android'
 
 apply from: '../config/quality/quality.gradle'
 apply from: '../config/quality/coverage.gradle'
 
 buildscript {
+    ext {
+        kotlinVersion = '1.1.2-4'
+    }
     repositories {
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath 'me.tatarka:gradle-retrolambda:3.6.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -98,6 +103,8 @@ dependencies {
     // JSON parsing and serializing
     compile 'com.google.code.gson:gson:2.8.0'
     testCompile 'junit:junit:4.12'
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
 
     compile files('../libs/eddsa-0.2.0.jar')
 }
