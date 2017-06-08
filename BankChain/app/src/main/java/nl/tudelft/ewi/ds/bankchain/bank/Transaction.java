@@ -35,6 +35,7 @@ public interface Transaction {
 
     /**
      * get the account the money is added to (negative means it's a payment)
+     *
      * @return
      */
     public Account getAcount();
@@ -45,4 +46,13 @@ public interface Transaction {
      * @return description or null
      */
     public String getDescription();
+
+    /**
+     * get the transaction Id (-1 when new transaction)
+     *
+     * @return transaction id
+     */
+
+    public int getId();
+
 }
