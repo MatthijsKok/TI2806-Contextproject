@@ -18,10 +18,22 @@ public class InternalStorage {
         List<VerifiedAccount> completedVerificationsList = new ArrayList<>();
 
         String FILENAME = "CompletedVerifications.txt";
-        context.deleteFile(FILENAME);
-        String string = "23576523:NL253645532b:Nu\n3456789:NL978634:Gister\n";
+        String verifiedAccounts = readFromInternalStorage(FILENAME, context);
+
+        if(verifiedAccounts == ""){
+            return completedVerificationsList;
+        }
+        String lines[] = verifiedAccounts.split("\\r?\\n");
 
 
+        for (int i = lines.length-1; i >= 0; i--) {
+            completedVerificationsList.add(parseVerifiedAccount(lines[i]));
+        }
+        return completedVerificationsList;
+    }
+
+    public static void appendVerification(Context context, String string){
+        String FILENAME = "CompletedVerifications.txt";
         try {
             FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_APPEND);
             fos.write(string.getBytes());
@@ -32,13 +44,6 @@ public class InternalStorage {
             e.printStackTrace();
         }
 
-        String verifiedAccounts = readFromInternalStorage(FILENAME, context);
-        String lines[] = verifiedAccounts.split("\\r?\\n");
-
-        for (int i = lines.length-1; i >= 0; i--) {
-            completedVerificationsList.add(parseVerifiedAccount(lines[i]));
-        }
-        return completedVerificationsList;
     }
 
     public static VerifiedAccount parseVerifiedAccount(String line) {
