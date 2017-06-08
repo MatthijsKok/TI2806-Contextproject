@@ -12,15 +12,19 @@ import com.google.gson.GsonBuilder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -38,7 +42,7 @@ import nl.tudelft.ewi.ds.bankchain.bank.network.NetUtils;
  * @author Jos Kuijpers
  */
 final class BunqSession extends Session {
-    private final static String KEYSTORE_ALIAS = "BunqSessionKeyPair";
+    private static final String KEYSTORE_ALIAS = "BunqSessionKeyPair";
 
     /**
      * Store the bank to access Retrofit
@@ -250,7 +254,7 @@ final class BunqSession extends Session {
 
         DiskSession disk;
 
-        try (Reader reader = new FileReader(getDiskFile(appContext))) {
+        try (Reader reader = new InputStreamReader(new FileInputStream(getDiskFile(appContext)), StandardCharsets.UTF_8)) {
             Gson gson = new GsonBuilder().create();
 
             disk = gson.fromJson(reader, DiskSession.class);
@@ -265,13 +269,11 @@ final class BunqSession extends Session {
     boolean saveToDisk(Context appContext) {
         DiskSession disk = new DiskSession(this);
 
-        try (Writer writer = new FileWriter(getDiskFile(appContext))) {
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(getDiskFile(appContext)), StandardCharsets.UTF_8)) {
             Gson gson = new GsonBuilder().create();
 
             gson.toJson(disk, writer);
         } catch (IOException e) {
-            e.printStackTrace();
-
             return false;
         }
 
@@ -326,8 +328,6 @@ final class BunqSession extends Session {
                     return null;
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-
                 return null;
             }
         }
@@ -336,7 +336,7 @@ final class BunqSession extends Session {
             try {
                 serverPublicKey = toString(key);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("BUNQ", "Failed to write public key to string");
             }
         }
 

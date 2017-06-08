@@ -95,12 +95,10 @@ public final class BunqTools {
         } catch (NoSuchAlgorithmException e) {
             // The algorithm is available on all Android versions supported
             // This should never happen
-            e.printStackTrace();
             return null;
         } catch (NoSuchProviderException | InvalidAlgorithmParameterException e) {
             // Both of these exceptions are configuration errors in the hardcoded
             // values used above. Should never happen.
-            e.printStackTrace();
             return null;
         }
 

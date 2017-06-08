@@ -1,16 +1,19 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.filters.MediumTest;
+import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Currency;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.net.UnknownHostException;
 
 import java8.util.concurrent.CompletionException;
 
@@ -25,16 +28,23 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-
 /**
  * E2E test for Bunq bank
  */
+@RunWith(AndroidJUnit4.class)
 public class BunqTest {
     private Session session;
     private Throwable throwable;
 
     private InputStream getInputStream(String path) {
         return this.getClass().getClassLoader().getResourceAsStream(path);
+    }
+
+    private Context instrumentationCtx;
+
+    @Before
+    public void setup() {
+        instrumentationCtx = InstrumentationRegistry.getContext();
     }
 
     @NonNull
@@ -50,7 +60,7 @@ public class BunqTest {
             throw new AssertionError("Environment could not be loaded");
         }
 
-        return new BankFactory(env).create();
+        return new BankFactory(env, instrumentationCtx).create();
     }
 
     private Bank createDummyBank() {
@@ -61,7 +71,7 @@ public class BunqTest {
         env.setBankUrl("https://sandbox.public.api.bunq.com/");
         env.setBankApiKey("");
 
-        return new BankFactory(env).create();
+        return new BankFactory(env, instrumentationCtx).create();
     }
 
     @Before
@@ -81,7 +91,7 @@ public class BunqTest {
         env.setBankUrl("https://doesnotextexample.com/");
         env.setBankApiKey("");
 
-        bank = new BankFactory(env).create();
+        bank = new BankFactory(env, instrumentationCtx).create();
 
         future = bank.createSession()
                 .thenAccept(t -> {
@@ -98,8 +108,8 @@ public class BunqTest {
 
         assertNull(session);
         assertNotNull(throwable);
-        assertTrue(throwable instanceof BunqBankException);
-        assertTrue(((BunqBankException) throwable).getHttpException().code() == 404);
+        assertTrue(throwable instanceof CompletionException);
+        assertTrue(throwable.getCause() instanceof UnknownHostException);
     }
 
     @Test
