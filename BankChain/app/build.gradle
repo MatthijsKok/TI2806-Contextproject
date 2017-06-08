@@ -15,7 +15,7 @@ buildscript {
     }
     dependencies {
         classpath 'me.tatarka:gradle-retrolambda:3.6.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
@@ -104,7 +104,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     testCompile 'junit:junit:4.12'
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     compile files('../libs/eddsa-0.2.0.jar')
 }
