@@ -1,9 +1,16 @@
 package nl.tudelft.ewi.ds.bankchain.Blockchain;
 
+import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -25,12 +32,13 @@ public class Blockchain {
 
     String location;
     Map<String, jsonBlock> blockMap;
+    Context context;
 
 
-    public Blockchain(String location) {
+    public Blockchain(String filename,Context context) {
       this.location = location;
         blockMap = new HashMap<String,jsonBlock>();
-
+        this.context = context;
     }
 
     private void toMap(String json) {
@@ -67,6 +75,31 @@ public class Blockchain {
         Gson gson = new Gson();
         String json = gson.toJson(chain);
         System.out.println(json);
+
+        String FILENAME = "hello_file";
+        String string = "hello world!";
+
+
+        try {
+            FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            fos.write(string.getBytes());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File path = context.getFilesDir();
+        Log.d("LOCATION",path.getPath());
+/*
+        try (Writer writer = new FileWriter("/storage/Output.json")) {
+            gson.toJson(chain, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File path = context.getFilesDir();
+        Log.d("LOCATION",path.getPath());
+        */
     }
 
      class jsonChain {

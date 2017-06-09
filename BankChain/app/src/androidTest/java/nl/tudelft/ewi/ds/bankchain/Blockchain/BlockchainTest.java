@@ -10,7 +10,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTools;
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 /**
  * Created by Richard-HP on 01/06/2017.
@@ -19,7 +19,7 @@ import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTools;
 public class BlockchainTest {
     @Test
     public void testjson() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        Blockchain block = new Blockchain("loc");
+        Blockchain block = new Blockchain("loc",getInstrumentation().getContext());
         String key =
                 "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0" +
                 "FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/" +
