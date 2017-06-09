@@ -12,7 +12,7 @@ import nl.tudelft.ewi.ds.bankchain.bank.bunq.api.PaymentService
  */
 class BunqTransaction : Transaction {
 
-    override val id: Int
+    override var id: Int
     override val date: Date
     override val value: Float
     override val description: String
