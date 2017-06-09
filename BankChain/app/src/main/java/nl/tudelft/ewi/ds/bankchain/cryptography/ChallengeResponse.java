@@ -21,6 +21,8 @@ import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.verifySignature;
  */
 public final class ChallengeResponse {
 
+    private ChallengeResponse() {}
+
     private static final int SEED_LENGTH = 4;
 
     private static final int DESCRIPTION_LENGTH = 140;

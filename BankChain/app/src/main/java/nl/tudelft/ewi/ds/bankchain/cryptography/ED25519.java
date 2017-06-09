@@ -22,8 +22,7 @@ import java.security.SignatureException;
 
 public final class ED25519 {
 
-    private ED25519() {
-    }
+    private ED25519() {}
 
     private static final int SEED_LENGTH = 32;
     private static final EdDSAParameterSpec parameterSpec = EdDSANamedCurveTable.getByName("Ed25519");

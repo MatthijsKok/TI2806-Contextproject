@@ -1,7 +1,9 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import java.security.InvalidKeyException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Currency;
@@ -16,7 +18,7 @@ import static nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse.isValid
 import static nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse.isValidDescriptionFormat;
 import static nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse.isValidResponse;
 
-public class BunqTransactionParser extends TransactionParser {
+public class BunqTransactionParser implements TransactionParser {
 
     @Override
     public void respondToPendingChallenges(Bank bank, PrivateKey privateKey, Collection<Transaction> transactionCollection) {
@@ -27,8 +29,10 @@ public class BunqTransactionParser extends TransactionParser {
             }
             PublicKey publicKey = getPublicKeyForTransaction(transaction);
             if (isValidChallenge(description, publicKey)) {
-                String response = createResponse(description, privateKey);
-                sendTransaction(bank, transaction, response);
+                try {
+                    String response = createResponse(description, privateKey);
+                    sendTransaction(bank, transaction, response);
+                } catch (SignatureException | InvalidKeyException ignored) {}
             }
         }
     }
