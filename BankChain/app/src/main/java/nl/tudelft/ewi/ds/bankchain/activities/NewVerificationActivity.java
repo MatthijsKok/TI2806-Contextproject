@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.InvalidKeyException;
+import java.security.SignatureException;
+
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
@@ -73,7 +76,9 @@ public class NewVerificationActivity extends AppCompatActivity {
         String privateKey = settings.getString("pref_private_key_key", "default_value");
 
         //TODO we crash if no private key is set
-        this.challenge = ChallengeResponse.createChallenge(ED25519.getPrivateKey(privateKey));
+        try {
+            this.challenge = ChallengeResponse.createChallenge(ED25519.getPrivateKey(privateKey));
+        } catch (SignatureException | InvalidKeyException ignored) {}
     }
 
     private void showChallenge() {
