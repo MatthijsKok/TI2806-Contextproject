@@ -1,7 +1,5 @@
 package nl.tudelft.ewi.ds.bankchain.cryptography;
 
-import android.util.Log;
-
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;

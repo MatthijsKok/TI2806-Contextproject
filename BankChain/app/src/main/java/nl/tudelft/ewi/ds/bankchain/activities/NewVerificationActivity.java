@@ -21,7 +21,6 @@ import java.security.SignatureException;
 
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
-import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
 
 import static nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier.isValidIBAN;
 import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.isValidPublicKey;
