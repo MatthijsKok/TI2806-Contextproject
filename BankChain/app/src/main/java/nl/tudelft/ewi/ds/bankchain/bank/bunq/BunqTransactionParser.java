@@ -1,5 +1,7 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import android.util.Log;
+
 import java.security.InvalidKeyException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -32,7 +34,9 @@ public class BunqTransactionParser implements TransactionParser {
                 try {
                     String response = createResponse(description, privateKey);
                     sendTransaction(bank, transaction, response);
-                } catch (SignatureException | InvalidKeyException ignored) {}
+                } catch (SignatureException | InvalidKeyException e) {
+                    Log.e("Transaction failed!", e.getLocalizedMessage());
+                }
             }
         }
     }

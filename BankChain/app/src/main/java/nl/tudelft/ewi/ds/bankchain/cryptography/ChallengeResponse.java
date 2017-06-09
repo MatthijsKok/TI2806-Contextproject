@@ -9,6 +9,7 @@ import java.security.SecureRandom;
 import java.security.SignatureException;
 
 import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.createSignature;
+import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.getPrivateKey;
 import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.verifySignature;
 
 /**
@@ -51,6 +52,14 @@ public final class ChallengeResponse {
 
     public static boolean isValidChallenge(String description, PublicKey publicKey) {
         return isChallenge(description) && verifyChallenge(description, publicKey);
+    }
+
+    public static String createChallenge(String privateKey) throws SignatureException, InvalidKeyException {
+        return createChallenge(getPrivateKey(privateKey));
+    }
+
+    public static String createChallenge(byte[] privateKey) throws SignatureException, InvalidKeyException {
+        return createChallenge(getPrivateKey(privateKey));
     }
 
     public static String createChallenge(PrivateKey privateKey) throws SignatureException, InvalidKeyException {

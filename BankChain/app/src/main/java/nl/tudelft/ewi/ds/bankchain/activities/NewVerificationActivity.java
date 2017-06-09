@@ -77,8 +77,10 @@ public class NewVerificationActivity extends AppCompatActivity {
 
         //TODO we crash if no private key is set
         try {
-            this.challenge = ChallengeResponse.createChallenge(ED25519.getPrivateKey(privateKey));
-        } catch (SignatureException | InvalidKeyException ignored) {}
+            this.challenge = ChallengeResponse.createChallenge(privateKey);
+        } catch (SignatureException | InvalidKeyException ignored) {
+            showLongToast("Your private key is not set correctly!");
+        }
     }
 
     private void showChallenge() {
