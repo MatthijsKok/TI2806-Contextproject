@@ -74,8 +74,6 @@ public class NewVerificationActivity extends AppCompatActivity {
 
         //TODO we crash if no private key is set
         this.challenge = ChallengeResponse.createChallenge(ED25519.getPrivateKey(privateKey));
-
-        showLongToast(privateKey + " " + challenge);
     }
 
     private void showChallenge() {

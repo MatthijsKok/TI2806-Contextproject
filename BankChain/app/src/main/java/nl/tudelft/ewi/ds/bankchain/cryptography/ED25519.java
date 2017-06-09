@@ -43,15 +43,29 @@ public final class ED25519 {
     }
 
     public static EdDSAPublicKey getPublicKey(EdDSAPrivateKey privateKey) {
-        return new EdDSAPublicKey(new EdDSAPublicKeySpec(privateKey.getAbyte(), parameterSpec));
+        try {
+            return new EdDSAPublicKey(new EdDSAPublicKeySpec(privateKey.getAbyte(), parameterSpec));
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
     public static EdDSAPublicKey getPublicKey(String publicKey) {
-        return getPublicKey(Utils.hexToBytes(publicKey));
+        try {
+            return getPublicKey(Utils.hexToBytes(publicKey));        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
     public static EdDSAPublicKey getPublicKey(byte[] publicKey) {
-        return new EdDSAPublicKey(new EdDSAPublicKeySpec(publicKey, parameterSpec));
+        try {
+            return new EdDSAPublicKey(new EdDSAPublicKeySpec(publicKey, parameterSpec));
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
     public static boolean isValidPublicKey(String publicKey) {
@@ -68,7 +82,7 @@ public final class ED25519 {
             // Will throw InvalidKeyException if key is invalid.
             sgr.initVerify(publicKey);
             return true;
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+        } catch (Exception e) {
             return false;
         }
     }
