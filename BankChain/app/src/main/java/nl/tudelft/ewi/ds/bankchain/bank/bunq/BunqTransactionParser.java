@@ -34,7 +34,7 @@ public class BunqTransactionParser extends TransactionParser {
     }
 
     private void sendTransaction(Bank bank, Transaction counterTransaction, String response) {
-        BunqTransaction transaction = new BunqTransaction(-0.01f, counterTransaction.getAcount(), counterTransaction.getCounterAccount(), Currency.getInstance("EUR"), response);
+        BunqTransaction transaction = new BunqTransaction(-0.01f, counterTransaction.getAccount(), counterTransaction.getCounterAccount(), Currency.getInstance("EUR"), response);
         bank.sendTransaction(transaction);
     }
 
