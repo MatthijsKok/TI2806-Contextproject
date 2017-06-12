@@ -2,7 +2,6 @@ package nl.tudelft.ewi.ds.bankchain.activities;
 
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.support.test.annotation.UiThreadTest;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -62,17 +61,6 @@ public class NewVerificationActivityTest extends TestRunner {
         onView(withId(R.id.createChallengeButton)).perform(click());
         assertEquals(null,  activityRule.getActivity().getPublicKey());
         assertEquals(null, activityRule.getActivity().getIban());
-    }
-
-    @Test
-    @UiThreadTest
-    public void verifyCreateChallenge() {
-        activityRule.getActivity().createChallenge("", "");
-        assertEquals(activityRule.getActivity().getPublicKey(), "");
-        assertEquals(activityRule.getActivity().getIban(), "");
-        activityRule.getActivity().createChallenge("Public key", "IBAN");
-        assertEquals(activityRule.getActivity().getPublicKey(), "Public key");
-        assertEquals(activityRule.getActivity().getIban(), "IBAN");
     }
 
     @Test

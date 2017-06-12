@@ -3,8 +3,10 @@ package nl.tudelft.ewi.ds.bankchain.activities;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,8 +16,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.security.InvalidKeyException;
+import java.security.SignatureException;
+
 import nl.tudelft.ewi.ds.bankchain.R;
-import nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier;
+import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
+
+import static nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier.isValidIBAN;
+import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.isValidPublicKey;
 
 public class NewVerificationActivity extends AppCompatActivity {
 
@@ -43,64 +51,61 @@ public class NewVerificationActivity extends AppCompatActivity {
         // if button is clicked, close the custom dialog
         verifyButton.setOnClickListener(v -> {
             EditText publicKeyText = (EditText) findViewById(R.id.publicKeyInput);
+            this.publicKey = publicKeyText.getText().toString();
+
             EditText ibanText = (EditText) findViewById(R.id.ibanInput);
-            String publicKey = publicKeyText.getText().toString();
-            String iban = ibanText.getText().toString();
+            this.iban = ibanText.getText().toString();
 
-            if (publicKey.length() == 0) {
-                Toast.makeText(getApplicationContext(),
-                        "Public Key can not be empty",
-                        Toast.LENGTH_LONG).show();
+            if (!isValidPublicKey(publicKey)) {
+                showLongToast("Invalid Public Key!");
                 return;
             }
-            if (iban.length() == 0) {
-                Toast.makeText(getApplicationContext(),
-                        "IBAN can not be empty",
-                        Toast.LENGTH_LONG).show();
+            if (!isValidIBAN(iban)) {
+                showLongToast("Invalid IBAN!");
                 return;
             }
 
-            if (!validIBAN(iban)) {
-                Toast.makeText(getApplicationContext(),
-                        "IBAN is not valid",
-                        Toast.LENGTH_LONG).show();
-                return;
-            }
-            createChallenge(publicKey, iban);
+            createChallenge();
+            showChallenge();
         });
     }
 
-    public void createChallenge(String publicKey, String iban) {
-        this.publicKey = publicKey;
-        this.iban = iban;
-        this.challenge = publicKey + ":" + iban;
-        showChallenge();
+    public void createChallenge() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        String privateKey = settings.getString("pref_private_key_key", "default_value");
+
+        //TODO we crash if no private key is set
+        try {
+            this.challenge = ChallengeResponse.createChallenge(privateKey);
+        } catch (SignatureException | InvalidKeyException ignored) {
+            showLongToast("Your private key is not set correctly!");
+        }
     }
 
-    public boolean validIBAN(String iban) {
-        return IBANVerifier.verify(iban);
-    }
-
-    public void showChallenge() {
+    private void showChallenge() {
         TextView textView = (TextView) findViewById(R.id.challengeTextView);
         textView.setText(this.challenge);
         LinearLayout layout = (LinearLayout) findViewById(R.id.challengeButtonLayout);
         layout.setVisibility(View.VISIBLE);
     }
 
+    private void showShortToast(String text) {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showLongToast(String text) {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+    }
+
     public void bunqVerification(View v) {
-        Toast.makeText(getApplicationContext(),
-                "Going to send a Bunq transaction (but not really...)",
-                Toast.LENGTH_LONG).show();
+        showLongToast("Going to send a Bunq transaction (but not really...)");
     }
 
     public void manualVerification(View v) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Challenge", this.challenge);
         clipboard.setPrimaryClip(clip);
-        Toast.makeText(getApplicationContext(),
-                "Challenge copied to clipboard",
-                Toast.LENGTH_LONG).show();
+        showLongToast("Challenge copied to clipboard");
     }
 
     @Override
@@ -108,10 +113,9 @@ public class NewVerificationActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -2,19 +2,27 @@ package nl.tudelft.ewi.ds.bankchain.cryptography;
 
 import net.i2p.crypto.eddsa.Utils;
 
+import java.security.InvalidKeyException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.SignatureException;
 
 import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.createSignature;
+import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.getPrivateKey;
 import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.verifySignature;
 
 /**
  * Challenge class.
  * A challenge is the following format:
  * "CH:MESSAGE:SIGNATURE"
+ * where CH is a magic string to signify that this transaction is part of our protocol,
+ * MESSAGE is the randomly generated string that will be signed,
+ * and SIGNATURE is the signature of the MESSAGE.
  */
 public final class ChallengeResponse {
+
+    private ChallengeResponse() {}
 
     private static final int SEED_LENGTH = 4;
 
@@ -46,7 +54,15 @@ public final class ChallengeResponse {
         return isChallenge(description) && verifyChallenge(description, publicKey);
     }
 
-    public static String createChallenge(PrivateKey privateKey) {
+    public static String createChallenge(String privateKey) throws SignatureException, InvalidKeyException {
+        return createChallenge(getPrivateKey(privateKey));
+    }
+
+    public static String createChallenge(byte[] privateKey) throws SignatureException, InvalidKeyException {
+        return createChallenge(getPrivateKey(privateKey));
+    }
+
+    public static String createChallenge(PrivateKey privateKey) throws SignatureException, InvalidKeyException {
         byte[] cb = generateChallengeBytes();
         byte[] sb = createSignature(cb, privateKey);
         return CHALLENGE_TOKEN + SPLIT + encode(cb) + SPLIT + encode(sb);
@@ -71,7 +87,8 @@ public final class ChallengeResponse {
         return isResponse(description) && ChallengeResponse.verifyResponse(description, publicKey);
     }
 
-    public static String createResponse(String challenge, PrivateKey privateKey) {
+    public static String createResponse(String challenge, PrivateKey privateKey)
+            throws SignatureException, InvalidKeyException {
         String[] challengeArray = challenge.split(SPLIT);
         byte[] message = decode(challengeArray[1]);
         byte[] signature = createSignature(message, privateKey);
