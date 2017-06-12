@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import nl.tudelft.ewi.ds.bankchain.cryptography.Verification;
 
-public abstract class TransactionParser {
+public interface TransactionParser {
 
     /**
      * Checks a list of transactions and responds to any challenges.

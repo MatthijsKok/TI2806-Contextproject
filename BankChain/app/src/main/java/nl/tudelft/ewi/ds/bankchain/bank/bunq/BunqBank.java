@@ -169,7 +169,7 @@ public final class BunqBank extends Bank {
 
         service = retrofit.create(PaymentService.class);
 
-        future = service.createPayment(tran.convertToRequest(), tran.getAcount().getParty().getId(), tran.getAcount().getId());
+        future = service.createPayment(tran.convertToRequest(), tran.getAccount().getParty().getId(), tran.getAccount().getId());
         return future.thenApply((PaymentService.PostResponse response) -> {
             int id = response.items.get(0).id.id;
             if (id > 0) {

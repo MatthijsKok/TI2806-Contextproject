@@ -1,10 +1,9 @@
 package nl.tudelft.ewi.ds.bankchain.cryptography;
 
-import android.util.Log;
-
 import net.i2p.crypto.eddsa.EdDSAEngine;
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
 import net.i2p.crypto.eddsa.EdDSAPublicKey;
+import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
@@ -21,54 +20,92 @@ import java.security.SignatureException;
 
 public final class ED25519 {
 
-    private ED25519() {
-    }
+    private ED25519() {}
 
     private static final int SEED_LENGTH = 32;
     private static final EdDSAParameterSpec parameterSpec = EdDSANamedCurveTable.getByName("Ed25519");
 
     public static EdDSAPrivateKey generatePrivateKey() {
         byte[] seed = new SecureRandom().generateSeed(SEED_LENGTH);
-        return generatePrivateKey(seed);
+        return getPrivateKey(seed);
     }
 
-    public static EdDSAPrivateKey generatePrivateKey(byte[] seed) {
+    public static EdDSAPrivateKey getPrivateKey(String privateKeyString) {
+        return getPrivateKey(Utils.hexToBytes(privateKeyString));
+    }
+
+    public static EdDSAPrivateKey getPrivateKey(byte[] seed) {
         EdDSAPrivateKeySpec privateKeySpec = new EdDSAPrivateKeySpec(seed, parameterSpec);
         return new EdDSAPrivateKey(privateKeySpec);
     }
 
     public static EdDSAPublicKey getPublicKey(EdDSAPrivateKey privateKey) {
-        EdDSAPublicKeySpec publicKeySpec = new EdDSAPublicKeySpec(privateKey.getAbyte(), parameterSpec);
-        return new EdDSAPublicKey(publicKeySpec);
+        return getPublicKey(privateKey.getAbyte());
     }
 
-    static byte[] createSignature(byte[] message, PrivateKey privateKey) {
+    public static EdDSAPublicKey getPublicKey(String publicKey) {
+        return getPublicKey(Utils.hexToBytes(publicKey));
+    }
+
+    public static EdDSAPublicKey getPublicKey(byte[] publicKey) {
         try {
-            Signature signature = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
+            return new EdDSAPublicKey(new EdDSAPublicKeySpec(publicKey, parameterSpec));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static boolean isValidPublicKey(String publicKey) {
+        return isValidPublicKey(getPublicKey(publicKey));
+    }
+
+    public static boolean isValidPublicKey(byte[] publicKey) {
+        return isValidPublicKey(getPublicKey(publicKey));
+    }
+
+    public static boolean isValidPublicKey(EdDSAPublicKey publicKey) {
+        try {
+            Signature sgr = getSignature();
+            sgr.initVerify(publicKey); // Will throw InvalidKeyException if key is invalid.
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    static byte[] createSignature(byte[] message, PrivateKey privateKey)
+            throws InvalidKeyException, SignatureException {
+        Signature signature = getSignature();
+        if (signature != null) {
             signature.initSign(privateKey);
             signature.update(message);
             return signature.sign();
-        } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
-            Log.e("CRYPTO", e.getMessage());
+        } else {
+            return new byte[0];
         }
-        return null;
     }
     
     public static boolean verifySignature(byte[] message, byte[] signature, byte[] publicKey) {
-        EdDSAPublicKeySpec publicKeySpec = new EdDSAPublicKeySpec(publicKey, parameterSpec);
-        EdDSAPublicKey vk = new EdDSAPublicKey(publicKeySpec);
+        EdDSAPublicKey vk = getPublicKey(publicKey);
         return verifySignature(message, signature, vk);
     }
 
     public static boolean verifySignature(byte[] message, byte[] signature, PublicKey publicKey) {
+        Signature sgr = getSignature();
         try {
-            Signature sgr = new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
             sgr.initVerify(publicKey);
             sgr.update(message);
             return sgr.verify(signature);
-        } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
-            Log.e("CRYPTO", e.getMessage());
+        } catch (Exception e) {
+            return false;
         }
-        return false;
+    }
+
+    private static Signature getSignature() {
+        try {
+            return new EdDSAEngine(MessageDigest.getInstance(parameterSpec.getHashAlgorithm()));
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
     }
 }
