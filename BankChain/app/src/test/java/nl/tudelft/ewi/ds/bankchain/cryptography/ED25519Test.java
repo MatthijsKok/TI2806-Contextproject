@@ -16,7 +16,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.createSignature;
-import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.generatePrivateKey;
 import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.getPublicKey;
 import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.verifySignature;
 import static org.junit.Assert.assertTrue;
@@ -38,19 +37,19 @@ public class ED25519Test {
 
     @Test
     public void generatePrivateKeyTest() throws Exception {
-        EdDSAPrivateKey pk = ED25519.generatePrivateKey(TEST_SEED);
+        EdDSAPrivateKey pk = ED25519.getPrivateKey(TEST_SEED);
         assertTrue(Arrays.equals(pk.getAbyte(), TEST_PK));
     }
 
     @Test
     public void generatePrivateKeyWrongSeedLengthTest() throws Exception {
         exception.expect(IllegalArgumentException.class);
-        generatePrivateKey(new byte[]{0, 0, 0});
+        ED25519.getPrivateKey(new byte[]{0, 0, 0});
     }
 
     @Test
     public void getPublicKeyTest() throws Exception {
-        EdDSAPrivateKey privateKey = generatePrivateKey(TEST_SEED);
+        EdDSAPrivateKey privateKey = ED25519.getPrivateKey(TEST_SEED);
         EdDSAPublicKey publicKey = getPublicKey(privateKey);
 
         assertTrue(Arrays.equals(publicKey.getEncoded(), TEST_VK));
@@ -59,7 +58,7 @@ public class ED25519Test {
     @Test
     public void generatePrivateKeyEmptySeedTest() throws Exception {
         exception.expect(IllegalArgumentException.class);
-        generatePrivateKey(new byte[]{});
+        ED25519.getPrivateKey(new byte[]{});
     }
 
     @Test
@@ -76,5 +75,10 @@ public class ED25519Test {
         EdDSAPublicKey publicKey = new EdDSAPublicKey(publicKeySpec);
 
         assertTrue(verifySignature(TEST_MSG, TEST_MSG_SIG, publicKey));
+    }
+
+    @Test
+    public void verifySignatureOverloadTest() throws Exception {
+        assertTrue(verifySignature(TEST_MSG, TEST_MSG_SIG, TEST_PK));
     }
 }
