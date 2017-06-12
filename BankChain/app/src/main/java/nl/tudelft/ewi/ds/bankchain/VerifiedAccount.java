@@ -1,8 +1,5 @@
 package nl.tudelft.ewi.ds.bankchain;
 
-
-import java.util.Date;
-
 /**
  * @author Isha Dijcks
  */
@@ -42,7 +39,7 @@ public class VerifiedAccount {
         this.date = date;
     }
 
-    public String toString(){
+    public String toString() {
         return this.publicKey + ":" + this.iban + ":" + this.date;
     }
 }

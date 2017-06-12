@@ -1,10 +1,11 @@
 package nl.tudelft.ewi.ds.bankchain;
 
 import android.content.Context;
+import android.util.Log;
+
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,31 +18,30 @@ public class InternalStorage {
     public static List<VerifiedAccount> retrieveCompletedVerifications(Context context) {
         List<VerifiedAccount> completedVerificationsList = new ArrayList<>();
 
-        String FILENAME = "CompletedVerifications.txt";
-        String verifiedAccounts = readFromInternalStorage(FILENAME, context);
+        String filename = "CompletedVerifications.txt";
+        String verifiedAccounts = readFromInternalStorage(filename, context);
 
-        if(verifiedAccounts == ""){
+        if (verifiedAccounts.equals("")) {
             return completedVerificationsList;
         }
-        String lines[] = verifiedAccounts.split("\\r?\\n");
+        String[] lines = verifiedAccounts.split("\\r?\\n");
 
 
-        for (int i = lines.length-1; i >= 0; i--) {
+        for (int i = lines.length - 1; i >= 0; i--) {
             completedVerificationsList.add(parseVerifiedAccount(lines[i]));
         }
         return completedVerificationsList;
     }
 
-    public static void appendVerification(Context context, String string){
-        String FILENAME = "CompletedVerifications.txt";
+    public static void appendVerification(Context context, String string) {
+        String filename = "CompletedVerifications.txt";
         try {
-            FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_APPEND);
-            fos.write(string.getBytes());
+            FileOutputStream fos = context.openFileOutput(filename, Context.MODE_APPEND);
+            fos.write(string.getBytes(Charset.forName("UTF-8")));
             fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        } catch (Exception ignored) {
+            Log.d("Internal Storage", "appendVerification: exception");
         }
 
     }
@@ -64,8 +64,8 @@ public class InternalStorage {
                 temp = temp + Character.toString((char) c);
             }
             fin.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
+            Log.d("Internal Storage", "readFromInternalStorage: exception");
         }
         return temp;
     }
