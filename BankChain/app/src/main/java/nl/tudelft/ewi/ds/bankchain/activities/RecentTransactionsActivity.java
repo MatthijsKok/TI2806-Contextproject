@@ -83,6 +83,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
                     } catch (InterruptedException | ExecutionException e) {
                         Log.e("CRYPTO", e.getMessage());
+                        return;
                     }
 
                     b.listTransactions(ac).thenAccept(ts -> Tools.runOnMainThread(() -> {
