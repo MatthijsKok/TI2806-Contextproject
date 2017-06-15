@@ -133,8 +133,8 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             listDataHeader.add(transactionList.get(i).getDescription());
             List<String> details = new ArrayList<>();
 
-            if (transactionList.get(i).getValue() != null && transactionList.get(i).getCurrency() != null) {
-                details.add(transactionList.get(i).getValue().toString() + " " + transactionList.get(i).getCurrency().toString());
+            if (transactionList.get(i).getCurrency() != null) {
+                details.add(transactionList.get(i).getValue() + " " + transactionList.get(i).getCurrency().toString());
             }
             if (transactionList.get(i).getDate() != null) {
                 details.add(transactionList.get(i).getDate().toString());

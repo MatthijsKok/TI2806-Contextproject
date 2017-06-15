@@ -17,7 +17,7 @@ public class IBANVerifier {
      * @param iban string of the IBAN
      * @return true when valid, false otherwise
      */
-    public static boolean verify(String iban) {
+    public static boolean isValidIBAN(String iban) {
         // Warning: iban length differs per country.
 
         // Wikipedia https://en.wikipedia.org/wiki/International_Bank_Account_Number#Algorithms:
@@ -60,12 +60,11 @@ public class IBANVerifier {
 
         //interchange any letter with the corresponding digit
         for (char c : arranged.toCharArray()) {
-            int val = c;
 
             if (c < 65) {
                 result.append(c);
             } else {
-                result.append(val - 55);
+                result.append((int) c - 55);
             }
         }
         //return value as a number
