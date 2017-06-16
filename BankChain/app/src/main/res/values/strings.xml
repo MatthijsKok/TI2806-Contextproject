@@ -91,5 +91,7 @@
     <string name="create_challenge">Create Challenge</string>
     <string name="verify_bunq">Bunq Verification</string>
     <string name="verify_manual">Manual Verification</string>
+    <string name="verify_challenge">Recieved Challenge</string>
+    <string name="respond">Respond</string>
 
 </resources>

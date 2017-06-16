@@ -42,4 +42,24 @@
 
     </RelativeLayout>
 
+    <EditText
+        android:id="@+id/challengeInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:hint="@string/verify_challenge"
+        android:inputType="text"
+        android:layout_above="@+id/manualVerificationButton"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/manualVerificationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="164dp"
+        android:text="@string/respond" />
+
 </RelativeLayout>
