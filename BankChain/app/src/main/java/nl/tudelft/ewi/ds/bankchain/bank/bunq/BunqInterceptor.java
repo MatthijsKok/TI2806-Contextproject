@@ -91,7 +91,6 @@ class BunqInterceptor implements Interceptor {
             // Without a header this response is spoofed
             String serverSignature = incoming.header(SERVER_SIGNATURE);
             if (serverSignature == null) {
-                // TODO: make proper exceptions that subclass IOException
                 throw new IOException("Bunq was spoofed: no server signature found");
             }
 

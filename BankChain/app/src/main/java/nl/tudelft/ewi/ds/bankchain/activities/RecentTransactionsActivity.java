@@ -63,7 +63,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             return;
         }
         Environment v = Environment.getDefaults();
-        Bank b = new BankFactory(v).create();
+        Bank b = new BankFactory(v, this.getApplicationContext()).create();
         b.createSession()
                 .thenAccept(t -> Tools.runOnMainThread(() -> {
                     Log.d("GUI", "Created session");
@@ -83,6 +83,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
                     } catch (InterruptedException | ExecutionException e) {
                         Log.e("CRYPTO", e.getMessage());
+                        return;
                     }
 
                     b.listTransactions(ac).thenAccept(ts -> Tools.runOnMainThread(() -> {
