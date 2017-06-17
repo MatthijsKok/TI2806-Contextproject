@@ -384,4 +384,16 @@ final class BunqSession extends Session {
                 && session.clientKeyPair.getPrivate().equals(this.clientKeyPair.getPrivate())
                 && session.clientKeyPair.getPublic().equals(this.clientKeyPair.getPublic());
     }
+
+    @Override
+    public int hashCode() {
+        return this.clientAuthenticationToken.hashCode()
+                ^ this.deviceServerId
+                ^ this.ipAddress.hashCode()
+                ^ this.sessionId
+                ^ (int) this.requestId
+                ^ this.serverPublicKey.hashCode()
+                ^ this.clientKeyPair.getPrivate().hashCode()
+                ^ this.clientKeyPair.getPublic().hashCode();
+    }
 }

@@ -2,6 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'kotlin-android'
 
+apply from: '../config/quality/quality.gradle'
+apply from: '../config/quality/coverage.gradle'
+
 buildscript {
     ext {
         kotlinVersion = '1.1.2-5'
@@ -28,6 +31,9 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+    }
+    lintOptions {
+        abortOnError false
     }
     buildTypes {
         release {
