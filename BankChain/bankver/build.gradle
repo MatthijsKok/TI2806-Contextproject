@@ -1,4 +1,20 @@
 apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'kotlin-android'
+
+buildscript {
+    ext {
+        kotlinVersion = '1.1.2-5'
+    }
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.6.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
 
 android {
     compileSdkVersion 25
@@ -18,7 +34,30 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled true
+        }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dexOptions {
+        preDexLibraries = false
+        javaMaxHeapSize "2g"
+    }
+}
+
+retrolambda {
+    javaVersion JavaVersion.VERSION_1_7
+    defaultMethods false
+    incremental true
+}
+
+repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+    mavenCentral()
 }
 
 dependencies {
@@ -27,7 +66,26 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
+
+    // HTTP library
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+
+    // Java 8 streams and async
+    compile 'net.sourceforge.streamsupport:streamsupport:1.5.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.4'
+
+    // JSON parsing and serializing
+    compile 'com.google.code.gson:gson:2.8.0'
+
     testCompile 'junit:junit:4.12'
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+    compile files('../libs/eddsa-0.2.0.jar')
 }
 
 task deleteJar(type: Delete) {
