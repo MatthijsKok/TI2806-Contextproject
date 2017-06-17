@@ -2,6 +2,7 @@ package nl.tudelft.ewi.ds.bankver.bank.bunq;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java8.util.concurrent.CompletableFuture;
 
@@ -233,5 +234,14 @@ public final class BunqBank extends Bank {
         }
 
         return e;
+    }
+
+    @Override
+    public void deleteAnySession(@Nullable Context appContext) {
+        if (appContext != null) {
+            BunqSession.deleteAnyFromDisk(appContext);
+        }
+
+        session = null;
     }
 }

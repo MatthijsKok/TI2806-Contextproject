@@ -1,5 +1,6 @@
 package nl.tudelft.ewi.ds.bankver.bank;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 
@@ -36,4 +37,9 @@ public abstract class Bank {
     public abstract Session getCurrentSession();
 
     public abstract Throwable confirmException(Throwable e);
+
+    /**
+     * Remove any (stored) session.
+     */
+    public abstract void deleteAnySession(@Nullable Context appContext);
 }

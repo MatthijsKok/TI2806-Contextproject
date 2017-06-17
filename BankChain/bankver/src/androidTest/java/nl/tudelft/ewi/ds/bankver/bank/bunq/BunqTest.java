@@ -99,6 +99,7 @@ public class BunqTest {
         env.setBankApiKey("");
 
         bank = new BankFactory(env, instrumentationCtx).create();
+        bank.deleteAnySession(instrumentationCtx);
 
         future = bank.createSession()
                 .thenAccept(t -> {
@@ -125,6 +126,7 @@ public class BunqTest {
         Bank bank;
 
         bank = createDummyBank();
+        bank.deleteAnySession(instrumentationCtx);
 
         future = bank.createSession()
                 .thenAccept(t -> {
@@ -153,6 +155,7 @@ public class BunqTest {
         Bank bank;
 
         bank = getRealBank();
+        bank.deleteAnySession(instrumentationCtx);
 
         future = bank.createSession()
                 .thenAccept(t -> {
@@ -171,12 +174,14 @@ public class BunqTest {
 
         assertNotNull(session);
         assertNull(throwable);
+        assertTrue(session.isValid());
     }
 
     // When running confirmation through null it should not crash but return null
     @Test
     public void testExceptionConfirmationNull() {
         Bank bank = createDummyBank();
+        bank.deleteAnySession(instrumentationCtx);
 
         assertNull(bank.confirmException(null));
     }
@@ -185,6 +190,7 @@ public class BunqTest {
     @Test
     public void testExceptionConfirmationNotFuture() {
         Bank bank = createDummyBank();
+        bank.deleteAnySession(instrumentationCtx);
 
         Throwable thr = new IllegalArgumentException("test");
 
@@ -194,6 +200,7 @@ public class BunqTest {
     @Test
     public void testGetUsers() throws ExecutionException, InterruptedException {
         Bank bank = getRealBank();
+        bank.deleteAnySession(instrumentationCtx);
         List<Party> users;
 
         bank.createSession().get();
@@ -208,6 +215,7 @@ public class BunqTest {
     @Test
     public void testGetAccounts() throws ExecutionException, InterruptedException {
         Bank bank = getRealBank();
+        bank.deleteAnySession(instrumentationCtx);
 
         bank.createSession().get();
 
@@ -220,10 +228,10 @@ public class BunqTest {
         assertEquals(ac.getId(), 2021);
     }
 
-
     @Test
     public void testPostTransaction() throws ExecutionException, InterruptedException {
         Bank bank = getRealBank();
+        bank.deleteAnySession(instrumentationCtx);
 
         bank.createSession().get();
 
@@ -240,6 +248,7 @@ public class BunqTest {
     @Test
     public void testListTransactions() throws ExecutionException, InterruptedException {
         Bank bank = getRealBank();
+        bank.deleteAnySession(instrumentationCtx);
         bank.createSession().get();
 
         BunqParty party = new BunqParty("Overton Onderlinge Waarborgmaatschappij", 2002);
@@ -251,5 +260,49 @@ public class BunqTest {
         assertEquals(t.getDescription(), "end tot end Bunqtest");
         assertEquals(t.getAccount().getId(), 2021);
         assertEquals(t.getCounterAccount().getIban(), "NL77BUNQ9900016947");
+    }
+
+    @Test
+    public void testSessionLoading() throws ExecutionException, InterruptedException {
+        Bank bank, bank2;
+        BunqSession firstSession, secondSession;
+
+        bank = getRealBank();
+        bank.deleteAnySession(instrumentationCtx);
+
+        bank.createSession().thenAccept(t -> {
+            session = t;
+        }).exceptionally(e -> {
+            throwable = bank.confirmException(e);
+            if (e instanceof CompletionException) {
+                e.getCause().printStackTrace();
+            }
+            return null;
+        }).get();
+
+        assertNotNull(session);
+        assertNull(throwable);
+        assertTrue(session.isValid());
+
+        firstSession = (BunqSession) session;
+
+        bank2 = getRealBank();
+        bank2.createSession().thenAccept(t -> {
+            session = t;
+        }).exceptionally(e -> {
+            throwable = bank2.confirmException(e);
+            if (e instanceof CompletionException) {
+                e.getCause().printStackTrace();
+            }
+            return null;
+        }).get();
+
+        assertNotNull(session);
+        assertNull(throwable);
+        assertTrue(session.isValid());
+
+        secondSession = (BunqSession) session;
+
+        assertEquals(firstSession, secondSession);
     }
 }

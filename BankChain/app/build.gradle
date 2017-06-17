@@ -90,10 +90,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
 
-    // HTTP library
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-
     // Java 8 streams and async
     compile 'net.sourceforge.streamsupport:streamsupport:1.5.4'
     compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.4'
@@ -106,6 +102,4 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-
-    compile files('../libs/eddsa-0.2.0.jar')
 }

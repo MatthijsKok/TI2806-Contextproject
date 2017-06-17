@@ -117,6 +117,10 @@ public final class BunqTools {
 
             if (key != null && key instanceof PrivateKey) {
                 Certificate cert = ks.getCertificate(alias);
+                if (cert == null) {
+                    return null;
+                }
+
                 PublicKey pubKey = cert.getPublicKey();
 
                 return new KeyPair(pubKey, (PrivateKey) key);
@@ -134,9 +138,10 @@ public final class BunqTools {
     static boolean destroyClientKeyPair(String alias) {
         try {
             KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
+            ks.load(null);
 
             ks.deleteEntry(alias);
-        } catch (KeyStoreException e) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
             Log.e("BUNQ", "Failed to destroy keypair: " + e.toString());
             return false;
         }

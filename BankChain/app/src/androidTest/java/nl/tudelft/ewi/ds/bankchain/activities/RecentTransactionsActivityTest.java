@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.tudelft.ewi.ds.bankchain.TestRunner;
-import nl.tudelft.ewi.ds.bunkver.bank.Transaction;
+import nl.tudelft.ewi.ds.bankver.bank.Transaction;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

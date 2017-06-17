@@ -294,6 +294,11 @@ final class BunqSession extends Session {
         return getDiskFile(appContext).delete();
     }
 
+    static void deleteAnyFromDisk(Context appContext) {
+        BunqTools.destroyClientKeyPair(KEYSTORE_ALIAS);
+        BunqSession.getDiskFile(appContext).delete();
+    }
+
     private static class DiskSession {
         private String serverPublicKey;
 
@@ -360,5 +365,23 @@ final class BunqSession extends Session {
 
             return o;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof BunqSession)) {
+            return false;
+        }
+
+        BunqSession session = (BunqSession) obj;
+
+        return session.clientAuthenticationToken.equals(this.clientAuthenticationToken)
+                && session.deviceServerId == this.deviceServerId
+                && session.ipAddress.equals(this.ipAddress)
+                && session.sessionId == this.sessionId
+                && session.requestId == this.requestId
+                && session.serverPublicKey.equals(this.serverPublicKey)
+                && session.clientKeyPair.getPrivate().equals(this.clientKeyPair.getPrivate())
+                && session.clientKeyPair.getPublic().equals(this.clientKeyPair.getPublic());
     }
 }
