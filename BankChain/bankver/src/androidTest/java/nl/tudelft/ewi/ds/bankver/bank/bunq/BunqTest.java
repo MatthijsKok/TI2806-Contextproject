@@ -31,6 +31,7 @@ import nl.tudelft.ewi.ds.bankver.bank.Session;
 import nl.tudelft.ewi.ds.bankver.bank.Transaction;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -304,5 +305,50 @@ public class BunqTest {
         secondSession = (BunqSession) session;
 
         assertEquals(firstSession, secondSession);
+    }
+
+    @Test
+    public void testSessionDeleting() throws ExecutionException, InterruptedException {
+        Bank bank, bank2;
+        BunqSession firstSession, secondSession;
+
+        bank = getRealBank();
+        bank.deleteAnySession(instrumentationCtx);
+
+        bank.createSession().thenAccept(t -> {
+            session = t;
+        }).exceptionally(e -> {
+            throwable = bank.confirmException(e);
+            if (e instanceof CompletionException) {
+                e.getCause().printStackTrace();
+            }
+            return null;
+        }).get();
+
+        assertNotNull(session);
+        assertNull(throwable);
+        assertTrue(session.isValid());
+
+        firstSession = (BunqSession) session;
+
+        bank2 = getRealBank();
+        bank2.deleteAnySession(instrumentationCtx);
+        bank2.createSession().thenAccept(t -> {
+            session = t;
+        }).exceptionally(e -> {
+            throwable = bank2.confirmException(e);
+            if (e instanceof CompletionException) {
+                e.getCause().printStackTrace();
+            }
+            return null;
+        }).get();
+
+        assertNotNull(session);
+        assertNull(throwable);
+        assertTrue(session.isValid());
+
+        secondSession = (BunqSession) session;
+
+        assertNotEquals(firstSession, secondSession);
     }
 }
