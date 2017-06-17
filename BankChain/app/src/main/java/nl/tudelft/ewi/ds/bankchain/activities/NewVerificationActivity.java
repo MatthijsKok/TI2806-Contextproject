@@ -20,10 +20,10 @@ import java.security.InvalidKeyException;
 import java.security.SignatureException;
 
 import nl.tudelft.ewi.ds.bankchain.R;
-import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
+import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
 
-import static nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier.isValidIBAN;
-import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.isValidPublicKey;
+import static nl.tudelft.ewi.ds.bankver.bank.IBANVerifier.isValidIBAN;
+import static nl.tudelft.ewi.ds.bankver.cryptography.ED25519.isValidPublicKey;
 
 public class NewVerificationActivity extends AppCompatActivity {
 

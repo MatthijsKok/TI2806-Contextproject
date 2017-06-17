@@ -17,16 +17,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import nl.tudelft.ewi.ds.bankchain.Environment;
+import nl.tudelft.ewi.ds.bankver.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.Tools;
-import nl.tudelft.ewi.ds.bankchain.bank.Account;
-import nl.tudelft.ewi.ds.bankchain.bank.Bank;
-import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
-import nl.tudelft.ewi.ds.bankchain.bank.Party;
-import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
+import nl.tudelft.ewi.ds.bankver.bank.Account;
+import nl.tudelft.ewi.ds.bankver.bank.Bank;
+import nl.tudelft.ewi.ds.bankver.bank.BankFactory;
+import nl.tudelft.ewi.ds.bankver.bank.Party;
+import nl.tudelft.ewi.ds.bankver.bank.Transaction;
+import nl.tudelft.ewi.ds.bankver.bank.bunq.BunqAccount;
+import nl.tudelft.ewi.ds.bankver.bank.bunq.BunqParty;
 
 public class RecentTransactionsActivity extends AppCompatActivity {
 
