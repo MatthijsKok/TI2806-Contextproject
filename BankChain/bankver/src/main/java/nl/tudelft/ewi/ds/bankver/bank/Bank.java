@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 
+import java.util.Currency;
 import java.util.List;
 
 import java8.util.concurrent.CompletableFuture;
@@ -25,6 +26,8 @@ public interface Bank {
     CompletableFuture<List<Account>> listAccount(Party party);
 
     CompletableFuture<Boolean> sendTransaction(Transaction transaction);
+
+    CompletableFuture<Boolean> transfer(Account fromAccount, String iban, Float amount, Currency currency, String description);
 
     /**
      * Get the current session of the bank.

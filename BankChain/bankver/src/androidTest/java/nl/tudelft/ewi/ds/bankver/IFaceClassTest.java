@@ -44,8 +44,14 @@ public class IFaceClassTest {
         c.setProperty(IFaceClass.SettingProperty.BUNQ_API_KEY, "55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
 
         String resp = c.handleManualMessage(new IBAN("NL29INGB0006108849"), "CH:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00f");
+        Log.d("IFACETEST", "Send response: " + resp);
 
         assertNotNull(resp);
+
+
+        // Create an online challenge
+        c.createOnlineChallenge(new IBAN("NL29INGB0006108849"));
+
 
         c.handleOnlineChallenges();
     }

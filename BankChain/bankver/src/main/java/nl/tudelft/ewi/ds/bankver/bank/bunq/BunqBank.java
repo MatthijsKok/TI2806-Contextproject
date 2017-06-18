@@ -8,6 +8,7 @@ import java8.util.concurrent.CompletableFuture;
 
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 
@@ -190,6 +191,16 @@ public final class BunqBank implements Bank {
         });
     }
 
+    @Override
+    public CompletableFuture<Boolean> transfer(Account fromAccount, String iban, Float amount, Currency currency, String description) {
+        // Use a dummy name as it is unverified
+        BunqParty cp = new BunqParty("Unverified", -1);
+        BunqAccount toAccount = new BunqAccount(iban, -1, cp);
+
+        BunqTransaction transaction = new BunqTransaction(-1 * amount, fromAccount, toAccount, currency, description);
+
+        return sendTransaction(transaction);
+    }
 
     @Override
     public BunqSession getCurrentSession() {

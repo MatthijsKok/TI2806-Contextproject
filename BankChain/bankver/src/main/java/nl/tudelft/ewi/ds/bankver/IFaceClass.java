@@ -12,12 +12,16 @@ import java.security.InvalidKeyException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.util.Currency;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import java8.util.concurrent.CompletableFuture;
 
+import nl.tudelft.ewi.ds.bankver.bank.Account;
 import nl.tudelft.ewi.ds.bankver.bank.Bank;
 import nl.tudelft.ewi.ds.bankver.bank.BankFactory;
+import nl.tudelft.ewi.ds.bankver.bank.Party;
 import nl.tudelft.ewi.ds.bankver.bank.Session;
 import nl.tudelft.ewi.ds.bankver.bank.Transaction;
 import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
@@ -248,6 +252,8 @@ public class IFaceClass {
      * @param target target account
      */
     public void createOnlineChallenge(@NonNull IBAN target) {
+        Log.d("IFACE", "Create online challege");
+
         PrivateKey privateKey = blockchain.getPrivateKey();
         validatePrivateKey(privateKey);
 
@@ -263,15 +269,23 @@ public class IFaceClass {
             throw new IllegalArgumentException("key for target is invalid");
         }
 
-        // Make a payment
-        // TODO: Make a payment to given target with challenge as message
         Bank bank = getBank();
+        if (bank == null) {
+            throw new RuntimeException("Failed to create bank connection");
+        }
 
-        Transaction transaction = null;
+        Account account = getBasicAccount(bank);
+        if (account == null) {
+            throw new RuntimeException("Failed to get hardcoded bank account");
+        }
 
-        bank.sendTransaction(transaction);
+        try {
+            bank.transfer(account, target.toString(), 0.01f, Currency.getInstance("EUR"), challenge).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
 
-        // TODO: create bank with session, if not exists yet or not valid session
+            throw new RuntimeException(e);
+        }
     }
 
     private void validatePublicKey(PublicKey publicKey) {
@@ -322,6 +336,30 @@ public class IFaceClass {
         }
 
         return bank;
+    }
+
+    @Nullable
+    private Account getBasicAccount(@NonNull Bank bank) {
+        CompletableFuture<List<Party>> f1 = bank.listUsers();
+
+        CompletableFuture<List<Account>> f2 = f1.thenCompose(parties -> {
+            if (parties.isEmpty()) {
+                throw new RuntimeException("No parties");
+            }
+
+            return bank.listAccount(parties.get(0));
+        });
+
+        try {
+            List<Account> accounts = f2.get();
+            if (accounts.isEmpty()) {
+                return null;
+            }
+
+            return accounts.get(0);
+        } catch (InterruptedException | ExecutionException e) {
+            return null;
+        }
     }
 
     /**
