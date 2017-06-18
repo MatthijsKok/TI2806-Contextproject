@@ -39,7 +39,7 @@ import nl.tudelft.ewi.ds.bankver.bank.network.NetUtils;
  *
  * @author Jos Kuijpers
  */
-final class BunqSession extends Session {
+final class BunqSession implements Session {
     private static final String KEYSTORE_ALIAS = "BunqSessionKeyPair";
 
     /**

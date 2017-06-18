@@ -1,6 +1,8 @@
 package nl.tudelft.ewi.ds.bankver.bank;
 
-public abstract class TransactionCounterparty {
+import nl.tudelft.ewi.ds.bankver.IBAN;
+
+public interface TransactionCounterparty {
     public enum Type {
         IBAN,
         EMAIL
@@ -11,28 +13,26 @@ public abstract class TransactionCounterparty {
      *
      * @return type available in enum
      */
-    public abstract Type getType();
+    Type getType();
 
     /**
      * Get IBAN of the counterparty, if available.
      *
      * @return IBAN, or null
      */
-    public abstract String getIBAN();
+    IBAN getIBAN();
 
     /**
      * Get e-mail of the counterparty, if available.
      *
      * @return Email, or null
      */
-    public abstract String getEmail();
+    String getEmail();
 
     /**
      * Get name of the counterparty, if available
      *
      * @return Name, or null
      */
-    public abstract String getName();
-
-    // boolean isIBANValid() { return (new IBANVerifier()).verify(this.iban)}
+    String getName();
 }
