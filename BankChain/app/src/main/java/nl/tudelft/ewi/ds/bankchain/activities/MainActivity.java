@@ -58,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
         // if button is clicked, close the custom dialog
         verifyButton.setOnClickListener(v -> {
             EditText challengeText = (EditText) findViewById(R.id.challengeInput);
+            EditText ibanText = (EditText) findViewById(R.id.ibanInput);
             String challenge = challengeText.getText().toString();
+            String iban = challengeText.getText().toString();
             showLongToast("Gonna verify this challenge (but not really...)");
         });
     }
