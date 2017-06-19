@@ -1,6 +1,7 @@
 package nl.tudelft.ewi.ds.bankver.bank.bunq;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -91,7 +92,7 @@ class BunqInterceptor implements Interceptor {
             // Without a header this response is spoofed
             String serverSignature = incoming.header(SERVER_SIGNATURE);
             if (serverSignature == null) {
-                throw new IOException("Bunq was spoofed: no server signature found");
+                throw new IOException("Bunq was spoofed: no server signature found. Data: " + incoming.body().string());
             }
 
             String signable = createSignable(incoming, builder);

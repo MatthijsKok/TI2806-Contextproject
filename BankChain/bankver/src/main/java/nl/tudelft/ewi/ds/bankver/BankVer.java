@@ -22,6 +22,7 @@ import nl.tudelft.ewi.ds.bankver.bank.Account;
 import nl.tudelft.ewi.ds.bankver.bank.Bank;
 import nl.tudelft.ewi.ds.bankver.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankver.bank.Party;
+import nl.tudelft.ewi.ds.bankver.bank.Transaction;
 import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
 
 /**
@@ -58,6 +59,9 @@ public class BankVer {
     }
 
     private static final String BUNQ_URL = "http://178.62.218.153:8080/";
+    private static final Currency CURRENCY = Currency.getInstance("EUR");
+    private static final Float TRANSACTION_SIZE = 0.01f;
+    private static final long THROTTLE_TIME = 2000L;
 
     /**
      * Blockchain interface
@@ -72,10 +76,14 @@ public class BankVer {
     private Context appContext;
     private Bank bank;
 
+    private boolean mustThrottlePost;
+
     public BankVer(@NonNull Context context, @NonNull Blockchain blockchain) {
         this.appContext = context;
         this.blockchain = blockchain;
         this.environment = new Environment();
+
+        this.mustThrottlePost = false;
 
         setProperty(SettingProperty.BANK_TYPE, BankType.BUNQ.toString());
     }
@@ -176,12 +184,78 @@ public class BankVer {
         Log.d("IFACE", "handle online challenges");
 
         // Get bank + session
-        // Read list of transactions
-        // Filter the challenges
-        // Handle each challenge, not handled
-          // Get public key?
+        Bank bank = getBank();
+        if (bank == null) {
+            throw new RuntimeException("Failed to create bank connection");
+        }
 
-        // For each handled, call into Blockchain
+        Account account = getBasicAccount(bank);
+        if (account == null) {
+            throw new RuntimeException("Failed to get hardcoded bank account");
+        }
+
+        // Read list of transactions
+        List<Transaction> transactions = null;
+        try {
+            transactions = bank.listTransactions(account).get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e("IFACE", e.toString());
+        }
+
+        // Filter the challenges and responses
+        for (Transaction transaction : transactions) {
+            IBAN iban = new IBAN(transaction.getCounterAccount().getIban());
+            PublicKey publicKey = blockchain.getPublicKeyForIBAN(iban);
+
+            // Not in blockchain
+            if (publicKey == null) {
+                continue;
+            }
+            validatePublicKey(publicKey);
+
+            // If is challenge
+            if (ChallengeResponse.isValidChallenge(transaction.getDescription(), publicKey)) {
+                PrivateKey privateKey = blockchain.getPrivateKey();
+                validatePrivateKey(privateKey);
+
+                // Create the response
+                String response;
+                try {
+                    response = ChallengeResponse.createResponse(transaction.getDescription(), privateKey);
+                } catch (SignatureException e) {
+                    Log.e("IFACE", e.toString());
+                    // TODO: when does this happen, what to do?
+                    throw new RuntimeException("signature failed");
+                } catch (InvalidKeyException e) {
+                    throw new IllegalArgumentException("private key is invalid");
+                }
+
+                if (mustThrottlePost) {
+                    try {
+                        Thread.sleep(THROTTLE_TIME);
+                        mustThrottlePost = false;
+                    } catch (InterruptedException e) {
+                        Log.e("IFACE", e.toString());
+
+                        // And continue
+                    }
+                }
+
+                // Send it with a cent
+                try {
+                    bank.transfer(account, iban.toString(), TRANSACTION_SIZE, CURRENCY, response).get();
+
+                    mustThrottlePost = true;
+                } catch (InterruptedException | ExecutionException e) {
+                    Log.e("IFACE", e.toString());
+
+                    throw new RuntimeException(bank.confirmException(e));
+                }
+
+            } else if(ChallengeResponse.isValidResponse(transaction.getDescription(), publicKey)) {
+                blockchain.setIbanVerified(publicKey, iban, transaction.getCounterAccount().getParty().getName());
+            }
+        }
     }
 
     /**
@@ -222,11 +296,12 @@ public class BankVer {
     /**
      * Create a manual challenge for given account with publickey
      *
-     * @param target public key of the receiver
+     * @param target iban of the receiver
      * @return challenge message
      */
-    public String createManualChallenge(@NonNull PublicKey target) throws InvalidKeyException {
-        validatePublicKey(target);
+    public String createManualChallenge(@NonNull IBAN target) throws InvalidKeyException {
+        PublicKey publicKey = blockchain.getPublicKeyForIBAN(target);
+        validatePublicKey(publicKey);
 
         PrivateKey privateKey = blockchain.getPrivateKey();
         validatePrivateKey(privateKey);
@@ -248,8 +323,6 @@ public class BankVer {
      * @param target target account
      */
     public void createOnlineChallenge(@NonNull IBAN target) {
-        Log.d("IFACE", "Create online challege");
-
         PrivateKey privateKey = blockchain.getPrivateKey();
         validatePrivateKey(privateKey);
 
@@ -276,11 +349,11 @@ public class BankVer {
         }
 
         try {
-            bank.transfer(account, target.toString(), 0.01f, Currency.getInstance("EUR"), challenge).get();
+            bank.transfer(account, target.toString(), TRANSACTION_SIZE, CURRENCY, challenge).get();
         } catch (ExecutionException | InterruptedException e) {
             Log.e("IFACE", e.toString());
 
-            throw new RuntimeException(e);
+            throw new RuntimeException(bank.confirmException(e));
         }
     }
 
@@ -316,8 +389,6 @@ public class BankVer {
         if (bank.getCurrentSession() == null || !bank.getCurrentSession().isValid()) {
             try {
                 bank.createSession().get();
-
-                Log.d("IFACE", "Got session");
             } catch (ExecutionException e) {
                 Throwable t = bank.confirmException(e);
 

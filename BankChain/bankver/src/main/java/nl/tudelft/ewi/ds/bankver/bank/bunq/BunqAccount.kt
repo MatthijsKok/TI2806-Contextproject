@@ -32,4 +32,8 @@ class BunqAccount : Account {
         this.party = party
         this.id = id
     }
+
+    override fun toString(): String {
+        return "BunqAccount(party=$party, iban='$iban', id=$id)"
+    }
 }

@@ -62,4 +62,8 @@ class BunqTransaction : Transaction {
         p.counterparty_alias = c
         return p
     }
+
+    override fun toString(): String {
+        return "BunqTransaction(id=$id, date=$date, value=$value, description='$description', currency=$currency, account=$account, counterAccount=$counterAccount)"
+    }
 }
