@@ -1,5 +1,7 @@
 package nl.tudelft.ewi.ds.bankver;
 
+import java.util.Locale;
+
 import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
 
 /**
@@ -23,7 +25,7 @@ public class IBAN {
 
     private void setValue(String value) {
         // Normalize
-        value = value.trim().toUpperCase();
+        value = value.trim().toUpperCase(Locale.ENGLISH);
 
         if (!IBANVerifier.isValidIBAN(value)) {
             throw new IllegalArgumentException("iban is not valid");

@@ -43,7 +43,8 @@ public class IFaceClassTest {
         c.setProperty(IFaceClass.SettingProperty.BANK_TYPE, IFaceClass.BankType.BUNQ);
         c.setProperty(IFaceClass.SettingProperty.BUNQ_API_KEY, "55ee97968338182ba528595d05ad9ba3eaf6bcd6f8d1c6e805ba1b29c2d1ba7c");
 
-        String resp = c.handleManualMessage(new IBAN("NL29INGB0006108849"), "CH:12345678:49d97746457147c7c0edfed0be26f7955810b3fe165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00f");
+        String resp = c.handleManualMessage(new IBAN("NL29INGB0006108849"), "CH:12345678:49d97746457147c7c0edfed0be26f7955810b3fe"
+                + "165e81d914d43a3c91c1caef91c6a22d45e3d47cfd4abc448c7fb44ffacf98eee2c76aa70ea74be6d010e00f");
         Log.d("IFACETEST", "Send response: " + resp);
 
         assertNotNull(resp);
@@ -57,21 +58,21 @@ public class IFaceClassTest {
     }
 
     class MyChain implements Blockchain {
-        private final byte[] TEST_SEED1 = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
-        private final byte[] TEST_SEED2 = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000001");
-        private final byte[] TEST_SEED3 = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000002");
+        private final byte[] testSeed1 = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
+        private final byte[] testSeed2 = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000001");
+        private final byte[] testSeed3 = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000002");
 
         private EdDSAPrivateKey privateKey;
 
         private List<Pair<IBAN, EdDSAPublicKey>> store;
 
         MyChain() {
-            privateKey = ED25519.getPrivateKey(TEST_SEED1);
+            privateKey = ED25519.getPrivateKey(testSeed1);
 
             store = new ArrayList<>();
 
-            store.add(new Pair<>(new IBAN("DE89370400440532013000"), ED25519.getPublicKey(ED25519.getPrivateKey(TEST_SEED2))));
-            store.add(new Pair<>(new IBAN("NL29INGB0006108849"), ED25519.getPublicKey(ED25519.getPrivateKey(TEST_SEED1))));
+            store.add(new Pair<>(new IBAN("DE89370400440532013000"), ED25519.getPublicKey(ED25519.getPrivateKey(testSeed2))));
+            store.add(new Pair<>(new IBAN("NL29INGB0006108849"), ED25519.getPublicKey(ED25519.getPrivateKey(testSeed1))));
         }
 
         @NonNull

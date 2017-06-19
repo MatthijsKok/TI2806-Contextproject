@@ -22,8 +22,6 @@ import nl.tudelft.ewi.ds.bankver.bank.Account;
 import nl.tudelft.ewi.ds.bankver.bank.Bank;
 import nl.tudelft.ewi.ds.bankver.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankver.bank.Party;
-import nl.tudelft.ewi.ds.bankver.bank.Session;
-import nl.tudelft.ewi.ds.bankver.bank.Transaction;
 import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
 
 // TODO: when requesting a private / public key, verify the algorithm is ED25519
@@ -207,7 +205,7 @@ public class IFaceClass {
             try {
                 return ChallengeResponse.createResponse(message, privateKey);
             } catch (SignatureException e) {
-                e.printStackTrace();
+                Log.e("IFACE", e.toString());
                 // TODO: when does this happen, what to do?
                 throw new RuntimeException("signature failed");
             } catch (InvalidKeyException e) {
@@ -262,7 +260,7 @@ public class IFaceClass {
         try {
             challenge = ChallengeResponse.createChallenge(privateKey);
         } catch (SignatureException e) {
-            e.printStackTrace();
+            Log.e("IFACE", e.toString());
             // TODO: handle
             return;
         } catch (InvalidKeyException e) {
@@ -282,7 +280,7 @@ public class IFaceClass {
         try {
             bank.transfer(account, target.toString(), 0.01f, Currency.getInstance("EUR"), challenge).get();
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            Log.e("IFACE", e.toString());
 
             throw new RuntimeException(e);
         }
