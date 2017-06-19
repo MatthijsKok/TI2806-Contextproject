@@ -55,7 +55,7 @@ public final class BunqBank implements Bank {
     /**
      * App context for loading and writing files
      */
-    private Context appContext;
+    Context appContext;
 
     /**
      * Create a new bank inferface with given API url.

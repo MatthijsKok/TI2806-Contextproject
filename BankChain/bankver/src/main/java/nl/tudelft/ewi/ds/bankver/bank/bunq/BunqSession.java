@@ -224,8 +224,18 @@ final class BunqSession implements Session {
      * @return unique id (for this app session)
      */
     String getNextRequestId() {
-        return String.valueOf(++requestId);
+        ++requestId;
+
+        scheduleSave();
+
+        return String.valueOf(requestId);
     }
+
+    private void scheduleSave() {
+        Thread t = new Thread(() -> this.saveToDisk(bank.appContext));
+        t.start();
+    }
+
 
     /**
      * Get whether the session contains the public key for the server.
