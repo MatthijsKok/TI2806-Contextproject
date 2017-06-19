@@ -1,5 +1,6 @@
 package nl.tudelft.ewi.ds.bankver;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
@@ -11,7 +12,13 @@ import nl.tudelft.ewi.ds.bankver.bank.IBANVerifier;
  *
  * @author Jos Kuijpers
  */
-public class IBAN {
+public class IBAN implements Serializable {
+    private static final long serialVersionUID = 8346587324687439867L;
+
+    /**
+     * Value of the iban
+     * @serial
+     */
     private String value;
 
     /**

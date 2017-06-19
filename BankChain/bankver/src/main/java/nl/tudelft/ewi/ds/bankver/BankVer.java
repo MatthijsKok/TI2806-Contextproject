@@ -24,8 +24,6 @@ import nl.tudelft.ewi.ds.bankver.bank.BankFactory;
 import nl.tudelft.ewi.ds.bankver.bank.Party;
 import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
 
-// TODO: when requesting a private / public key, verify the algorithm is ED25519
-
 /**
  * Interface to BankVer.
  *
@@ -33,7 +31,7 @@ import nl.tudelft.ewi.ds.bankver.cryptography.ChallengeResponse;
  *
  * @author Jos Kuijpers
  */
-public class IFaceClass {
+public class BankVer {
     public enum SettingProperty {
         BANK_TYPE,
 
@@ -74,7 +72,7 @@ public class IFaceClass {
     private Context appContext;
     private Bank bank;
 
-    public IFaceClass(@NonNull Context context, @NonNull Blockchain blockchain) {
+    public BankVer(@NonNull Context context, @NonNull Blockchain blockchain) {
         this.appContext = context;
         this.blockchain = blockchain;
         this.environment = new Environment();
