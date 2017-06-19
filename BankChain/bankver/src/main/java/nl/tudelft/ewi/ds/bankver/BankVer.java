@@ -252,7 +252,7 @@ public class BankVer {
                     throw new RuntimeException(bank.confirmException(e));
                 }
 
-            } else if(ChallengeResponse.isValidResponse(transaction.getDescription(), publicKey)) {
+            } else if (ChallengeResponse.isValidResponse(transaction.getDescription(), publicKey)) {
                 blockchain.setIbanVerified(publicKey, iban, transaction.getCounterAccount().getParty().getName());
             }
         }

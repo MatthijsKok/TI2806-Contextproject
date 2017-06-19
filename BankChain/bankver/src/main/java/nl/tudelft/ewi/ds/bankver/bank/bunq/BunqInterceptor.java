@@ -1,7 +1,6 @@
 package nl.tudelft.ewi.ds.bankver.bank.bunq;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
