@@ -16,7 +16,6 @@ import android.widget.Toast;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
-import okhttp3.Challenge;
 
 public class MainActivity extends AppCompatActivity {
 
