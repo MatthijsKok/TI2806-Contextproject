@@ -26,10 +26,18 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton newVerificationFab = (FloatingActionButton)  findViewById(R.id.newVerification);
         newVerificationFab.setOnClickListener(v -> startNewVerificationActivity(v));
+        FloatingActionButton completedVerificationFab = (FloatingActionButton)  findViewById(R.id.completedVerifications);
+        completedVerificationFab.setOnClickListener(v -> startCompletedVerificationsActivity(v));
     }
 
     public void startRecentTransactionActivity(View view) {
         Intent intent = new Intent(MainActivity.this, RecentTransactionsActivity.class);
+        startActivity(intent);
+        overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
+    }
+
+    public void startCompletedVerificationsActivity(View view) {
+        Intent intent = new Intent(MainActivity.this, CompletedVerificationsActivity.class);
         startActivity(intent);
         overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
     }

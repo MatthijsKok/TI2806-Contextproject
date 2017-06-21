@@ -39,6 +39,19 @@
             app:backgroundTint="@color/colorPrimary"
             app:elevation="4dp" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/completedVerifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="96dp"
+            android:layout_marginEnd="32dp"
+            android:src="@drawable/ic_all_friends"
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:elevation="4dp" />
+
+
 
     </RelativeLayout>
 
