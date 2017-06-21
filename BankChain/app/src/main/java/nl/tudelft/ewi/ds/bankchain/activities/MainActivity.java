@@ -9,6 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import nl.tudelft.ewi.ds.bankchain.R;
 
@@ -24,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        initializeListeners();
         FloatingActionButton newVerificationFab = (FloatingActionButton)  findViewById(R.id.newVerification);
-        newVerificationFab.setOnClickListener(v -> startNewVerificationActivity(v));
+        newVerificationFab.setOnClickListener(this::startNewVerificationActivity);
     }
 
     public void startRecentTransactionActivity(View view) {
@@ -44,6 +48,22 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
+    }
+
+    public void initializeListeners() {
+        Button verifyButton = (Button) findViewById(R.id.manualVerificationButton);
+        // if button is clicked, close the custom dialog
+        verifyButton.setOnClickListener(v -> {
+            EditText challengeText = (EditText) findViewById(R.id.challengeInput);
+            EditText ibanText = (EditText) findViewById(R.id.ibanInput);
+            String challenge = challengeText.getText().toString();
+            String iban = challengeText.getText().toString();
+            showLongToast("Gonna verify this challenge (but not really...)");
+        });
+    }
+
+    private void showLongToast(String text) {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 
     @Override
