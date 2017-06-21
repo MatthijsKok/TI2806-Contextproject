@@ -72,7 +72,6 @@ public class RecentTransactionsActivity extends AppCompatActivity {
                     Party p = new BunqParty("hello world", 2002);
                     Account account;
                     try {
-                        //account = java8.util.stream.StreamSupport.stream(b.listAccount(p).get()).findFirst().orElse(new BunqAccount("error", -1, p));
                         List<Account> accounts = bank.listAccount(p).get();
                         if (accounts.isEmpty()) {
                             account = new BunqAccount("error", -1, p);
