@@ -78,8 +78,6 @@
     <string name="pref_api_key_summ">Enter your Bunq API key</string>
     <string name="pref_bunq_title">Bunq</string>
     <string name="pref_keys">Keys</string>
-    <string name="pref_public_key_summ">Enter your public key</string>
-    <string name="pref_public_key">Public key</string>
     <string name="pref_private_key_summ">Enter your private key</string>
     <string name="pref_private_key">Private key</string>
     <string name="menu_refresh">Refresh</string>
