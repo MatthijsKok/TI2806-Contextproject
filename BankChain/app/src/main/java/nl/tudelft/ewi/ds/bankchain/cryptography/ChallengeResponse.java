@@ -46,14 +46,6 @@ public final class ChallengeResponse {
         return Utils.hexToBytes(challenge);
     }
 
-    private static boolean isChallenge(String description) {
-        return isValidDescriptionFormat(description) && description.split(SPLIT)[0].equals(CHALLENGE_TOKEN);
-    }
-
-    public static boolean isValidChallenge(String description, PublicKey publicKey) {
-        return isChallenge(description) && verifyChallenge(description, publicKey);
-    }
-
     public static String createChallenge(String privateKey) throws SignatureException, InvalidKeyException {
         return createChallenge(getPrivateKey(privateKey));
     }
@@ -68,24 +60,35 @@ public final class ChallengeResponse {
         return CHALLENGE_TOKEN + SPLIT + encode(cb) + SPLIT + encode(sb);
     }
 
+    public static boolean isValidChallenge(String description, PublicKey publicKey) {
+        return isChallenge(description) && verifyChallenge(description, publicKey);
+    }
+
+    private static boolean isChallenge(String description) {
+        return hasChallengeToken(description) && isValidDescriptionFormat(description);
+    }
+
+    private static boolean hasChallengeToken(String text) {
+        return text.split(SPLIT)[0].equals(CHALLENGE_TOKEN);
+    }
+
     /**
-     * Verify the signature of the Challenge.
+     * Verify the signature of the Challenge or Response.
      * @return Whether the signature is valid.
      */
     private static boolean verifyChallenge(String challenge, PublicKey publicKey) {
-        String[] challengeArray = challenge.split(SPLIT);
-        byte[] message = decode(challengeArray[1]);
-        byte[] signature = decode(challengeArray[2]);
-        return challengeArray[0].equals(CHALLENGE_TOKEN) && verifySignature(message, signature, publicKey);
+        return hasChallengeToken(challenge) && verifyChallengeOrResponse(challenge, publicKey);
     }
 
-    private static boolean isResponse(String description) {
-        return isValidDescriptionFormat(description) && description.split(SPLIT)[0].equals(RESPONSE_TOKEN);
+    private static boolean verifyChallengeOrResponse(String string, PublicKey publicKey) {
+        String[] strings = string.split(":");
+        byte[] message = decode(strings[1]);
+        byte[] signature = decode(strings[2]);
+        return (hasChallengeToken(string) || hasResponseToken(string)) &&
+                verifySignature(message, signature, publicKey);
     }
 
-    public static boolean isValidResponse(String description, PublicKey publicKey) {
-        return isResponse(description) && ChallengeResponse.verifyResponse(description, publicKey);
-    }
+    // === RESPONSE ===
 
     public static String createResponse(String challenge, PrivateKey privateKey)
             throws SignatureException, InvalidKeyException {
@@ -95,16 +98,25 @@ public final class ChallengeResponse {
         return RESPONSE_TOKEN + SPLIT + encode(message) + SPLIT + encode(signature);
     }
 
+    public static boolean isValidResponse(String description, PublicKey publicKey) {
+        return isResponse(description) && verifyResponse(description, publicKey);
+    }
+
+    private static boolean isResponse(String description) {
+        return hasResponseToken(description) && isValidDescriptionFormat(description);
+    }
+
+    private static boolean hasResponseToken(String text) {
+        return text.split(SPLIT)[0].equals(RESPONSE_TOKEN);
+    }
+
     /**
      * Verifies whether the signature of the Response is valid.
      * @param response The Response String to verify.
      * @return A boolean whether the response is valid.
      */
     private static boolean verifyResponse(String response, PublicKey publicKey) {
-        String[] responseArray = response.split(SPLIT);
-        byte[] message = decode(responseArray[1]);
-        byte[] signature = decode(responseArray[2]);
-        return responseArray[0].equals(RESPONSE_TOKEN) && verifySignature(message, signature, publicKey);
+        return hasResponseToken(response) && verifyChallengeOrResponse(response, publicKey);
     }
 
     /**
