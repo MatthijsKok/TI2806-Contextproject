@@ -15,9 +15,6 @@ import android.widget.Toast;
 
 import nl.tudelft.ewi.ds.bankchain.R;
 
-import static nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier.isValidIBAN;
-import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.isValidPublicKey;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -32,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         initializeListeners();
         FloatingActionButton newVerificationFab = (FloatingActionButton)  findViewById(R.id.newVerification);
-        newVerificationFab.setOnClickListener(v -> startNewVerificationActivity(v));
+        newVerificationFab.setOnClickListener(this::startNewVerificationActivity);
     }
 
     public void startRecentTransactionActivity(View view) {
