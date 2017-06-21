@@ -14,6 +14,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import nl.tudelft.ewi.ds.bankchain.R;
+import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
+import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
+import okhttp3.Challenge;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -58,7 +61,17 @@ public class MainActivity extends AppCompatActivity {
             EditText ibanText = (EditText) findViewById(R.id.ibanInput);
             String challenge = challengeText.getText().toString();
             String iban = challengeText.getText().toString();
-            showLongToast("Gonna verify this challenge (but not really...)");
+            showLongToast("Verifying and respond to this challenge");
+        });
+
+        Button responseButton = (Button) findViewById(R.id.manualResponseButton);
+        // if button is clicked, close the custom dialog
+        responseButton.setOnClickListener(v -> {
+            EditText responseText = (EditText) findViewById(R.id.response);
+            String response = responseText.getText().toString();
+            EditText publicKeyText = (EditText) findViewById(R.id.publicKeyInput);
+            String publicKey = publicKeyText.getText().toString();
+            showLongToast("Valid response: " + ChallengeResponse.isValidResponse(response, ED25519.getPublicKey(publicKey)));
         });
     }
 
