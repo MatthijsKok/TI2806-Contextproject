@@ -92,5 +92,6 @@
     <string name="verify_challenge">Recieved Challenge</string>
     <string name="respond">Respond</string>
     <string name="recieved_response">Recieved response</string>
+    <string name="verify_response">Verify response</string>
 
 </resources>

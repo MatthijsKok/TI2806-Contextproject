@@ -11,12 +11,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="60dp"
         android:orientation="horizontal"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="114dp">
+        tools:layout_editor_absoluteY="114dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
 
         <Button
             android:id="@+id/recentTransactionActivityButton"
@@ -25,85 +24,87 @@
             android:onClick="startRecentTransactionActivity"
             android:text="View recent transactions"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp" />
+            tools:layout_editor_absoluteY="8dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="68dp" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/newVerification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_new_verification"
+            app:backgroundTint="@color/colorPrimary"
+            app:elevation="4dp"
+            android:layout_marginBottom="25dp"
+            android:layout_above="@+id/respondToChallenge"
+            android:layout_alignStart="@+id/respondToChallenge" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/respondToChallenge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/verifyResponse"
+            android:layout_alignStart="@+id/verifyResponse"
+            android:layout_marginBottom="25dp"
+            android:src="@drawable/ic_new_verification"
+            app:backgroundTint="@color/colorPrimary"
+            app:elevation="4dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/verifyResponse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="32dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginEnd="18dp"
             android:src="@drawable/ic_new_verification"
             app:backgroundTint="@color/colorPrimary"
             app:elevation="4dp" />
 
 
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="none"
+            android:text="@string/create_challenge"
+            android:layout_alignTop="@+id/newVerification"
+            android:layout_toStartOf="@+id/newVerification"
+            android:layout_marginEnd="22dp"
+            android:editable="false"
+            android:focusable="false"
+            android:clickable="false"/>
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="none"
+            android:text="@string/verify_response"
+            android:layout_alignTop="@+id/verifyResponse"
+            android:layout_alignStart="@+id/editText"
+            android:editable="false"
+            android:focusable="false"
+            android:clickable="false"/>
+
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="none"
+            android:text="@string/verify_challenge"
+            android:layout_alignTop="@+id/respondToChallenge"
+            android:layout_alignStart="@+id/editText2"
+            android:editable="false"
+            android:focusable="false"
+            android:clickable="false"/>
+
     </RelativeLayout>
-
-
-    <EditText
-        android:id="@+id/ibanInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:hint="@string/iban"
-        android:inputType="text"
-            android:layout_above="@+id/challengeInput"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:id="@+id/challengeInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:hint="@string/verify_challenge"
-        android:inputType="text"
-        android:layout_above="@+id/manualVerificationButton"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:id="@+id/manualVerificationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="164dp"
-        android:text="@string/respond" />
-
-
-    <EditText
-        android:id="@+id/response"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:hint="@string/recieved_response"
-        android:inputType="text"
-        android:layout_above="@+id/manualResponseButton"
-        android:layout_alignStart="@+id/manualResponseButton" />
-
-    <EditText
-        android:id="@+id/publicKeyInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:hint="@string/public_key"
-        android:inputType="text"
-        android:layout_above="@+id/response"
-        android:layout_alignStart="@+id/response" />
-
-    <Button
-        android:id="@+id/manualResponseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/verify"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/challengeInput" />
 
 
 </RelativeLayout>
