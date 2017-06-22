@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
 import net.i2p.crypto.eddsa.Utils;
 
 import java.io.BufferedReader;
@@ -43,12 +44,12 @@ import okhttp3.internal.Util;
 public class Blockchain implements IBlockchain {
 
     String filename;
-    Map<String, jsonBlock> blockMap;
+    Map<String, JsonBlock> blockMap;
     Context context;
 
 
     public Blockchain(String filename, Context context, boolean openFile) {
-        blockMap = new HashMap<String, jsonBlock>();
+        blockMap = new HashMap<String, JsonBlock>();
         this.filename = filename;
         this.context = context;
         if (openFile) {
@@ -64,7 +65,7 @@ public class Blockchain implements IBlockchain {
             InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
             BufferedReader bufferedReader = new BufferedReader(isr);
             jsonChain chain = gson.fromJson(bufferedReader.readLine(), jsonChain.class);
-            for (jsonBlock block : chain.blockchain) {
+            for (JsonBlock block : chain.blockchain) {
                 blockMap.put(block.iban, block);
             }
         } catch (Exception e) {
@@ -72,16 +73,16 @@ public class Blockchain implements IBlockchain {
         }
     }
 
-    public boolean addKey(PublicKey key, String iban, String name, boolean validated) {
+    public boolean addKey(EdDSAPublicKey key, String iban, String name, boolean validated) {
         if (blockMap.containsKey(iban)) {
             return false;
         }
-        blockMap.put(iban, new jsonBlock(key, iban, name, validated));
+        blockMap.put(iban, new JsonBlock(key, iban, name, validated));
         return true;
     }
 
-    public boolean isValidated(Transaction trans) {
-        return blockMap.containsKey(trans.getCounterAccount().getIban());
+    public boolean isValidated(String iban) {
+        return blockMap.containsKey(iban);
     }
 
     public String toString() {
@@ -133,39 +134,39 @@ public class Blockchain implements IBlockchain {
     @Nullable
     @Override
     public PublicKey getPublicKeyForIBAN(String iban) {
-        jsonBlock block= blockMap.get(iban);
+        JsonBlock block= blockMap.get(iban);
         PublicKey k = block.getPublicKey();
         return  k;
     }
 
     @Override
     public void setIbanVerified(PublicKey publicKey, String iban, String legalName) {
-        addKey(publicKey, iban, legalName, true);
+        addKey((EdDSAPublicKey)publicKey, iban, legalName, true);
     }
 
     class jsonChain {
-        public List<jsonBlock> blockchain;
+        public List<JsonBlock> blockchain;
     }
 
-    class jsonBlock {
+    class JsonBlock {
         public String iban;
         public String name;
         public String publicKey;
         public boolean validated;
 
-        public jsonBlock() {
+        public JsonBlock() {
         }
 
 
-        public jsonBlock(PublicKey key, String iban, String name, boolean validated) {
+        public JsonBlock(EdDSAPublicKey key, String iban, String name, boolean validated) {
             this.iban = iban;
             this.name = name;
             this.validated = validated;
             setPublicKey(key);
         }
 
-        public void setPublicKey(PublicKey key) {
-            publicKey = Utils.bytesToHex(key.getEncoded());
+        public void setPublicKey(EdDSAPublicKey key) {
+            publicKey = Utils.bytesToHex(key.getAbyte());
             key.toString();
         }
 
