@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import net.i2p.crypto.eddsa.Utils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +33,8 @@ import java.util.Map;
 
 import nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
+import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
+import okhttp3.internal.Util;
 
 /**
  * Created by Richard-HP on 01/06/2017.
@@ -114,12 +118,14 @@ public class Blockchain implements IBlockchain {
 
     @NonNull
     @Override
+    // not implemented in this version
     public PrivateKey getPrivateKey() {
         return null;
     }
 
     @NonNull
     @Override
+    // not implemented in this version
     public PublicKey getPublicKey() {
         return null;
     }
@@ -127,7 +133,9 @@ public class Blockchain implements IBlockchain {
     @Nullable
     @Override
     public PublicKey getPublicKeyForIBAN(String iban) {
-        return blockMap.get(iban).getPublicKey();
+        jsonBlock block= blockMap.get(iban);
+        PublicKey k = block.getPublicKey();
+        return  k;
     }
 
     @Override
@@ -157,20 +165,12 @@ public class Blockchain implements IBlockchain {
         }
 
         public void setPublicKey(PublicKey key) {
-            publicKey = new String(Base64.encode(key.getEncoded(), 0), StandardCharsets.UTF_8);
+            publicKey = Utils.bytesToHex(key.getEncoded());
+            key.toString();
         }
 
         public PublicKey getPublicKey() {
-            try {
-                byte[] data = Base64.decode(publicKey, Base64.DEFAULT);
-
-                X509EncodedKeySpec spec = new X509EncodedKeySpec(data);
-                KeyFactory fact = KeyFactory.getInstance("ed25519");
-
-                return fact.generatePublic(spec);
-            } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-                return null;
-            }
+           return ED25519.getPublicKey(publicKey);
         }
     }
 
