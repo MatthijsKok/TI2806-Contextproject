@@ -6,10 +6,14 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -30,23 +34,36 @@ import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 
 public class Blockchain {
 
-    String location;
+    String filename;
     Map<String, jsonBlock> blockMap;
     Context context;
 
 
-    public Blockchain(String filename,Context context) {
-      this.location = location;
-        blockMap = new HashMap<String,jsonBlock>();
+    public Blockchain(String filename, Context context,boolean openFile) {
+        blockMap = new HashMap<String, jsonBlock>();
+        this.filename = filename;
         this.context = context;
+        if(openFile){
+            openFile();
+        }
     }
 
-    private void toMap(String json) {
+    public void openFile() {
         Gson gson = new Gson();
-        jsonChain chain = gson.fromJson(json, jsonChain.class);
-        for (jsonBlock block : chain.blockchain) {
-            blockMap.put(block.iban, block);
+
+        try {
+            FileInputStream fis = null;
+            fis = context.openFileInput(filename);
+            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(isr);
+            jsonChain chain = gson.fromJson(bufferedReader.readLine(), jsonChain.class);
+            for (jsonBlock block : chain.blockchain) {
+                blockMap.put(block.iban, block);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        Log.d("RESULT", toString());
     }
 //{"blockchain":[{"IBAN":"NLABNA0123456789","name":"henk","validated":false},{"IBAN":"NLTRIO0123456789","name":"Steve","validated":true}]}
 
@@ -55,7 +72,7 @@ public class Blockchain {
             return false;
         }
 
-        blockMap.put(iban,new jsonBlock(key, iban, name, validated));
+        blockMap.put(iban, new jsonBlock(key, iban, name, validated));
         return true;
     }
 
@@ -63,13 +80,24 @@ public class Blockchain {
         return blockMap.containsKey(trans.getCounterAccount().getIban());
     }
 
-    ;
 
     public PublicKey GetPublicKeyForTransaction(Transaction trans) {
         return blockMap.get(trans.getCounterAccount().getIban()).getPublicKey();
     }
 
-    public void save(){
+    private void open() {
+        File block = new File(context.getFilesDir() + "/" + filename);
+    }
+
+    public String toString() {
+        jsonChain chain = new jsonChain();
+        chain.blockchain = new ArrayList<>(blockMap.values());
+        Gson gson = new Gson();
+        String json = gson.toJson(chain);
+        return json;
+    }
+
+    public void save() {
         jsonChain chain = new jsonChain();
         chain.blockchain = new ArrayList<>(blockMap.values());
         Gson gson = new Gson();
@@ -80,29 +108,20 @@ public class Blockchain {
         String string = "hello world!";
 
 
+        File path = context.getFilesDir();
+        Log.d("starting write", "Writing0");
         try {
-            FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-            fos.write(string.getBytes());
+            FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            fos.write(json.getBytes());
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        File path = context.getFilesDir();
-        Log.d("LOCATION",path.getPath());
-/*
-        try (Writer writer = new FileWriter("/storage/Output.json")) {
-            gson.toJson(chain, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        File path = context.getFilesDir();
-        Log.d("LOCATION",path.getPath());
-        */
+        Log.d("LOCATION1", path.getPath());
     }
 
-     class jsonChain {
+    class jsonChain {
         public List<jsonBlock> blockchain;
     }
 
@@ -124,7 +143,7 @@ public class Blockchain {
         }
 
         public void setPublicKey(PublicKey key) {
-           publicKey = new String(Base64.encode(key.getEncoded(), 0), StandardCharsets.UTF_8);
+            publicKey = new String(Base64.encode(key.getEncoded(), 0), StandardCharsets.UTF_8);
         }
 
         public PublicKey getPublicKey() {
@@ -132,7 +151,7 @@ public class Blockchain {
                 byte[] data = Base64.decode(publicKey, Base64.DEFAULT);
 
                 X509EncodedKeySpec spec = new X509EncodedKeySpec(data);
-                KeyFactory fact = KeyFactory.getInstance("RSA");
+                KeyFactory fact = KeyFactory.getInstance("ed25519");
 
                 return fact.generatePublic(spec);
             } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
