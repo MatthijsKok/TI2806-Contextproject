@@ -7,17 +7,6 @@
     <include layout="@layout/toolbar" />
 
     <EditText
-        android:id="@+id/publicKeyInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="16dp"
-        android:hint="@string/public_key"
-        android:inputType="text" />
-
-    <EditText
         android:id="@+id/ibanInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

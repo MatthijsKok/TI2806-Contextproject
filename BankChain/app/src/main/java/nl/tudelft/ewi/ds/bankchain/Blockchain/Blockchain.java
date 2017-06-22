@@ -144,6 +144,20 @@ public class Blockchain implements IBlockchain {
         addKey((EdDSAPublicKey)publicKey, iban, legalName, true);
     }
 
+
+    private static Blockchain blockchain = null;
+
+    public static Blockchain getblockchain(Context context){
+        if(blockchain == null){
+            blockchain = new Blockchain("chain",context,true);
+        }
+        return  blockchain;
+    }
+    public static Blockchain getblockchain(){
+        return  blockchain;
+    }
+
+
     class jsonChain {
         public List<JsonBlock> blockchain;
     }

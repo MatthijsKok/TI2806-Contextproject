@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import nl.tudelft.ewi.ds.bankchain.Blockchain.Blockchain;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
@@ -28,22 +29,22 @@ public class MainActivity extends AppCompatActivity {
         if (getActionBar() != null) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
+        Blockchain.getblockchain(this.getApplicationContext());
         initializeListeners();
-        FloatingActionButton newVerificationFab = (FloatingActionButton)  findViewById(R.id.newVerification);
+        FloatingActionButton newVerificationFab = (FloatingActionButton) findViewById(R.id.newVerification);
         newVerificationFab.setOnClickListener(this::startNewVerificationActivity);
     }
 
     public void startRecentTransactionActivity(View view) {
         Intent intent = new Intent(MainActivity.this, RecentTransactionsActivity.class);
         startActivity(intent);
-        overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
+        overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
     }
 
     public void startNewVerificationActivity(View view) {
         Intent intent = new Intent(MainActivity.this, NewVerificationActivity.class);
         startActivity(intent);
-        overridePendingTransition  (R.anim.right_slide_in, R.anim.left_slide_out);
+        overridePendingTransition(R.anim.right_slide_in, R.anim.left_slide_out);
     }
 
     public void startSettingsActivity(MenuItem item) {

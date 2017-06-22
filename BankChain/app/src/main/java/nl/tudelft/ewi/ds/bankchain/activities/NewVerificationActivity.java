@@ -19,8 +19,19 @@ import android.widget.Toast;
 
 import java.security.InvalidKeyException;
 import java.security.SignatureException;
+import java.util.Currency;
+import java.util.concurrent.ExecutionException;
 
+import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
+import nl.tudelft.ewi.ds.bankchain.bank.Account;
+import nl.tudelft.ewi.ds.bankchain.bank.Bank;
+import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
+import nl.tudelft.ewi.ds.bankchain.bank.Party;
+import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTransaction;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
 
 import static nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier.isValidIBAN;
@@ -51,16 +62,9 @@ public class NewVerificationActivity extends AppCompatActivity {
         Button verifyButton = (Button) findViewById(R.id.createChallengeButton);
         // if button is clicked, close the custom dialog
         verifyButton.setOnClickListener(v -> {
-            EditText publicKeyText = (EditText) findViewById(R.id.publicKeyInput);
-            this.publicKey = publicKeyText.getText().toString();
-
             EditText ibanText = (EditText) findViewById(R.id.ibanInput);
             this.iban = ibanText.getText().toString();
 
-            if (!isValidPublicKey(publicKey)) {
-                showLongToast("Invalid Public Key!");
-                return;
-            }
             if (!isValidIBAN(iban)) {
                 showLongToast("Invalid IBAN!");
                 return;
@@ -106,6 +110,22 @@ public class NewVerificationActivity extends AppCompatActivity {
     }
 
     public void bunqVerification(View v) {
+        Environment env = Environment.getDefaults();
+        Bank bank = new BankFactory(env, this.getApplicationContext()).create();
+        bank.createSession();
+        try {
+            Party user = bank.listUsers().get().get(0);
+            Account ac = bank .listAccount(user).get().get(0);
+            Party chp = new BunqParty("Anonimus",-1);
+            Account cha =  new BunqAccount(iban,-1,chp);
+            Transaction trans = new BunqTransaction(0.01f,ac,cha, Currency.getInstance("EUR"),challenge);
+            bank.sendTransaction(trans);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
         showLongToast("Going to send a Bunq transaction (but not really...)");
     }
 
