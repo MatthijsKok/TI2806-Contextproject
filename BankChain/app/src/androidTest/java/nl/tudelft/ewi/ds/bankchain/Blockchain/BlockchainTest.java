@@ -50,7 +50,10 @@ public class BlockchainTest {
     @Test
     public void testGetKey(){
         Blockchain block = new Blockchain("loc", getInstrumentation().getTargetContext(),true);
+
     }
+
+
 
 /*
     @Test

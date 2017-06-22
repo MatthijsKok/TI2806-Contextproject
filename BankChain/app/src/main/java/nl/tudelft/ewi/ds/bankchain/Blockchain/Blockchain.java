@@ -1,6 +1,8 @@
 package nl.tudelft.ewi.ds.bankchain.Blockchain;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
 
@@ -18,6 +20,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
@@ -26,31 +29,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier;
 import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 
 /**
  * Created by Richard-HP on 01/06/2017.
  */
 
-public class Blockchain {
+public class Blockchain implements IBlockchain {
 
     String filename;
     Map<String, jsonBlock> blockMap;
     Context context;
 
 
-    public Blockchain(String filename, Context context,boolean openFile) {
+    public Blockchain(String filename, Context context, boolean openFile) {
         blockMap = new HashMap<String, jsonBlock>();
         this.filename = filename;
         this.context = context;
-        if(openFile){
+        if (openFile) {
             openFile();
         }
     }
 
     public void openFile() {
         Gson gson = new Gson();
-
         try {
             FileInputStream fis = null;
             fis = context.openFileInput(filename);
@@ -63,30 +66,18 @@ public class Blockchain {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.d("RESULT", toString());
     }
-//{"blockchain":[{"IBAN":"NLABNA0123456789","name":"henk","validated":false},{"IBAN":"NLTRIO0123456789","name":"Steve","validated":true}]}
 
     public boolean addKey(PublicKey key, String iban, String name, boolean validated) {
         if (blockMap.containsKey(iban)) {
             return false;
         }
-
         blockMap.put(iban, new jsonBlock(key, iban, name, validated));
         return true;
     }
 
     public boolean isValidated(Transaction trans) {
         return blockMap.containsKey(trans.getCounterAccount().getIban());
-    }
-
-
-    public PublicKey GetPublicKeyForTransaction(Transaction trans) {
-        return blockMap.get(trans.getCounterAccount().getIban()).getPublicKey();
-    }
-
-    private void open() {
-        File block = new File(context.getFilesDir() + "/" + filename);
     }
 
     public String toString() {
@@ -119,6 +110,29 @@ public class Blockchain {
         }
 
         Log.d("LOCATION1", path.getPath());
+    }
+
+    @NonNull
+    @Override
+    public PrivateKey getPrivateKey() {
+        return null;
+    }
+
+    @NonNull
+    @Override
+    public PublicKey getPublicKey() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public PublicKey getPublicKeyForIBAN(String iban) {
+        return blockMap.get(iban).getPublicKey();
+    }
+
+    @Override
+    public void setIbanVerified(PublicKey publicKey, String iban, String legalName) {
+        addKey(publicKey, iban, legalName, true);
     }
 
     class jsonChain {
