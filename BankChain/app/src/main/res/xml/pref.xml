@@ -16,11 +16,6 @@
         android:title="@string/pref_keys">
         <EditTextPreference
             android:defaultValue="true"
-            android:key="pref_public_key_key"
-            android:summary="@string/pref_public_key_summ"
-            android:title="@string/pref_public_key" />
-        <EditTextPreference
-            android:defaultValue="true"
             android:key="pref_private_key_key"
             android:summary="@string/pref_private_key_summ"
             android:title="@string/pref_private_key" />

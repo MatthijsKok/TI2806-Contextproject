@@ -1,5 +1,6 @@
 package nl.tudelft.ewi.ds.bankchain.bank.bunq;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java8.util.concurrent.CompletableFuture;
@@ -50,14 +51,20 @@ public final class BunqBank extends Bank {
     private String apiKey;
 
     /**
+     * App context for loading and writing files
+     */
+    Context appContext;
+
+    /**
      * Create a new bank inferface with given API url.
      * <p>
      * Creates a proper HTTP client and a session store.
      *
      * @param url URL of the Bunq API
      */
-    public BunqBank(@NonNull String url, @NonNull String apiKey) {
+    public BunqBank(@NonNull Context appContext, @NonNull String url, @NonNull String apiKey) {
         this.apiKey = apiKey;
+        this.appContext = appContext;
 
         // Create a retrofit system with a JSON parser and Java8 async system
         Retrofit.Builder builder = new Retrofit.Builder()
@@ -66,8 +73,10 @@ public final class BunqBank extends Bank {
                 .addCallAdapterFactory(Java8CallAdapterFactory.create());
 
         // Use the underlying OkHTTP to add interceptors
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new BunqInterceptor(this));
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+                .addInterceptor(new BunqInterceptor(this))
+                .followRedirects(false)
+                .followSslRedirects(false);
 
         // Create the client
         builder.client(httpClient.build());
@@ -76,28 +85,28 @@ public final class BunqBank extends Bank {
 
     @Override
     public CompletableFuture<Session> createSession() {
+        // Attempt to load a session
+        session = BunqSession.loadFromDisk(this, appContext);
+        if (session != null && session.isValid()) {
+            return CompletableFuture.completedFuture(session);
+        }
+
+        // Create a new session instead
         session = new BunqSession(this);
 
         // Install new client pubkey at Bunq (using some functional programming)
         return CompletableFuture
-                .supplyAsync(this::loadOrCreateClientKeys)
+                .supplyAsync(session::createKeys)
                 .thenComposeAsync(session::doInstallation)
                 .thenComposeAsync(session::doDeviceRegistration)
                 .thenComposeAsync(session::doSessionStart)
 
                 // Set the session as a value (use an upcast)
-                .thenApply((v) -> (Session) session);
-    }
+                .thenApply((v) -> {
+                    session.saveToDisk(appContext);
 
-    /**
-     * Load or create a new set of client keys
-     */
-    private Void loadOrCreateClientKeys() {
-        // TODO: if available on disk, try
-        // TODO: if failed to load from disk, make new
-        session.createKeys();
-
-        return null;
+                    return (Session) session;
+                });
     }
 
     @Override

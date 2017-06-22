@@ -48,7 +48,7 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_recent_transactions_swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(() -> retrieveRecentTransactions());
+        swipeRefreshLayout.setOnRefreshListener(this::retrieveRecentTransactions);
         retrieveRecentTransactions();
     }
 
@@ -63,32 +63,28 @@ public class RecentTransactionsActivity extends AppCompatActivity {
             return;
         }
         Environment v = Environment.getDefaults();
-        Bank b = new BankFactory(v).create();
-        b.createSession()
+        Bank bank = new BankFactory(v, this.getApplicationContext()).create();
+        bank.createSession()
                 .thenAccept(t -> Tools.runOnMainThread(() -> {
                     Log.d("GUI", "Created session");
-                    Toast.makeText(getApplicationContext(),
-                            "Created session!",
-                            Toast.LENGTH_LONG).show();
+                    showLongToast("Created session!");
 
                     Party p = new BunqParty("hello world", 2002);
-                    Account ac = null;
+                    Account account;
                     try {
-                        //ac = java8.util.stream.StreamSupport.stream(b.listAccount(p).get()).findFirst().orElse(new BunqAccount("error", -1, p));
-                        List<Account> list = b.listAccount(p).get();
-                        if (list.isEmpty()) {
-                            ac = new BunqAccount("error", -1, p);
+                        List<Account> accounts = bank.listAccount(p).get();
+                        if (accounts.isEmpty()) {
+                            account = new BunqAccount("error", -1, p);
                         }
-                        ac = b.listAccount(p).get().get(0);
+                        account = bank.listAccount(p).get().get(0);
 
                     } catch (InterruptedException | ExecutionException e) {
                         Log.e("CRYPTO", e.getMessage());
+                        return;
                     }
 
-                    b.listTransactions(ac).thenAccept(ts -> Tools.runOnMainThread(() -> {
-                        Toast.makeText(getApplicationContext(),
-                                "Got list of transactions!",
-                                Toast.LENGTH_LONG).show();
+                    bank.listTransactions(account).thenAccept(ts -> Tools.runOnMainThread(() -> {
+                        showLongToast("Got list of transactions!");
                         Log.i("GUI", ts.toString());
                         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                         showRecentTransactions(ts);
@@ -97,13 +93,11 @@ public class RecentTransactionsActivity extends AppCompatActivity {
 
                 }))
                 .exceptionally(e -> {
-                    final Throwable t = b.confirmException(e);
+                    final Throwable t = bank.confirmException(e);
 
                     Tools.runOnMainThread(() -> {
+                        showLongToast("Failed to create session: " + t.getMessage());
                         Log.d("GUI", "Failed session " + t.getMessage());
-                        Toast.makeText(getApplicationContext(),
-                                "Failed to create session: " + t.getMessage(),
-                                Toast.LENGTH_LONG).show();
                         Log.d("GUI", "Just failed");
                         showRecentTransactions(null);
                     });
@@ -129,18 +123,14 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         }
 
         for (int i = 0; i < transactionList.size(); i++) {
-            listDataHeader.add(transactionList.get(i).getDescription());
-            List<String> details = new ArrayList<>();
+            Transaction transaction = transactionList.get(i);
+            listDataHeader.add(transaction.getDescription());
 
-            if (transactionList.get(i).getCurrency() != null) {
-                details.add(transactionList.get(i).getValue() + " " + transactionList.get(i).getCurrency().toString());
-            }
-            if (transactionList.get(i).getDate() != null) {
-                details.add(transactionList.get(i).getDate().toString());
-            }
-            if (transactionList.get(i).getCounterAccount() != null && transactionList.get(i).getCounterAccount().getParty() != null) {
-                details.add("" + transactionList.get(i).getCounterAccount().getParty().toString());
-            }
+            List<String> details = new ArrayList<>();
+            details.add(transaction.getValue() + " " + transactionList.get(i).getCurrency().toString());
+            details.add(transaction.getDate().toString());
+            details.add(transaction.getCounterAccount().getParty().toString());
+
             listDataChild.put(listDataHeader.get(i), details);
         }
         swipeRefreshLayout.setRefreshing(false);
@@ -156,6 +146,10 @@ public class RecentTransactionsActivity extends AppCompatActivity {
         expListView = (ExpandableListView) findViewById(R.id.recentTransactionsList);
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
+    }
+
+    private void showLongToast(String text) {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 
     /*

@@ -54,7 +54,7 @@ public class Environment {
      * @param stream stream
      * @return environment
      */
-    static Environment loadDefaults(@NonNull InputStream stream) throws IOException {
+    public static Environment loadDefaults(@NonNull InputStream stream) throws IOException {
         try {
             Environment env = new Environment();
             XmlPullParser parser = Xml.newPullParser();
