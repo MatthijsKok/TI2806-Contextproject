@@ -3,7 +3,9 @@ package nl.tudelft.ewi.ds.bankchain;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.Collection;
 import java.util.Currency;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import nl.tudelft.ewi.ds.bankchain.blockchain.Blockchain;
@@ -44,6 +46,17 @@ public class BankTeller {
     public void addkey(String name, String iban, String publicKey, boolean validated) {
         blockchain.addKey(ED25519.getPublicKey(publicKey), iban, name, validated);
         blockchain.save();
+    }
+
+    public List<Transaction> getTransactions() {
+        try {
+            return bank.listTransactions(getBasicaccount()).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private Account createRecipient(String iban, String name) {

@@ -2,7 +2,9 @@ package nl.tudelft.ewi.ds.bankchain.activities;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,13 +14,20 @@ import android.view.MenuItem;
 import android.view.View;
 
 import java.io.IOException;
+import java.security.PrivateKey;
+import java.util.List;
 
 import nl.tudelft.ewi.ds.bankchain.BankTeller;
 import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
+import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
+import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTransactionParser;
+import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private long lastSynchronized = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("GUI", "Failed to load environment");
             return;
         }
-        Environment v = Environment.getDefaults();
-        BankTeller.getBankTeller(this.getApplicationContext(), v);
+        BankTeller.getBankTeller(this.getApplicationContext(), Environment.getDefaults());
 
         FloatingActionButton newVerificationFab = (FloatingActionButton) findViewById(R.id.newVerification);
 
@@ -50,7 +58,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void synchronize(View view) {
-        // Go Richard Go!
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        String privateKeyString = settings.getString("pref_private_key_key", "default_value");
+        PrivateKey privateKey = ED25519.getPrivateKey(privateKeyString);
+
+        List<Transaction> transactions = BankTeller.getBankTeller().getTransactions();
+        BunqTransactionParser bunqTransactionParser = new BunqTransactionParser();
+
+        bunqTransactionParser.respondToPendingChallenges(privateKey,transactions, lastSynchronized);
+        lastSynchronized = System.currentTimeMillis();
     }
 
     public void startRecentTransactionActivity(View view) {
