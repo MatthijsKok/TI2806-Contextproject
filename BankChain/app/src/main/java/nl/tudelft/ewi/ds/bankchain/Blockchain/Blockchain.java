@@ -14,28 +14,17 @@ import net.i2p.crypto.eddsa.Utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier;
-import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
-import okhttp3.internal.Util;
 
 /**
  * Created by Richard-HP on 01/06/2017.
@@ -64,7 +53,7 @@ public class Blockchain implements IBlockchain {
             fis = context.openFileInput(filename);
             InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
             BufferedReader bufferedReader = new BufferedReader(isr);
-            jsonChain chain = gson.fromJson(bufferedReader.readLine(), jsonChain.class);
+            JsonChain chain = gson.fromJson(bufferedReader.readLine(), JsonChain.class);
             for (JsonBlock block : chain.blockchain) {
                 blockMap.put(block.iban, block);
             }
@@ -87,14 +76,15 @@ public class Blockchain implements IBlockchain {
 
     public boolean isValidated(String iban) {
         JsonBlock block = blockMap.get(iban);
-        if(block == null){
+        if (block == null) {
             return false;
         }
         return block.validated;
     }
 
+    @Override
     public String toString() {
-        jsonChain chain = new jsonChain();
+        JsonChain chain = new JsonChain();
         chain.blockchain = new ArrayList<>(blockMap.values());
         Gson gson = new Gson();
         String json = gson.toJson(chain);
@@ -102,7 +92,7 @@ public class Blockchain implements IBlockchain {
     }
 
     public void save() {
-        jsonChain chain = new jsonChain();
+        JsonChain chain = new JsonChain();
         chain.blockchain = new ArrayList<>(blockMap.values());
         Gson gson = new Gson();
         String json = gson.toJson(chain);
@@ -142,34 +132,20 @@ public class Blockchain implements IBlockchain {
     @Nullable
     @Override
     public PublicKey getPublicKeyForIBAN(String iban) {
-        JsonBlock block= blockMap.get(iban);
-        if(block == null){
+        JsonBlock block = blockMap.get(iban);
+        if (block == null) {
             return null;
         }
         PublicKey k = block.getPublicKey();
-        return  k;
+        return k;
     }
 
     @Override
     public void setIbanVerified(PublicKey publicKey, String iban, String legalName) {
-        addKey((EdDSAPublicKey)publicKey, iban, legalName, true);
+        addKey((EdDSAPublicKey) publicKey, iban, legalName, true);
     }
 
-
-    private static Blockchain blockchain = null;
-
-    public static Blockchain getblockchain(Context context){
-        if(blockchain == null){
-            blockchain = new Blockchain("chain",context,true);
-        }
-        return  blockchain;
-    }
-    public static Blockchain getblockchain(){
-        return  blockchain;
-    }
-
-
-    class jsonChain {
+    class JsonChain {
         public List<JsonBlock> blockchain;
     }
 
@@ -182,7 +158,6 @@ public class Blockchain implements IBlockchain {
         public JsonBlock() {
         }
 
-
         public JsonBlock(EdDSAPublicKey key, String iban, String name, boolean validated) {
             this.iban = iban;
             this.name = name;
@@ -192,11 +167,10 @@ public class Blockchain implements IBlockchain {
 
         public void setPublicKey(EdDSAPublicKey key) {
             publicKey = Utils.bytesToHex(key.getAbyte());
-            key.toString();
         }
 
         public PublicKey getPublicKey() {
-           return ED25519.getPublicKey(publicKey);
+            return ED25519.getPublicKey(publicKey);
         }
     }
 

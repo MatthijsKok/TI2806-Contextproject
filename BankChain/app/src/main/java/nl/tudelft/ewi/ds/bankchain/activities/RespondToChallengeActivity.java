@@ -77,8 +77,8 @@ public class RespondToChallengeActivity extends AppCompatActivity {
             showLongToast("unkown bank account");
             return false;
         }
-        if(ChallengeResponse.isValidChallenge(challenge,(EdDSAPublicKey)pk)){
-            bl.setIbanVerified(pk,iban,"ignored");
+        if (ChallengeResponse.isValidChallenge(challenge, (EdDSAPublicKey) pk)) {
+            bl.setIbanVerified(pk, iban, "ignored");
             createResponse();
             return true;
         }

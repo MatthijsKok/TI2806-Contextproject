@@ -3,11 +3,11 @@ package nl.tudelft.ewi.ds.bankchain;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.VectorEnabledTintResources;
+import android.util.Log;
 
 import java.util.Currency;
 import java.util.concurrent.ExecutionException;
 
-import nl.tudelft.ewi.ds.bankchain.Blockchain.Block;
 import nl.tudelft.ewi.ds.bankchain.Blockchain.Blockchain;
 import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
@@ -40,25 +40,23 @@ public class BankTeller {
     }
 
     public void sendCent(String iban, String name, String description) {
-        Transaction t = new BunqTransaction(0.01f,getBasicaccount(),createRecipient(iban,name),Currency.getInstance("EUR"),description);
+        Transaction t = new BunqTransaction(0.01f, getBasicaccount(), createRecipient(iban, name), Currency.getInstance("EUR"), description);
         bank.sendTransaction(t);
     }
 
-    public void addkey(String name, String iban,String publicKey,boolean validated){
-        blockchain.addKey(ED25519.getPublicKey(publicKey),iban,name,validated);
+    public void addkey(String name, String iban, String publicKey, boolean validated) {
+        blockchain.addKey(ED25519.getPublicKey(publicKey), iban, name, validated);
         blockchain.save();
     }
 
-    private Account createRecipient(String iban, String name){
-        Party  p = new BunqParty(name, -1);
-        return new BunqAccount(iban,-1,p);
+    private Account createRecipient(String iban, String name) {
+        Party p = new BunqParty(name, -1);
+        return new BunqAccount(iban, -1, p);
     }
 
-    public Blockchain getBlockchain(){
+    public Blockchain getBlockchain() {
         return blockchain;
     }
-
-
 
     private Account getBasicaccount() {
         Account ac = null;
@@ -66,16 +64,17 @@ public class BankTeller {
             Party user = bank.listUsers().get().get(0);
             ac = bank.listAccount(user).get().get(0);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("Bankteller",e.toString());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            Log.e("Bankteller",e.toString());
         }
         return ac;
     }
 
 
     private static BankTeller teller = null;
-    public static BankTeller getBankTeller(){
+
+    public static BankTeller getBankTeller() {
         return teller;
     }
 

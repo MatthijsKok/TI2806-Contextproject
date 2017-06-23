@@ -76,11 +76,11 @@ public class NewVerificationActivity extends AppCompatActivity {
                 return;
             }
 
-            if(name.isEmpty()){
+            if (name.isEmpty()) {
                 showLongToast("Forgot name!");
             }
 
-            if(!isValidPublicKey(publicKey)){
+            if (!isValidPublicKey(publicKey)) {
                 showLongToast("invalid key");
             }
 
@@ -126,15 +126,15 @@ public class NewVerificationActivity extends AppCompatActivity {
     }
 
     public void bunqVerification(View v) {
-        BankTeller.getBankTeller().sendCent(iban,"anonimus",challenge);
-        BankTeller.getBankTeller().addkey(name,iban,publicKey,false);
+        BankTeller.getBankTeller().sendCent(iban, "anonimus", challenge);
+        BankTeller.getBankTeller().addkey(name, iban, publicKey, false);
         showLongToast("Going to send a Bunq transaction");
     }
 
     public void manualVerification(View v) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Challenge", this.challenge);
-        BankTeller.getBankTeller().addkey(name,iban,publicKey,false);
+        BankTeller.getBankTeller().addkey(name, iban, publicKey, false);
         clipboard.setPrimaryClip(clip);
         showLongToast("Challenge copied to clipboard");
     }

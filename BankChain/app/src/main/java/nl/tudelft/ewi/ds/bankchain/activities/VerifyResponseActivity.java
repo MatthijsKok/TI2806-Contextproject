@@ -52,7 +52,7 @@ public class VerifyResponseActivity extends AppCompatActivity {
                 showLongToast("Invalid IBAN!");
                 return;
             }
-            if(response.isEmpty()){
+            if (response.isEmpty()) {
                 isValid();
                 return;
             }
@@ -61,9 +61,9 @@ public class VerifyResponseActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isValid(){
-        Blockchain bl =  BankTeller.getBankTeller().getBlockchain();
-        if(bl.isValidated(iban)){
+    private boolean isValid() {
+        Blockchain bl = BankTeller.getBankTeller().getBlockchain();
+        if (bl.isValidated(iban)) {
             showLongToast("IBAN validated");
             return true;
         }
@@ -71,16 +71,16 @@ public class VerifyResponseActivity extends AppCompatActivity {
         return false;
     }
 
-    private void validate(){
+    private void validate() {
 
-        Blockchain bl =  BankTeller.getBankTeller().getBlockchain();
-        if(bl.isValidated(iban)&& 1==2){
+        Blockchain bl = BankTeller.getBankTeller().getBlockchain();
+        if (bl.isValidated(iban) && 1 == 2) {
             showLongToast("IBAN already validated");
             return;
         }
         PublicKey pk = bl.getPublicKeyForIBAN(iban);
-        if(ChallengeResponse.isValidResponse(response, pk)){
-            bl.setIbanVerified(pk,iban,"unused");
+        if (ChallengeResponse.isValidResponse(response, pk)) {
+            bl.setIbanVerified(pk, iban, "unused");
             showLongToast("IBAN validated");
             return;
         }
