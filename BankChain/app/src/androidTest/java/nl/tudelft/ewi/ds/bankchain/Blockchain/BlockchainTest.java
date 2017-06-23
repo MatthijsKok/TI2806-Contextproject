@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
+import nl.tudelft.ewi.ds.bankchain.blockchain_hello.Blockchain;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;

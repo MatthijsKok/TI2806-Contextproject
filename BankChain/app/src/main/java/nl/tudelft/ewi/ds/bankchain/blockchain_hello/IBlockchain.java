@@ -1,4 +1,4 @@
-package nl.tudelft.ewi.ds.bankchain.blockchain;
+package nl.tudelft.ewi.ds.bankchain.blockchain_hello;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
