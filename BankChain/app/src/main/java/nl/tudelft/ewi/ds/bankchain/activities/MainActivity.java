@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
         verifyResponseFab.setOnClickListener(this::startVerifyResponseAcitivity);
         FloatingActionButton respondToChallenge = (FloatingActionButton) findViewById(R.id.respondToChallenge);
         respondToChallenge.setOnClickListener(this::startRespondToChallengeActivity);
-        //FloatingActionButton synchronize = (FloatingActionButton) findViewById(R.id.synchronize);
-        //synchronize.setOnClickListener(this::synchronize);
+        FloatingActionButton synchronize = (FloatingActionButton) findViewById(R.id.synchronize);
+        synchronize.setOnClickListener(this::synchronize);
     }
 
     private void synchronize(View view) {
