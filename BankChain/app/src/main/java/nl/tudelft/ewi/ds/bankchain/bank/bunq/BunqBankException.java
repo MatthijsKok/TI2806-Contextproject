@@ -52,7 +52,7 @@ public class BunqBankException extends BankException {
         this.error = ApiError.parseError((BunqBank) bank, httpException);
     }
 
-    public HttpException getHttpException() {
+    HttpException getHttpException() {
         return httpException;
     }
 

@@ -49,7 +49,7 @@ public class ApiError {
      * @return string with error or null
      */
     public String getError() {
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             return errors.get(0).toString();
         }
 
@@ -62,7 +62,7 @@ public class ApiError {
      * @return localized error string
      */
     public String getLocalizedError() {
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()){
             Error err = errors.get(0);
 
             return err.localizedError();

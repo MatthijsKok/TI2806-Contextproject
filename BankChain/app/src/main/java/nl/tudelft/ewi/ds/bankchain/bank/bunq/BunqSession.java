@@ -203,11 +203,7 @@ final class BunqSession implements Session {
 
         // A session is useless when the IP address changed as it is bound
         // to the tokens.
-        if (ipAddress != null && !ipAddress.equals(NetUtils.getIPAddress())) {
-            return false;
-        }
-
-        return true;
+        return !(ipAddress != null && !ipAddress.equals(NetUtils.getIPAddress()));
     }
 
     /**

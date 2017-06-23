@@ -1,16 +1,12 @@
 package nl.tudelft.ewi.ds.bankchain.bank;
 
-import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import nl.tudelft.ewi.ds.bankchain.Environment;
-import nl.tudelft.ewi.ds.bankchain.activities.MainActivity;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
-import nl.tudelft.ewi.ds.bankchain.bank.mock.MockBank;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -50,19 +46,4 @@ public class BankFactoryTest {
         assertTrue(bank instanceof BunqBank);
     }
 
-    @Test
-    public void testMockEnvironment() throws Exception {
-        Bank bank;
-        Environment env;
-
-        env = new Environment();
-        env.setBank("Mock");
-        env.setBankUrl("https://example.com/");
-        env.setBankApiKey("");
-
-        bank = new BankFactory(env, null).create();
-
-        assertNotNull(bank);
-        assertTrue(bank instanceof MockBank);
-    }
 }

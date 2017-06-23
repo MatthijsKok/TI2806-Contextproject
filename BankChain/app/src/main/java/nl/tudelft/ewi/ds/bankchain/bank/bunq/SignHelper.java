@@ -12,6 +12,12 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
+/**
+ * Class that helps with signing and valdiating of bunq requests and responses
+ * and its signatures.
+ *
+ * @author Jos Kuijpers
+ */
 class SignHelper {
 
     private PrivateKey clientPrivateKey;

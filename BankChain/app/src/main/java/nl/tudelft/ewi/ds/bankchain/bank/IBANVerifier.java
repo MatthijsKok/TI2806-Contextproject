@@ -12,6 +12,10 @@ import java.math.BigInteger;
  */
 public class IBANVerifier {
 
+
+    private IBANVerifier(){
+    }
+
     /**
      * Verify given IBAN string.
      * @param iban string of the IBAN

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqBank;
-import nl.tudelft.ewi.ds.bankchain.bank.mock.MockBank;
 
 /**
  * A factory that creates a new bank based on current app configuration.
@@ -25,8 +24,6 @@ public class BankFactory {
         switch (env.getBank()) {
             case "Bunq":
                 return new BunqBank(appContext, env.getBankUrl(), env.getBankApiKey());
-            case "Mock":
-                return new MockBank();
             default:
                 return null;
         }
