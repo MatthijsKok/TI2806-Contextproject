@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.security.PrivateKey;
@@ -67,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
         bunqTransactionParser.respondToPendingChallenges(privateKey,transactions, lastSynchronized);
         lastSynchronized = System.currentTimeMillis();
+
+        showLongToast("Synchronize successful!");
+    }
+
+    private void showLongToast(String text) {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
 
     public void startRecentTransactionActivity(View view) {
