@@ -18,6 +18,31 @@
         android:hint="@string/iban"
         android:inputType="text" />
 
+    <EditText
+        android:id="@+id/pk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif"
+        android:hint="Public key"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif"
+        android:hint="Name"
+        android:inputType="text"
+        android:singleLine="false" />
+
     <LinearLayout
         android:id="@+id/LinearLayout02"
         android:layout_width="fill_parent"

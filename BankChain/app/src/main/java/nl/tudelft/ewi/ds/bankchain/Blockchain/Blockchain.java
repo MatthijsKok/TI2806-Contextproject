@@ -75,14 +75,22 @@ public class Blockchain implements IBlockchain {
 
     public boolean addKey(EdDSAPublicKey key, String iban, String name, boolean validated) {
         if (blockMap.containsKey(iban)) {
-            return false;
+            JsonBlock b = blockMap.get(iban);
+            b.validated = validated;
+            save();
+            return true;
         }
         blockMap.put(iban, new JsonBlock(key, iban, name, validated));
+        save();
         return true;
     }
 
     public boolean isValidated(String iban) {
-        return blockMap.containsKey(iban);
+        JsonBlock block = blockMap.get(iban);
+        if(block == null){
+            return false;
+        }
+        return block.validated;
     }
 
     public String toString() {
@@ -135,6 +143,9 @@ public class Blockchain implements IBlockchain {
     @Override
     public PublicKey getPublicKeyForIBAN(String iban) {
         JsonBlock block= blockMap.get(iban);
+        if(block == null){
+            return null;
+        }
         PublicKey k = block.getPublicKey();
         return  k;
     }

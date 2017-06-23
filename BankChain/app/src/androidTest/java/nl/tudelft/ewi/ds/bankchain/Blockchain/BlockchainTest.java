@@ -36,7 +36,6 @@ public class BlockchainTest {
         byte[] seed = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
         EdDSAPrivateKey privateKey = ED25519.getPrivateKey(seed);
         EdDSAPublicKey pk = getPublicKey(privateKey);
-
         block.addKey(pk, "NLABNA0123456789", "henk", false);
         block.addKey(pk, "NLTRIO0123456789", "Steve", true);
         String newBlockchain = block.toString();
@@ -67,7 +66,7 @@ public class BlockchainTest {
         block.addKey(pk, "NLABNA0123456789", "henk", false);
         assertTrue(block.getPublicKeyForIBAN("NLABNA0123456789")!= null);
     }
-
+    @Test
     public void testSetvalidated(){
         Blockchain block = new Blockchain("new", getInstrumentation().getTargetContext(),false);
         byte[] seed = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
@@ -78,6 +77,18 @@ public class BlockchainTest {
         block.setIbanVerified(pk,"NLABNA0123456789","henk");
         assertTrue(block.isValidated("NLABNA0123456789"));
     }
+
+    @Test
+    public void testUnknownIban(){
+        Blockchain block = new Blockchain("new", getInstrumentation().getTargetContext(),false);
+        byte[] seed = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
+        EdDSAPrivateKey privateKey = ED25519.getPrivateKey(seed);
+        EdDSAPublicKey pk = getPublicKey(privateKey);
+
+        block.addKey(pk, "NLABNA0123456789", "henk", false);
+        assertEquals(block.getPublicKeyForIBAN("hello world"),null);
+    }
+
 }
 
 

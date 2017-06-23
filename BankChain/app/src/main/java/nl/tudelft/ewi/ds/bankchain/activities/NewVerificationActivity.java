@@ -22,6 +22,7 @@ import java.security.SignatureException;
 import java.util.Currency;
 import java.util.concurrent.ExecutionException;
 
+import nl.tudelft.ewi.ds.bankchain.BankTeller;
 import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.bank.Account;
@@ -42,6 +43,7 @@ public class NewVerificationActivity extends AppCompatActivity {
     private String publicKey;
     private String iban;
     private String challenge;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +66,25 @@ public class NewVerificationActivity extends AppCompatActivity {
         verifyButton.setOnClickListener(v -> {
             EditText ibanText = (EditText) findViewById(R.id.ibanInput);
             this.iban = ibanText.getText().toString();
+            EditText pkText = (EditText) findViewById(R.id.pk);
+            this.publicKey = pkText.getText().toString();
+            EditText nameText = (EditText) findViewById(R.id.name);
+            this.name = nameText.getText().toString();
 
             if (!isValidIBAN(iban)) {
                 showLongToast("Invalid IBAN!");
                 return;
             }
+
+            if(name.isEmpty()){
+                showLongToast("Forgot name!");
+            }
+
+            if(!isValidPublicKey(publicKey)){
+                showLongToast("invalid key");
+            }
+
+
             hideSoftKeyBoard();
             createChallenge();
             showChallenge();
@@ -110,28 +126,15 @@ public class NewVerificationActivity extends AppCompatActivity {
     }
 
     public void bunqVerification(View v) {
-        Environment env = Environment.getDefaults();
-        Bank bank = new BankFactory(env, this.getApplicationContext()).create();
-        bank.createSession();
-        try {
-            Party user = bank.listUsers().get().get(0);
-            Account ac = bank .listAccount(user).get().get(0);
-            Party chp = new BunqParty("Anonimus",-1);
-            Account cha =  new BunqAccount(iban,-1,chp);
-            Transaction trans = new BunqTransaction(0.01f,ac,cha, Currency.getInstance("EUR"),challenge);
-            bank.sendTransaction(trans);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        showLongToast("Going to send a Bunq transaction (but not really...)");
+        BankTeller.getBankTeller().sendCent(iban,"anonimus",challenge);
+        BankTeller.getBankTeller().addkey(name,iban,publicKey,false);
+        showLongToast("Going to send a Bunq transaction");
     }
 
     public void manualVerification(View v) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Challenge", this.challenge);
+        BankTeller.getBankTeller().addkey(name,iban,publicKey,false);
         clipboard.setPrimaryClip(clip);
         showLongToast("Challenge copied to clipboard");
     }
