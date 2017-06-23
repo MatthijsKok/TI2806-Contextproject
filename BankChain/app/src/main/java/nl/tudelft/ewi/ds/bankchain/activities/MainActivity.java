@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         List<Transaction> transactions = BankTeller.getBankTeller().getTransactions();
         BunqTransactionParser bunqTransactionParser = new BunqTransactionParser();
 
-        bunqTransactionParser.respondToPendingChallenges(privateKey,transactions, lastSynchronized);
+        bunqTransactionParser.respondToPendingChallenges(privateKey, transactions, lastSynchronized);
         lastSynchronized = System.currentTimeMillis();
 
         showLongToast("Synchronize successful!");
