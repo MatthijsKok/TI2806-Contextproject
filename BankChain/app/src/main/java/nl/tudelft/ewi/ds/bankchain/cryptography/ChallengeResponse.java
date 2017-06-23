@@ -125,6 +125,9 @@ public final class ChallengeResponse {
      * CH:ChallengeString:Signature => for a challenge, and
      * RE:ChallengeString:Signature => for a response.
      *
+     * CH/RE is type message type: challege and response, respectively. The next part
+     * is the challenge, a basic piece of data. Then follows the signature of that string.
+     *
      * This does not check for the validity of the message or it's signature.
      *
      * @param description The String to check.

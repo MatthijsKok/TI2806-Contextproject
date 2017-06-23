@@ -237,19 +237,4 @@ public class BunqTest {
         assertTrue(bank.sendTransaction(pay).get());
     }
 
-    @Test
-    public void testListTransactions() throws ExecutionException, InterruptedException {
-        Bank bank = getRealBank();
-        bank.createSession().get();
-
-        BunqParty party = new BunqParty("Overton Onderlinge Waarborgmaatschappij", 2002);
-        BunqAccount account = new BunqAccount("NL05BUNQ9900019989", 2021, party);
-
-        List<Transaction> transactions = bank.listTransactions(account).get();
-        assertTrue(transactions.size() > 5);
-        Transaction t = transactions.get(0);
-        assertEquals(t.getDescription(), "end tot end Bunqtest");
-        assertEquals(t.getAccount().getId(), 2021);
-        assertEquals(t.getCounterAccount().getIban(), "NL77BUNQ9900016947");
-    }
 }

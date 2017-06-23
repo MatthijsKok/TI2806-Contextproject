@@ -11,6 +11,9 @@ import android.support.annotation.NonNull;
  */
 public class Tools {
 
+    private Tools(){
+    }
+
     /**
      * Run a piece of code on the main thread.
      *

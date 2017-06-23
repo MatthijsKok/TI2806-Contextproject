@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *
  * @author Jos Kuijpers
  */
-public final class BunqBank extends Bank {
+public final class BunqBank implements Bank {
     /**
      * Current session
      */
@@ -119,7 +119,7 @@ public final class BunqBank extends Bank {
         future = service.listPayments(account.getParty().getId(), account.getId());
 
         return future.thenApply((PaymentService.ListResponse response) -> {
-            List<Transaction> transactions = new ArrayList<Transaction>();
+            List<Transaction> transactions = new ArrayList<>();
 
             for (PaymentService.ListResponse.Item item : response.items) {
                 transactions.add(new BunqTransaction(item.payment, account));
@@ -142,7 +142,7 @@ public final class BunqBank extends Bank {
         service = retrofit.create(UserService.class);
         future = service.getUsers();
         return future.thenApply((UserService.ListResponse response) -> {
-            List<Party> parties = new ArrayList<Party>();
+            List<Party> parties = new ArrayList<>();
 
             for (UserService.ListResponse.Item item : response.items) {
                 parties.add(new BunqParty(item.user));
@@ -160,7 +160,7 @@ public final class BunqBank extends Bank {
         service = retrofit.create(AccountService.class);
         future = service.listAccounts(party.getId());
         return future.thenApply((AccountService.ListResponse response) -> {
-            List<Account> accounts = new ArrayList<Account>();
+            List<Account> accounts = new ArrayList<>();
 
             for (AccountService.ListResponse.Item item : response.items) {
                 accounts.add(new BunqAccount(item.account, party));

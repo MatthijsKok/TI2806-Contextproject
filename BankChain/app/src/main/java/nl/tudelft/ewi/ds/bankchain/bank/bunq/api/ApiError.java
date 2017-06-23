@@ -49,7 +49,7 @@ public class ApiError {
      * @return string with error or null
      */
     public String getError() {
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             return errors.get(0).toString();
         }
 
@@ -62,7 +62,7 @@ public class ApiError {
      * @return localized error string
      */
     public String getLocalizedError() {
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             Error err = errors.get(0);
 
             return err.localizedError();
@@ -73,12 +73,12 @@ public class ApiError {
 
     /**
      * Parse a throwable into an Error response.
-     *
+     * <p>
      * If given throwable is not an HttpException, an ErrorResponse is created
      * with the description of the throwable.
      *
      * @param bank Bank
-     * @param obj Object
+     * @param obj  Object
      * @return Error response
      */
     @NonNull
@@ -99,7 +99,7 @@ public class ApiError {
     /**
      * Parse a response into an error
      *
-     * @param bank bank
+     * @param bank     bank
      * @param response response
      * @return error response
      */

@@ -39,7 +39,7 @@ import nl.tudelft.ewi.ds.bankchain.bank.network.NetUtils;
  *
  * @author Jos Kuijpers
  */
-final class BunqSession extends Session {
+final class BunqSession implements Session {
     private static final String KEYSTORE_ALIAS = "BunqSessionKeyPair";
 
     /**
@@ -81,8 +81,6 @@ final class BunqSession extends Session {
      */
     BunqSession(BunqBank bank) {
         this.bank = bank;
-
-        // TODO: this is not deterministic random in the app lifetime. Is that needed though?
         SecureRandom r = new SecureRandom();
         this.requestId = r.nextLong();
     }
@@ -118,8 +116,6 @@ final class BunqSession extends Session {
         InstallationService service;
         InstallationService.CreateRequest request;
 
-        // TODO: test if this is necessary. if not, return completed
-
         service = bank.getRetrofit().create(InstallationService.class);
 
         // Create the object to send to Bunq
@@ -145,8 +141,6 @@ final class BunqSession extends Session {
         CompletableFuture<DeviceServerService.CreateResponse> future;
         DeviceServerService service;
         DeviceServerService.CreateRequest request;
-
-        // TODO: test if this is necessary. if not, return completed
 
         service = bank.getRetrofit().create(DeviceServerService.class);
 
@@ -174,8 +168,6 @@ final class BunqSession extends Session {
         CompletableFuture<SessionServerService.CreateResponse> future;
         SessionServerService service;
         SessionServerService.CreateRequest request;
-
-        // TODO: test if this is necessary. if not, return completed
 
         service = bank.getRetrofit().create(SessionServerService.class);
 
@@ -211,11 +203,7 @@ final class BunqSession extends Session {
 
         // A session is useless when the IP address changed as it is bound
         // to the tokens.
-        if (ipAddress != null && !ipAddress.equals(NetUtils.getIPAddress())) {
-            return false;
-        }
-
-        return true;
+        return !(ipAddress != null && !ipAddress.equals(NetUtils.getIPAddress()));
     }
 
     /**

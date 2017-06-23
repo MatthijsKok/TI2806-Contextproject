@@ -44,7 +44,7 @@ public interface PaymentService {
             public Amount amount;
             public int id;
 
-            @SerializedName("counterparty_alias")
+            @SerializedName("counterpartyAlias")
             public CounterParty counterParty;
 
             public Date getCreationDate() {
@@ -97,7 +97,7 @@ public interface PaymentService {
 
         public Amount amount;
         @SerializedName("counterparty_alias")
-        public CounterpartyAlias counterparty_alias;
+        public CounterpartyAlias counterpartyAlias;
         public String description;
 
     }

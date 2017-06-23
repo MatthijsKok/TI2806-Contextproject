@@ -59,7 +59,7 @@ class BunqTransaction : Transaction {
         a.value = java.lang.Float.toString(Math.abs(value)) //usually the outgoing amount should be negative this is the exception so it's covered here
         p.description = description
         p.amount = a
-        p.counterparty_alias = c
+        p.counterpartyAlias = c
         return p
     }
 }

@@ -7,8 +7,8 @@ package nl.tudelft.ewi.ds.bankchain.activities;
  * @author Isha Dijcks
  */
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -25,10 +25,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> listDataHeader; // header titles
     // child data in format of header title, child title
-    private HashMap<String, List<String>> listDataChild;
+    private Map<String, List<String>> listDataChild;
 
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<String>> listChildData) {
+                                 Map<String, List<String>> listChildData) {
         this.context = context;
         this.listDataHeader = listDataHeader;
         this.listDataChild = listChildData;

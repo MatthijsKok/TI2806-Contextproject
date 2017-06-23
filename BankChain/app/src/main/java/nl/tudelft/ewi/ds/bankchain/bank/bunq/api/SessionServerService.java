@@ -43,9 +43,6 @@ public interface SessionServerService {
 
             @SerializedName("Token")
             public GenericToken token;
-
-//            @SerializedName("UserCompany")
-            // TODO: look into data that might be useful here
         }
     }
 
