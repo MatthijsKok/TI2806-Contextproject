@@ -50,6 +50,17 @@ public class NewVerificationActivity extends AppCompatActivity {
     }
 
     public void initializeListeners() {
+        Button manualButton = (Button) findViewById(R.id.verifyManualButton);
+        // if button is clicked, close the custom dialog
+        manualButton.setOnClickListener(v -> {
+            manualVerification();
+        });
+
+        Button bunqButton = (Button) findViewById(R.id.verifyBunqButton);
+        // if button is clicked, close the custom dialog
+        bunqButton.setOnClickListener(v -> {
+            bunqVerification();
+        });
         Button verifyButton = (Button) findViewById(R.id.createChallengeButton);
         // if button is clicked, close the custom dialog
         verifyButton.setOnClickListener(v -> {
@@ -64,7 +75,6 @@ public class NewVerificationActivity extends AppCompatActivity {
                 showLongToast("Invalid IBAN!");
                 return;
             }
-
 
             if (name.isEmpty()) {
                 showLongToast("Forgot name!");
@@ -81,6 +91,8 @@ public class NewVerificationActivity extends AppCompatActivity {
             showChallenge();
         });
     }
+
+
 
     public void createChallenge() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -115,14 +127,14 @@ public class NewVerificationActivity extends AppCompatActivity {
         }
     }
 
-    public void bunqVerification(View v) {
+    public void bunqVerification() {
         BankTeller.getBankTeller().sendCent(iban, name, challenge);
         BankTeller.getBankTeller().addkey(name, iban, publicKey, false);
 
         showLongToast("Going to send a Bunq transaction");
     }
 
-    public void manualVerification(View v) {
+    public void manualVerification() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Challenge", this.challenge);
         BankTeller.getBankTeller().addkey(name, iban, publicKey, false);

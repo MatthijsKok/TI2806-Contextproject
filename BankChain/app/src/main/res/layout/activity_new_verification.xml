@@ -78,16 +78,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/verify_bunq"
-            android:onClick="bunqVerification"/>
+            android:text="@string/verify_bunq"/>
 
         <Button
             android:id="@+id/verifyManualButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/verify_manual"
-            android:onClick="manualVerification"/>
+            android:text="@string/verify_manual" />
     </LinearLayout>
 
 </LinearLayout>
