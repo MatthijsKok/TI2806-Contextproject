@@ -51,18 +51,15 @@ public class NewVerificationActivity extends AppCompatActivity {
 
     public void initializeListeners() {
         Button manualButton = (Button) findViewById(R.id.verifyManualButton);
-        // if button is clicked, close the custom dialog
         manualButton.setOnClickListener(v -> {
             manualVerification();
         });
 
         Button bunqButton = (Button) findViewById(R.id.verifyBunqButton);
-        // if button is clicked, close the custom dialog
         bunqButton.setOnClickListener(v -> {
             bunqVerification();
         });
         Button verifyButton = (Button) findViewById(R.id.createChallengeButton);
-        // if button is clicked, close the custom dialog
         verifyButton.setOnClickListener(v -> {
             EditText ibanText = (EditText) findViewById(R.id.ibanInput);
             this.iban = ibanText.getText().toString();

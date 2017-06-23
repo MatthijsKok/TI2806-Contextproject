@@ -63,7 +63,6 @@ public interface InstallationService {
         @SerializedName("client_public_key")
         public String clientPublicKey;
 
-        // TODO add Tools static class.
         public CreateRequest(PublicKey key) {
             this(BunqTools.publicKeyToString(key));
         }

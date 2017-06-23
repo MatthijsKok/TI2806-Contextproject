@@ -117,7 +117,6 @@ public final class Java8CallAdapterFactory extends CallAdapter.Factory {
 
                 @Override
                 public void onFailure(Call<R> call, Throwable t) {
-                    // TODO: posisbly convert as well, but have to know how this is triggered
                     future.completeExceptionally(t);
                 }
             });

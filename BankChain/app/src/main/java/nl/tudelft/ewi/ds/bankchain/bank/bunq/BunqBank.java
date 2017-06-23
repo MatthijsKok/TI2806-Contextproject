@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *
  * @author Jos Kuijpers
  */
-public final class BunqBank extends Bank {
+public final class BunqBank implements Bank {
     /**
      * Current session
      */
