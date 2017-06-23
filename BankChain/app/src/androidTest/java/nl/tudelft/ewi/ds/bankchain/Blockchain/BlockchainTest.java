@@ -1,6 +1,5 @@
-package nl.tudelft.ewi.ds.bankchain.Blockchain;
+package nl.tudelft.ewi.ds.bankchain.blockchain;
 
-import android.util.Base64;
 import android.util.Log;
 
 import net.i2p.crypto.eddsa.EdDSAPrivateKey;
@@ -9,15 +8,10 @@ import net.i2p.crypto.eddsa.Utils;
 
 import org.junit.Test;
 
-import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 
-import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTransaction;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;

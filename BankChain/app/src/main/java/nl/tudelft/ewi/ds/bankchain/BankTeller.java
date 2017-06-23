@@ -1,14 +1,12 @@
 package nl.tudelft.ewi.ds.bankchain;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.support.v7.widget.VectorEnabledTintResources;
 import android.util.Log;
 
 import java.util.Currency;
 import java.util.concurrent.ExecutionException;
 
-import nl.tudelft.ewi.ds.bankchain.Blockchain.Blockchain;
+import nl.tudelft.ewi.ds.bankchain.blockchain.Blockchain;
 import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;

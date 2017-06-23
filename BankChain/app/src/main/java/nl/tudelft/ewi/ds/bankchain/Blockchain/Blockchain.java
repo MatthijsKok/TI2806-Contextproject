@@ -1,4 +1,4 @@
-package nl.tudelft.ewi.ds.bankchain.Blockchain;
+package nl.tudelft.ewi.ds.bankchain.blockchain;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -96,9 +96,6 @@ public class Blockchain implements IBlockchain {
         Gson gson = new Gson();
         String json = gson.toJson(chain);
         System.out.println(json);
-
-        String FILENAME = "hello_file";
-        String string = "hello world!";
 
 
         File path = context.getFilesDir();

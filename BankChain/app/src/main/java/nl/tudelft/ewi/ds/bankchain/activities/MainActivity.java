@@ -14,7 +14,6 @@ import android.view.View;
 import java.io.IOException;
 
 import nl.tudelft.ewi.ds.bankchain.BankTeller;
-import nl.tudelft.ewi.ds.bankchain.Blockchain.Blockchain;
 import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
 
