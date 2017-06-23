@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class Blockchain implements IBlockchain {
                 blockMap.put(block.iban, block);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("Blockchain", e.toString());
         }
     }
 
@@ -95,17 +96,16 @@ public class Blockchain implements IBlockchain {
         chain.blockchain = new ArrayList<>(blockMap.values());
         Gson gson = new Gson();
         String json = gson.toJson(chain);
-        System.out.println(json);
 
 
         File path = context.getFilesDir();
         Log.d("starting write", "Writing0");
         try {
             FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            fos.write(json.getBytes());
+            fos.write(json.getBytes(StandardCharsets.UTF_8));
             fos.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("Blockchain", e.toString());
         }
 
         Log.d("LOCATION1", path.getPath());

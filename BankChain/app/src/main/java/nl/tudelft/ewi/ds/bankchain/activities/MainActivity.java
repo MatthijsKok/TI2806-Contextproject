@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Environment v = Environment.getDefaults();
-        new BankTeller(this.getApplicationContext(), v);
+        BankTeller.getBankTeller(this.getApplicationContext(), v);
 
         FloatingActionButton newVerificationFab = (FloatingActionButton) findViewById(R.id.newVerification);
 

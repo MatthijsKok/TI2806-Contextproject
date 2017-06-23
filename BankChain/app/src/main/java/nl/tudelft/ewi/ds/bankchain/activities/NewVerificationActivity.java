@@ -19,20 +19,9 @@ import android.widget.Toast;
 
 import java.security.InvalidKeyException;
 import java.security.SignatureException;
-import java.util.Currency;
-import java.util.concurrent.ExecutionException;
 
 import nl.tudelft.ewi.ds.bankchain.BankTeller;
-import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
-import nl.tudelft.ewi.ds.bankchain.bank.Account;
-import nl.tudelft.ewi.ds.bankchain.bank.Bank;
-import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
-import nl.tudelft.ewi.ds.bankchain.bank.Party;
-import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
-import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTransaction;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
 
 import static nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier.isValidIBAN;

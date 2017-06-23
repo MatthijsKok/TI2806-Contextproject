@@ -16,8 +16,6 @@ import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
 
 import static nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier.isValidIBAN;
-import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.getPublicKey;
-import static nl.tudelft.ewi.ds.bankchain.cryptography.ED25519.isValidPublicKey;
 
 public class VerifyResponseActivity extends AppCompatActivity {
 
@@ -51,8 +49,9 @@ public class VerifyResponseActivity extends AppCompatActivity {
                 showLongToast("Invalid IBAN!");
                 return;
             }
+            // this allows you to check the blockchain for an iban without receiving a response
             if (response.isEmpty()) {
-                isValid();
+                isIbanValid();
                 return;
             }
             validate();
@@ -60,7 +59,7 @@ public class VerifyResponseActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isValid() {
+    private boolean isIbanValid() {
         Blockchain bl = BankTeller.getBankTeller().getBlockchain();
         if (bl.isValidated(iban)) {
             showLongToast("IBAN validated");
@@ -71,12 +70,12 @@ public class VerifyResponseActivity extends AppCompatActivity {
     }
 
     private void validate() {
-
         Blockchain bl = BankTeller.getBankTeller().getBlockchain();
-        if (bl.isValidated(iban) && 1 == 2) {
+        if (bl.isValidated(iban)) {
             showLongToast("IBAN already validated");
             return;
         }
+
         PublicKey pk = bl.getPublicKeyForIBAN(iban);
         if (ChallengeResponse.isValidResponse(response, pk)) {
             bl.setIbanVerified(pk, iban, "unused");

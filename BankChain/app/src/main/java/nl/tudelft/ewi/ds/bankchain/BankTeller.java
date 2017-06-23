@@ -28,13 +28,12 @@ public class BankTeller {
     Environment env;
     Bank bank;
 
-    public BankTeller(Context context, Environment env) {
+    private BankTeller(Context context, Environment env) {
         this.env = env;
         this.context = context;
         bank = new BankFactory(env, context).create();
         blockchain = new Blockchain("chain", context, true);
         bank.createSession();
-        teller = this;
     }
 
     public void sendCent(String iban, String name, String description) {
@@ -72,7 +71,19 @@ public class BankTeller {
 
     private static BankTeller teller = null;
 
+    public static BankTeller getBankTeller(Context context, Environment v) {
+        if (teller == null) {
+            teller = new BankTeller(context, v);
+        }
+
+        return teller;
+    }
+
     public static BankTeller getBankTeller() {
+        if (teller == null) {
+            throw new RuntimeException("Initialize BankTeller before using");
+        }
+
         return teller;
     }
 
