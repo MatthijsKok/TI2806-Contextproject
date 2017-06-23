@@ -41,6 +41,17 @@
             android:layout_alignStart="@+id/respondToChallenge" />
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/synchronize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_popup_sync"
+            app:backgroundTint="@color/colorPrimary"
+            app:elevation="4dp"
+            android:layout_above="@+id/newVerification"
+            android:layout_toEndOf="@+id/editText"
+            android:layout_marginBottom="25dp" />
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/respondToChallenge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.Currency;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import nl.tudelft.ewi.ds.bankchain.blockchain.Blockchain;
 import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;
@@ -15,11 +15,8 @@ import nl.tudelft.ewi.ds.bankchain.bank.Transaction;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqAccount;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqParty;
 import nl.tudelft.ewi.ds.bankchain.bank.bunq.BunqTransaction;
+import nl.tudelft.ewi.ds.bankchain.blockchain.Blockchain;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
-
-/**
- * Created by Richard-HP on 22/06/2017.
- */
 
 public class BankTeller {
 
@@ -44,6 +41,15 @@ public class BankTeller {
     public void addkey(String name, String iban, String publicKey, boolean validated) {
         blockchain.addKey(ED25519.getPublicKey(publicKey), iban, name, validated);
         blockchain.save();
+    }
+
+    public List<Transaction> getTransactions() {
+        try {
+            return bank.listTransactions(getBasicaccount()).get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.d("No transactions found", "Something went wrong!");
+        }
+        return null;
     }
 
     private Account createRecipient(String iban, String name) {
