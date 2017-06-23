@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.security.InvalidKeyException;
 import java.security.SignatureException;
 
+import nl.tudelft.ewi.ds.bankchain.BankTeller;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
 
@@ -31,6 +32,7 @@ public class NewVerificationActivity extends AppCompatActivity {
     private String publicKey;
     private String iban;
     private String challenge;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,34 +50,54 @@ public class NewVerificationActivity extends AppCompatActivity {
     }
 
     public void initializeListeners() {
+        Button manualButton = (Button) findViewById(R.id.verifyManualButton);
+        // if button is clicked, close the custom dialog
+        manualButton.setOnClickListener(v -> {
+            manualVerification();
+        });
+
+        Button bunqButton = (Button) findViewById(R.id.verifyBunqButton);
+        // if button is clicked, close the custom dialog
+        bunqButton.setOnClickListener(v -> {
+            bunqVerification();
+        });
         Button verifyButton = (Button) findViewById(R.id.createChallengeButton);
         // if button is clicked, close the custom dialog
         verifyButton.setOnClickListener(v -> {
-            EditText publicKeyText = (EditText) findViewById(R.id.publicKeyInput);
-            this.publicKey = publicKeyText.getText().toString();
-
             EditText ibanText = (EditText) findViewById(R.id.ibanInput);
             this.iban = ibanText.getText().toString();
+            EditText pkText = (EditText) findViewById(R.id.pk);
+            this.publicKey = pkText.getText().toString();
+            EditText nameText = (EditText) findViewById(R.id.name);
+            this.name = nameText.getText().toString();
 
-            if (!isValidPublicKey(publicKey)) {
-                showLongToast("Invalid Public Key!");
-                return;
-            }
             if (!isValidIBAN(iban)) {
                 showLongToast("Invalid IBAN!");
                 return;
             }
+
+            if (name.isEmpty()) {
+                showLongToast("Forgot name!");
+                return;
+            }
+
+            if (!isValidPublicKey(publicKey)) {
+                showLongToast("invalid key");
+                return;
+            }
+
             hideSoftKeyBoard();
             createChallenge();
             showChallenge();
         });
     }
 
+
+
     public void createChallenge() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String privateKey = settings.getString("pref_private_key_key", "default_value");
 
-        //TODO we crash if no private key is set
         try {
             this.challenge = ChallengeResponse.createChallenge(privateKey);
         } catch (SignatureException | InvalidKeyException ignored) {
@@ -105,14 +127,19 @@ public class NewVerificationActivity extends AppCompatActivity {
         }
     }
 
-    public void bunqVerification(View v) {
-        showLongToast("Going to send a Bunq transaction (but not really...)");
+    public void bunqVerification() {
+        BankTeller.getBankTeller().sendCent(iban, name, challenge);
+        BankTeller.getBankTeller().addkey(name, iban, publicKey, false);
+
+        showLongToast("Going to send a Bunq transaction");
     }
 
-    public void manualVerification(View v) {
+    public void manualVerification() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Challenge", this.challenge);
+        BankTeller.getBankTeller().addkey(name, iban, publicKey, false);
         clipboard.setPrimaryClip(clip);
+
         showLongToast("Challenge copied to clipboard");
     }
 

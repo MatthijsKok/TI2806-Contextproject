@@ -8,11 +8,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.security.PublicKey;
+
+import nl.tudelft.ewi.ds.bankchain.BankTeller;
+import nl.tudelft.ewi.ds.bankchain.blockchain.Blockchain;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
-import nl.tudelft.ewi.ds.bankchain.cryptography.ED25519;
+
+import static nl.tudelft.ewi.ds.bankchain.bank.IBANVerifier.isValidIBAN;
 
 public class VerifyResponseActivity extends AppCompatActivity {
+
+    String response;
+    String iban;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +42,48 @@ public class VerifyResponseActivity extends AppCompatActivity {
         // if button is clicked, close the custom dialog
         responseButton.setOnClickListener(v -> {
             EditText responseText = (EditText) findViewById(R.id.response);
-            String response = responseText.getText().toString();
-            EditText publicKeyText = (EditText) findViewById(R.id.publicKeyInput);
-            String publicKey = publicKeyText.getText().toString();
-            showLongToast("Valid response: " + ChallengeResponse.isValidResponse(response, ED25519.getPublicKey(publicKey)));
+            response = responseText.getText().toString();
+            EditText publicKeyText = (EditText) findViewById(R.id.iban);
+            iban = publicKeyText.getText().toString();
+            if (!isValidIBAN(iban)) {
+                showLongToast("Invalid IBAN!");
+                return;
+            }
+            // this allows you to check the blockchain for an iban without receiving a response
+            if (response.isEmpty()) {
+                isIbanValid();
+                return;
+            }
+            validate();
+
         });
+    }
+
+    private boolean isIbanValid() {
+        Blockchain bl = BankTeller.getBankTeller().getBlockchain();
+        if (bl.isValidated(iban)) {
+            showLongToast("IBAN validated");
+            return true;
+        }
+        showLongToast("IBAN! not validated");
+        return false;
+    }
+
+    private void validate() {
+        Blockchain bl = BankTeller.getBankTeller().getBlockchain();
+        if (bl.isValidated(iban)) {
+            showLongToast("IBAN already validated");
+            return;
+        }
+
+        PublicKey pk = bl.getPublicKeyForIBAN(iban);
+        if (ChallengeResponse.isValidResponse(response, pk)) {
+            bl.setIbanVerified(pk, iban, "unused");
+            showLongToast("IBAN validated");
+            return;
+        }
+        showLongToast("Invalid response for IBAN");
+
     }
 
     private void showLongToast(String text) {

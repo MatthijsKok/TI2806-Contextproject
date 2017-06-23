@@ -247,7 +247,7 @@ public class BunqTest {
 
         List<Transaction> transactions = bank.listTransactions(account).get();
         assertTrue(transactions.size() > 5);
-        Transaction t = transactions.get(transactions.size() - 2);
+        Transaction t = transactions.get(0);
         assertEquals(t.getDescription(), "end tot end Bunqtest");
         assertEquals(t.getAccount().getId(), 2021);
         assertEquals(t.getCounterAccount().getIban(), "NL77BUNQ9900016947");

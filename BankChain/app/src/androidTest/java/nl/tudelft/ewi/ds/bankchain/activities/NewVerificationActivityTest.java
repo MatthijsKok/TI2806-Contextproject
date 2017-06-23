@@ -2,18 +2,27 @@ package nl.tudelft.ewi.ds.bankchain.activities;
 
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Ignore;
+import org.junit.Before;
+//TRAVIS import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import nl.tudelft.ewi.ds.bankchain.BankTeller;
+import nl.tudelft.ewi.ds.bankchain.Environment;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.TestRunner;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -36,49 +45,67 @@ public class NewVerificationActivityTest extends TestRunner {
     public ActivityTestRule<NewVerificationActivity> activityRule =
             new ActivityTestRule<>(NewVerificationActivity.class);
 
+    @Before
+    public void setPrivateKey() throws IOException {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("pref_private_key_key", "0000000000000000000000000000000000000000000000000000000000000000");
+        editor.apply();
+        BankTeller.getBankTeller(getInstrumentation().getTargetContext(), Environment.loadDefaults(getInputStream("res/raw/environment.xml")));
+    }
+
+    private InputStream getInputStream(String path) {
+        return this.getClass().getClassLoader().getResourceAsStream(path);
+    }
+
     @Test
     public void verifyVerify() {
-        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
+        onView(ViewMatchers.withId(R.id.pk)).perform(replaceText("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29"));
         onView(withId(R.id.ibanInput)).perform(replaceText("GB82WEST12345698765432"));
+        onView(withId(R.id.name)).perform(replaceText("Dummy"));
         onView(withId(R.id.createChallengeButton)).perform(click());
-        assertEquals("PublicKey",  activityRule.getActivity().getPublicKey());
+        assertEquals("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29", activityRule.getActivity().getPublicKey());
         assertEquals("GB82WEST12345698765432", activityRule.getActivity().getIban());
     }
 
     @Test
     public void verifyWrongPublicKey() {
-        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText(""));
+        onView(ViewMatchers.withId(R.id.pk)).perform(replaceText(""));
         onView(withId(R.id.ibanInput)).perform(replaceText("Iban"));
+        onView(withId(R.id.name)).perform(replaceText("Dummy"));
         onView(withId(R.id.createChallengeButton)).perform(click());
-        assertEquals(null,  activityRule.getActivity().getPublicKey());
-        assertEquals(null, activityRule.getActivity().getIban());
+        assertEquals("", activityRule.getActivity().getPublicKey());
+        assertEquals("Iban", activityRule.getActivity().getIban());
     }
 
     @Test
     public void verifyWrongIBAN() {
-        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
+        onView(ViewMatchers.withId(R.id.pk)).perform(replaceText("PublicKey"));
         onView(withId(R.id.ibanInput)).perform(replaceText(""));
         onView(withId(R.id.createChallengeButton)).perform(click());
-        assertEquals(null,  activityRule.getActivity().getPublicKey());
-        assertEquals(null, activityRule.getActivity().getIban());
+        assertEquals("PublicKey", activityRule.getActivity().getPublicKey());
+        assertEquals("", activityRule.getActivity().getIban());
     }
 
     @Test
     public void bunqVerificationTest() {
-        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
+        onView(withId(R.id.pk)).perform(replaceText("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29"));
         onView(withId(R.id.ibanInput)).perform(replaceText("GB82WEST12345698765432"));
+        onView(withId(R.id.name)).perform(replaceText("Dummy"));
         onView(withId(R.id.createChallengeButton)).perform(click());
         onView(withId(R.id.verifyBunqButton)).perform(click());
     }
 
     @Test
     public void manualVerificationTest() {
-        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
+        onView(ViewMatchers.withId(R.id.pk)).perform(replaceText("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29"));
         onView(withId(R.id.ibanInput)).perform(replaceText("GB82WEST12345698765432"));
+        onView(withId(R.id.name)).perform(replaceText("Dummy"));
         onView(withId(R.id.createChallengeButton)).perform(click());
         onView(withId(R.id.verifyManualButton)).perform(click());
         ClipboardManager clipboard = (ClipboardManager) activityRule.getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-        assertEquals("PublicKey:GB82WEST12345698765432", clipboard.getText());
+        assertEquals("CH:39fe407d:4bda3689f31fa2a38046da3745809eca7b3d820cd441ac1612323d919603ffa37ec572c3626a28c2f3fd9d43024a3537b43e2fb71d850ea739d4ea336d456600",
+                clipboard.getText());
     }
 
     @Test
