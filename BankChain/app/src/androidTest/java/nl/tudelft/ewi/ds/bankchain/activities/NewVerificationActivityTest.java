@@ -38,7 +38,7 @@ public class NewVerificationActivityTest extends TestRunner {
 
     @Test
     public void verifyVerify() {
-        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
+        onView(ViewMatchers.withId(R.id.pk)).perform(replaceText("PublicKey"));
         onView(withId(R.id.ibanInput)).perform(replaceText("GB82WEST12345698765432"));
         onView(withId(R.id.createChallengeButton)).perform(click());
         assertEquals("PublicKey",  activityRule.getActivity().getPublicKey());
@@ -47,7 +47,7 @@ public class NewVerificationActivityTest extends TestRunner {
 
     @Test
     public void verifyWrongPublicKey() {
-        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText(""));
+        onView(ViewMatchers.withId(R.id.pk)).perform(replaceText(""));
         onView(withId(R.id.ibanInput)).perform(replaceText("Iban"));
         onView(withId(R.id.createChallengeButton)).perform(click());
         assertEquals(null,  activityRule.getActivity().getPublicKey());
@@ -56,7 +56,7 @@ public class NewVerificationActivityTest extends TestRunner {
 
     @Test
     public void verifyWrongIBAN() {
-        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
+        onView(ViewMatchers.withId(R.id.pk)).perform(replaceText("PublicKey"));
         onView(withId(R.id.ibanInput)).perform(replaceText(""));
         onView(withId(R.id.createChallengeButton)).perform(click());
         assertEquals(null,  activityRule.getActivity().getPublicKey());
@@ -65,7 +65,7 @@ public class NewVerificationActivityTest extends TestRunner {
 
     @Test
     public void bunqVerificationTest() {
-        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
+        onView(ViewMatchers.withId(R.id.pk)).perform(replaceText("PublicKey"));
         onView(withId(R.id.ibanInput)).perform(replaceText("GB82WEST12345698765432"));
         onView(withId(R.id.createChallengeButton)).perform(click());
         onView(withId(R.id.verifyBunqButton)).perform(click());
@@ -73,7 +73,7 @@ public class NewVerificationActivityTest extends TestRunner {
 
     @Test
     public void manualVerificationTest() {
-        onView(ViewMatchers.withId(R.id.publicKeyInput)).perform(replaceText("PublicKey"));
+        onView(ViewMatchers.withId(R.id.pk)).perform(replaceText("PublicKey"));
         onView(withId(R.id.ibanInput)).perform(replaceText("GB82WEST12345698765432"));
         onView(withId(R.id.createChallengeButton)).perform(click());
         onView(withId(R.id.verifyManualButton)).perform(click());
