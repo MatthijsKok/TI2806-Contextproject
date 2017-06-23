@@ -7,7 +7,6 @@ package nl.tudelft.ewi.ds.bankchain.activities;
  * @author Isha Dijcks
  */
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
