@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void synchronize(View view) {
+        showLongToast("Synchronize started!");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String privateKeyString = settings.getString("pref_private_key_key", "default_value");
         PrivateKey privateKey = ED25519.getPrivateKey(privateKeyString);

@@ -47,8 +47,9 @@
             android:src="@android:drawable/ic_popup_sync"
             app:backgroundTint="@color/colorPrimary"
             app:elevation="4dp"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/editText" />
+            android:layout_above="@+id/newVerification"
+            android:layout_toEndOf="@+id/editText"
+            android:layout_marginBottom="25dp" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/respondToChallenge"
