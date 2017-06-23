@@ -42,7 +42,7 @@ public interface IBlockchain {
      * Called when given public key has been verified.
      *
      * @param publicKey Public key used for the verification
-     * @param iban IBAN of the bank account
+     * @param iban      IBAN of the bank account
      * @param legalName Legal name connected to the bank account
      */
     void setIbanVerified(PublicKey publicKey, String iban, String legalName);

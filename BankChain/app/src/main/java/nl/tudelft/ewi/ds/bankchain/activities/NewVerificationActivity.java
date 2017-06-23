@@ -76,14 +76,16 @@ public class NewVerificationActivity extends AppCompatActivity {
                 return;
             }
 
+
             if (name.isEmpty()) {
                 showLongToast("Forgot name!");
+                return;
             }
 
             if (!isValidPublicKey(publicKey)) {
                 showLongToast("invalid key");
+                return;
             }
-
 
             hideSoftKeyBoard();
             createChallenge();
@@ -95,7 +97,6 @@ public class NewVerificationActivity extends AppCompatActivity {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String privateKey = settings.getString("pref_private_key_key", "default_value");
 
-        //TODO we crash if no private key is set
         try {
             this.challenge = ChallengeResponse.createChallenge(privateKey);
         } catch (SignatureException | InvalidKeyException ignored) {
@@ -126,8 +127,9 @@ public class NewVerificationActivity extends AppCompatActivity {
     }
 
     public void bunqVerification(View v) {
-        BankTeller.getBankTeller().sendCent(iban, "anonimus", challenge);
+        BankTeller.getBankTeller().sendCent(iban, name, challenge);
         BankTeller.getBankTeller().addkey(name, iban, publicKey, false);
+
         showLongToast("Going to send a Bunq transaction");
     }
 
@@ -136,6 +138,7 @@ public class NewVerificationActivity extends AppCompatActivity {
         ClipData clip = ClipData.newPlainText("Challenge", this.challenge);
         BankTeller.getBankTeller().addkey(name, iban, publicKey, false);
         clipboard.setPrimaryClip(clip);
+
         showLongToast("Challenge copied to clipboard");
     }
 

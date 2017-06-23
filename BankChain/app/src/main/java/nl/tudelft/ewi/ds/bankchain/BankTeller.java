@@ -64,9 +64,9 @@ public class BankTeller {
             Party user = bank.listUsers().get().get(0);
             ac = bank.listAccount(user).get().get(0);
         } catch (InterruptedException e) {
-            Log.e("Bankteller",e.toString());
+            Log.e("Bankteller", e.toString());
         } catch (ExecutionException e) {
-            Log.e("Bankteller",e.toString());
+            Log.e("Bankteller", e.toString());
         }
         return ac;
     }

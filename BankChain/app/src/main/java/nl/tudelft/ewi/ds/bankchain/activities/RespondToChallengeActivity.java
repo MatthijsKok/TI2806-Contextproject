@@ -74,7 +74,7 @@ public class RespondToChallengeActivity extends AppCompatActivity {
         Blockchain bl = BankTeller.getBankTeller().getBlockchain();
         PublicKey pk = bl.getPublicKeyForIBAN(iban);
         if (pk == null) {
-            showLongToast("unkown bank account");
+            showLongToast("unknown bank account");
             return false;
         }
         if (ChallengeResponse.isValidChallenge(challenge, (EdDSAPublicKey) pk)) {
@@ -94,17 +94,15 @@ public class RespondToChallengeActivity extends AppCompatActivity {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String privateKey = settings.getString("pref_private_key_key", "default_value");
 
-        //TODO we crash if no private key is set
         try {
             this.response = ChallengeResponse.createResponse(challenge, ED25519.getPrivateKey(privateKey));
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("response", this.response);
+            clipboard.setPrimaryClip(clip);
+            showLongToast("response validated and copied to clipboard");
         } catch (SignatureException | InvalidKeyException ignored) {
             showLongToast("Your private key is not set correctly!");
         }
-
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("response", this.response);
-        clipboard.setPrimaryClip(clip);
-        showLongToast("response validated and copied to clipboard");
     }
 
     @Override
