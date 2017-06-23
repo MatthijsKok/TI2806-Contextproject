@@ -6,7 +6,7 @@ import android.util.Log;
 import java.util.Currency;
 import java.util.concurrent.ExecutionException;
 
-import nl.tudelft.ewi.ds.bankchain.blockchain_hello.Blockchain;
+import nl.tudelft.ewi.ds.bankchain.blockchain.Blockchain;
 import nl.tudelft.ewi.ds.bankchain.bank.Account;
 import nl.tudelft.ewi.ds.bankchain.bank.Bank;
 import nl.tudelft.ewi.ds.bankchain.bank.BankFactory;

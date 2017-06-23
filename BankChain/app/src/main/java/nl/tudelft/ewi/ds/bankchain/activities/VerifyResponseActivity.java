@@ -11,7 +11,7 @@ import android.widget.Toast;
 import java.security.PublicKey;
 
 import nl.tudelft.ewi.ds.bankchain.BankTeller;
-import nl.tudelft.ewi.ds.bankchain.blockchain_hello.Blockchain;
+import nl.tudelft.ewi.ds.bankchain.blockchain.Blockchain;
 import nl.tudelft.ewi.ds.bankchain.R;
 import nl.tudelft.ewi.ds.bankchain.cryptography.ChallengeResponse;
 
