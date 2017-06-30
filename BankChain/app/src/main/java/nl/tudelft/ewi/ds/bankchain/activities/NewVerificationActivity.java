@@ -49,6 +49,15 @@ public class NewVerificationActivity extends AppCompatActivity {
         }
     }
 
+    public void fillForDemo(View v) {
+        EditText editText = (EditText) findViewById(R.id.ibanInput);
+        editText.setText("GB82WEST12345698765432");
+        EditText editText2 = (EditText) findViewById(R.id.pk);
+        editText2.setText("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29");
+        EditText editText3 = (EditText) findViewById(R.id.name);
+        editText3.setText("Dummy Dum");
+    }
+
     public void initializeListeners() {
         Button manualButton = (Button) findViewById(R.id.verifyManualButton);
         manualButton.setOnClickListener(v -> {
