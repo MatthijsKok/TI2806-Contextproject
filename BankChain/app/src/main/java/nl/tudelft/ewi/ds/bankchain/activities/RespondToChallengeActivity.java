@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -69,6 +70,12 @@ public class RespondToChallengeActivity extends AppCompatActivity {
 
     }
 
+    public void fillForDemo(View v) {
+        EditText editText = (EditText) findViewById(R.id.ibanInput);
+        editText.setText("GB82WEST12345698765432");
+        EditText editText2 = (EditText) findViewById(R.id.challengeInput);
+        editText2.setText("CH:a091b8af:381283d24486f95db050e061fdce765299734f9a6f8e74136a32b0b45fc66625ed9158c4463fd132a7f77dbd9132d686a37b466bb1ca2c3abe03257f7d3fb707");
+    }
 
     private Boolean respond() {
         Blockchain bl = BankTeller.getBankTeller().getBlockchain();
